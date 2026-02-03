@@ -14,7 +14,6 @@ export abstract class AceEditorView extends TextFileView {
 
 	private minimapRoot: Root | null = null;
 	private minimapContainer: HTMLElement | null = null;
-	private actionsAdded: boolean = false;
 
 	constructor(
 		leaf: WorkspaceLeaf,
@@ -38,6 +37,9 @@ export abstract class AceEditorView extends TextFileView {
 	async onOpen() {
 		await super.onOpen();
 
+		// 初始化编辑器（只执行一次）
+		this.init();
+
 		this.registerEvent(
 			this.app.workspace.on("css-change", () => {
 				this.aceService.updateTheme(
@@ -52,13 +54,16 @@ export abstract class AceEditorView extends TextFileView {
 
 	async onUnloadFile(file: TFile) {
 		await super.onUnloadFile(file);
-		this.unmountMinimap();
-		this.aceService.destroy();
+		// 不销毁编辑器，因为同一个视图可能会加载新文件
+		// 只清空内容
+		this.clear();
 	}
 
 	async onClose() {
 		await super.onClose();
 		this.unmountMinimap();
+		// 关闭视图时销毁编辑器
+		this.aceService.destroy();
 	}
 
 	onResize() {
@@ -115,11 +120,6 @@ export abstract class AceEditorView extends TextFileView {
 	}
 
 	protected addActions() {
-		if (this.actionsAdded) {
-			return;
-		}
-		this.actionsAdded = true;
-
 		this.addToggleAction(
 			"map",
 			"Toggle minimap",

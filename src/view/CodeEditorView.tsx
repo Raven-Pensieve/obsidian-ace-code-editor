@@ -13,7 +13,13 @@ export class CodeEditorView extends AceEditorView {
 	}
 
 	async onLoadFile(file: TFile): Promise<void> {
-		this.init();
+		// 只配置编辑器，不重新初始化
+		if (this.aceService.isEditorInitialized()) {
+			this.aceService.configureEditor(
+				this.config,
+				this.getFileExtension(file)
+			);
+		}
 
 		await super.onLoadFile(file);
 	}
