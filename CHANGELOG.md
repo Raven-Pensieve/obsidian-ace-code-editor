@@ -1,3 +1,20 @@
+## [2.0.1](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.0...2.0.1) (2026-03-04)
+
+
+### ✨ Features
+
+* **editor:** 优化编辑器生命周期管理 (#97) ([a9b5002](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/a9b500299e862e0644eaf547d7d8a1dc5df5ea29)), closes [#97](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/97)
+
+
+### 🐛 Bug Fixes
+
+* 防止重复添加 minimap 动作按钮 (#95) ([12ff769](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/12ff7697605c21cf0c225b14663f27c3ef032085)), closes [#95](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/95)
+* 添加保存请求抑制机制 (#100) ([5e790ea](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/5e790eae6e567b44a654c92d7c567e570d5a4a26)), closes [#100](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/100)
+
+
+### 🔨 Chore
+
+* 重构脚本工具链，使用pnpm ([521677c](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/521677cba546adb9110aab802280f7458907c0dc))
 # [2.0.0](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/1.5.2...2.0.0) (2026-01-25)
 
 
