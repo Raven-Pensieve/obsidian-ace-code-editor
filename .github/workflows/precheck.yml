@@ -10,12 +10,12 @@ permissions:
     pull-requests: write
 
 env:
-    PLUGIN_ID: ace-code-editor
+    PLUGIN_ID: obsidian-plugin-starter # 替换为你的插件 ID
 
 jobs:
     version-bump-precheck:
         if: contains(github.event.pull_request.labels.*.name, 'version-bump')
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
 
         steps:
             - name: Checkout code
@@ -23,23 +23,39 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
+            - name: Use Node.js
+              uses: actions/setup-node@v3
               with:
-                  node-version: "18.x"
-                  cache: "npm"
+                  node-version: "20.x"
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 10
+
+            - name: Get pnpm store directory
+              id: pnpm-cache
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+            - name: Setup pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
 
             - name: Prepare manifest
               id: prepare_manifest
               run: |
                   if [[ ${{ github.ref }} == *"beta"* ]]; then
+                    echo "📦 Using beta manifest"
                     cp manifest-beta.json manifest.json
+                  else
+                    echo "📦 Using stable manifest"
                   fi
-
-            - name: Install dependencies
-              run: |
-                  npm install -g yarn
-                  yarn
 
             - name: Run comprehensive checks
               id: checks
@@ -48,7 +64,8 @@ jobs:
 
                   # 使用与 release 一致的构建方法
                   echo "📝 Building plugin..."
-                  if yarn run build --if-present; then
+                  pnpm install --frozen-lockfile
+                  if pnpm run build; then
                     echo "✅ Build successful"
                     echo "build_check=✅" >> $GITHUB_OUTPUT
                   else
@@ -59,7 +76,7 @@ jobs:
 
                   # 构建产物检查
                   echo "📦 Verifying build artifacts..."
-                  required_files=("main.js" "manifest.json" "styles.css")
+                  required_files=("dist/main.js" "dist/manifest.json" "dist/styles.css")
                   missing_files=()
 
                   for file in "${required_files[@]}"; do
@@ -80,7 +97,7 @@ jobs:
                   # 版本一致性检查
                   echo "🔢 Checking version consistency..."
                   package_version=$(node -p "require('./package.json').version")
-                  manifest_version=$(node -p "require('./manifest.json').version")
+                  manifest_version=$(node -p "require('./dist/manifest.json').version")
 
                   echo "Package.json version: $package_version"
                   echo "Manifest.json version: $manifest_version"
