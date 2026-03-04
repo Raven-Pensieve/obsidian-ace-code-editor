@@ -65,17 +65,17 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						} catch (error) {
 							console.warn(
 								"Local Font Access API failed:",
-								error
+								error,
 							);
 							// 降级到预定义字体列表，但只包含可用的
 							fonts = await getAvailableFonts(
-								getDesktopFallbackFonts()
+								getDesktopFallbackFonts(),
 							);
 						}
 					} else {
 						// 桌面端但不支持 Local Font Access API，检测可用字体
 						fonts = await getAvailableFonts(
-							getDesktopFallbackFonts()
+							getDesktopFallbackFonts(),
 						);
 					}
 				} else if (Platform.isMobileApp) {
@@ -97,12 +97,12 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				console.error("获取系统字体失败:", error);
 				// 使用最基础的字体列表作为最后的降级方案
 				const basicFonts = await getAvailableFonts(
-					getBasicFallbackFonts()
+					getBasicFallbackFonts(),
 				);
 				setSystemFonts(
 					basicFonts.length > 0
 						? basicFonts
-						: ["monospace", "sans-serif"]
+						: ["monospace", "sans-serif"],
 				);
 			}
 		}
@@ -232,7 +232,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				value: theme,
 				label: theme,
 			})),
-		[]
+		[],
 	);
 
 	const darkThemeOptions = useMemo(
@@ -241,7 +241,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				value: theme,
 				label: theme,
 			})),
-		[]
+		[],
 	);
 
 	const keyboardOptions = useMemo(
@@ -250,7 +250,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				value: keyboard,
 				label: keyboard,
 			})),
-		[]
+		[],
 	);
 
 	const EditorSettings = useMemo(() => {
@@ -270,7 +270,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"lightTheme",
-								value as string
+								value as string,
 							)
 						}
 					/>
@@ -286,7 +286,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"darkTheme",
-								value as string
+								value as string,
 							)
 						}
 					/>
@@ -303,7 +303,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"fontFamily",
-								value
+								value,
 							)
 						}
 						suggestions={systemFonts}
@@ -331,7 +331,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"fontSize",
-								Number(value)
+								Number(value),
 							)
 						}
 					/>
@@ -346,7 +346,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"showLineNumbers",
-								value
+								value,
 							)
 						}
 					/>
@@ -361,7 +361,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"showPrintMargin",
-								value
+								value,
 							)
 						}
 					/>
@@ -376,7 +376,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"showInvisibles",
-								value
+								value,
 							)
 						}
 					/>
@@ -391,7 +391,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"displayIndentGuides",
-								value
+								value,
 							)
 						}
 					/>
@@ -406,7 +406,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"showFoldWidgets",
-								value
+								value,
 							)
 						}
 					/>
@@ -469,7 +469,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"supportExtensions",
-								value
+								value,
 							)
 						}
 						placeholder={LL.setting.supportExtensions.placeholder()}
@@ -487,7 +487,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"keyboard",
-								value as string
+								value as string,
 							)
 						}
 					/>
@@ -503,7 +503,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"tabSize",
-								Number(value)
+								Number(value),
 							)
 						}
 					/>
@@ -539,7 +539,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 								{
 									...settings.snippetsManager,
 									location: value,
-								}
+								},
 							)
 						}
 					/>
@@ -552,7 +552,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 								{
 									...settings.snippetsManager,
 									icon: value,
-								}
+								},
 							)
 						}
 					/>
@@ -568,7 +568,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						onChange={(value) =>
 							settingsStore.updateSettingByPath(
 								"embedMaxHeight",
-								Number(value)
+								Number(value),
 							)
 						}
 					/>
@@ -623,7 +623,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 			EditorSettings,
 			ExtendSettings,
 			AboutSettings,
-		]
+		],
 	);
 
 	return (
