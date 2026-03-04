@@ -11,6 +11,7 @@ export abstract class AceEditorView extends TextFileView {
 	public aceService: AceService;
 	protected config: ICodeEditorConfig;
 	protected editorScope: Scope;
+	private suppressSaveRequest = false;
 
 	private minimapRoot: Root | null = null;
 	private minimapContainer: HTMLElement | null = null;
@@ -75,11 +76,24 @@ export abstract class AceEditorView extends TextFileView {
 	}
 
 	setViewData(data: string, clear: boolean) {
-		this.aceService.setValue(data, clear ? 1 : -1);
+		this.runWithoutSaveRequest(() => {
+			this.aceService.setValue(data, clear ? 1 : -1);
+		});
 	}
 
 	clear() {
-		this.aceService.setValue("");
+		this.runWithoutSaveRequest(() => {
+			this.aceService.setValue("");
+		});
+	}
+
+	private runWithoutSaveRequest(action: () => void) {
+		this.suppressSaveRequest = true;
+		try {
+			action();
+		} finally {
+			this.suppressSaveRequest = false;
+		}
 	}
 
 	updateEditorConfig(newConfig: ICodeEditorConfig) {
@@ -104,6 +118,9 @@ export abstract class AceEditorView extends TextFileView {
 			const editor = this.aceService.getEditor();
 
 			editor?.on("change", () => {
+				if (this.suppressSaveRequest) {
+					return;
+				}
 				this.requestSave();
 			});
 
