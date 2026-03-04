@@ -4,12 +4,7 @@
 
 一个基于 Ace 编辑器增强的代码编辑器，提供语法高亮、代码折叠等高级编辑功能。
 
-[![GitHub stars](https://img.shields.io/github/stars/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=星标)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/stargazers)
-[![Total Downloads](https://img.shields.io/github/downloads/Raven-Pensieve/obsidian-ace-code-editor/total?style=flat&label=总下载量)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/releases)
-[![Latest Downloads](https://img.shields.io/github/downloads/Raven-Pensieve/obsidian-ace-code-editor/latest/total?style=flat&label=最新版下载量)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/releases/latest)
-[![GitHub License](https://img.shields.io/github/license/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=许可证)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/blob/master/LICENSE)
-[![GitHub Issues](https://img.shields.io/github/issues/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=问题)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=最后提交)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commits/master)
+![GitHub Socialify](https://socialify.git.ci/Raven-Pensieve/obsidian-ace-code-editor/image?description=1&font=Rokkitt&forks=1&issues=1&language=1&name=1&owner=1&pattern=Floating+Cogs&pulls=1&stargazers=1&theme=Auto)
 
 ## 功能介绍
 

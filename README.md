@@ -4,12 +4,7 @@ English | [中文](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/bl
 
 An enhanced code editor using Ace editor, providing syntax highlighting, code folding, and other advanced editing features.
 
-[![GitHub stars](https://img.shields.io/github/stars/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=Stars)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/stargazers)
-[![Total Downloads](https://img.shields.io/github/downloads/Raven-Pensieve/obsidian-ace-code-editor/total?style=flat&label=Total%20Downloads)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/releases)
-[![Latest Downloads](https://img.shields.io/github/downloads/Raven-Pensieve/obsidian-ace-code-editor/latest/total?style=flat&label=Latest%20Downloads)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/releases/latest)
-[![GitHub License](https://img.shields.io/github/license/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=License)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/blob/master/LICENSE)
-[![GitHub Issues](https://img.shields.io/github/issues/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=Issues)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/Raven-Pensieve/obsidian-ace-code-editor?style=flat&label=Last%20Commit)](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commits/master)
+![GitHub Socialify](https://socialify.git.ci/Raven-Pensieve/obsidian-ace-code-editor/image?description=1&font=Rokkitt&forks=1&issues=1&language=1&name=1&owner=1&pattern=Floating+Cogs&pulls=1&stargazers=1&theme=Auto)
 
 ## Features
 
