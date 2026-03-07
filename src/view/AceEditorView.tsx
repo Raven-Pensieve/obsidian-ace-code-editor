@@ -39,7 +39,9 @@ export abstract class AceEditorView extends TextFileView {
 		await super.onOpen();
 
 		// 初始化编辑器（只执行一次）
-		this.init();
+		if (this.shouldInitEditorOnOpen()) {
+			this.init();
+		}
 
 		this.registerEvent(
 			this.app.workspace.on("css-change", () => {
@@ -51,6 +53,10 @@ export abstract class AceEditorView extends TextFileView {
 		);
 
 		this.registerAceKeybindings();
+	}
+
+	protected shouldInitEditorOnOpen(): boolean {
+		return true;
 	}
 
 	async onUnloadFile(file: TFile) {
@@ -191,9 +197,17 @@ export abstract class AceEditorView extends TextFileView {
 			this.minimapContainer = null;
 		}
 
-		const container = this.getEditorContainer();
+		const container = this.tryGetEditorContainer();
 		if (container) {
 			container.classList.remove("ace-minimap-enabled");
+		}
+	}
+
+	private tryGetEditorContainer(): HTMLElement | null {
+		try {
+			return this.getEditorContainer();
+		} catch {
+			return null;
 		}
 	}
 
