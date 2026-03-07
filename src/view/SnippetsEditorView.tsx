@@ -29,6 +29,10 @@ export class SnippetsEditorView extends AceEditorView {
 		return this.rightPanel;
 	}
 
+	protected shouldInitEditorOnOpen(): boolean {
+		return false;
+	}
+
 	getViewType(): string {
 		return SNIPPETS_EDITOR_VIEW_TYPE;
 	}
@@ -51,7 +55,7 @@ export class SnippetsEditorView extends AceEditorView {
 		this.contentEl.addClass("ace-snippets-editor");
 
 		const splitContainer = this.contentEl.createDiv(
-			"ace-snippets-split-container"
+			"ace-snippets-split-container",
 		);
 
 		this.leftPanel = splitContainer.createDiv("ace-snippets-left-panel");
@@ -72,7 +76,7 @@ export class SnippetsEditorView extends AceEditorView {
 		this.registerEvent(
 			this.app.workspace.on("css-change", () => {
 				this.refreshToggleSnippetAction?.();
-			})
+			}),
 		);
 	}
 
@@ -84,7 +88,7 @@ export class SnippetsEditorView extends AceEditorView {
 
 	async setState(
 		state: unknown,
-		result: { history: boolean }
+		result: { history: boolean },
 	): Promise<void> {
 		const viewState = state as Record<string, unknown> | null;
 		if (viewState?.file && typeof viewState.file === "string") {
@@ -102,7 +106,7 @@ export class SnippetsEditorView extends AceEditorView {
 		try {
 			await this.app.vault.adapter.write(
 				`${this.snippetsFolder}/${this.currentFile}`,
-				content
+				content,
 			);
 			this.app.customCss.requestLoadSnippets();
 		} catch (error) {
@@ -151,10 +155,10 @@ export class SnippetsEditorView extends AceEditorView {
 					SnippetUtils.toggleSnippetState(
 						this.app,
 						this.currentFile,
-						enabled
+						enabled,
 					);
 				}
-			}
+			},
 		);
 		this.refreshToggleSnippetAction = refresh;
 	}
@@ -162,7 +166,7 @@ export class SnippetsEditorView extends AceEditorView {
 	private renderEmptyState() {
 		this.rightPanel.empty();
 		const emptyState = this.rightPanel.createDiv(
-			"ace-snippets-empty-state"
+			"ace-snippets-empty-state",
 		);
 		emptyState.createEl("div", {
 			text: LL.view.snippets.no_snippets(),
@@ -184,7 +188,7 @@ export class SnippetsEditorView extends AceEditorView {
 						this.aceService.editor?.resize();
 					}}
 				/>
-			</StrictMode>
+			</StrictMode>,
 		);
 	}
 
@@ -195,7 +199,7 @@ export class SnippetsEditorView extends AceEditorView {
 
 		try {
 			const content = await this.app.vault.adapter.read(
-				`${this.snippetsFolder}/${this.currentFile}`
+				`${this.snippetsFolder}/${this.currentFile}`,
 			);
 
 			// Re-initialize editor if it was in empty state

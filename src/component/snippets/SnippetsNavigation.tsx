@@ -67,7 +67,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 		setLoading(true);
 		try {
 			const snippetFiles = await SnippetUtils.getSnippetsFiles(
-				plugin.app
+				plugin.app,
 			);
 			const fileNames = await Promise.all(
 				snippetFiles.map(async (file) => {
@@ -76,7 +76,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 					const stat = await plugin.app.vault.adapter.stat(file);
 					const isEnabled = SnippetUtils.isSnippetEnabled(
 						plugin.app,
-						fileName
+						fileName,
 					);
 					return {
 						name: fileName,
@@ -85,7 +85,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 						created: stat?.ctime || 0,
 						enabled: isEnabled,
 					};
-				})
+				}),
 			);
 
 			setFiles(fileNames);
@@ -164,7 +164,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				.setTitle(LL.view.snippets.sort_by_name_asc())
 				.setIcon("arrow-up-az")
 				.setChecked(sortType === "name_asc")
-				.onClick(() => setSortType("name_asc"))
+				.onClick(() => setSortType("name_asc")),
 		);
 
 		menu.addItem((item) =>
@@ -172,7 +172,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				.setTitle(LL.view.snippets.sort_by_name_desc())
 				.setIcon("arrow-up-za")
 				.setChecked(sortType === "name_desc")
-				.onClick(() => setSortType("name_desc"))
+				.onClick(() => setSortType("name_desc")),
 		);
 
 		menu.addSeparator();
@@ -182,7 +182,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				.setTitle(LL.view.snippets.sort_by_mtime_desc())
 				.setIcon("arrow-up-10")
 				.setChecked(sortType === "mtime_new")
-				.onClick(() => setSortType("mtime_new"))
+				.onClick(() => setSortType("mtime_new")),
 		);
 
 		menu.addItem((item) =>
@@ -190,7 +190,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				.setTitle(LL.view.snippets.sort_by_mtime_asc())
 				.setIcon("arrow-up-01")
 				.setChecked(sortType === "mtime_old")
-				.onClick(() => setSortType("mtime_old"))
+				.onClick(() => setSortType("mtime_old")),
 		);
 
 		menu.addSeparator();
@@ -200,7 +200,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				.setTitle(LL.view.snippets.sort_by_ctime_desc())
 				.setIcon("arrow-up-10")
 				.setChecked(sortType === "ctime_new")
-				.onClick(() => setSortType("ctime_new"))
+				.onClick(() => setSortType("ctime_new")),
 		);
 
 		menu.addItem((item) =>
@@ -208,7 +208,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				.setTitle(LL.view.snippets.sort_by_ctime_asc())
 				.setIcon("arrow-up-01")
 				.setChecked(sortType === "ctime_old")
-				.onClick(() => setSortType("ctime_old"))
+				.onClick(() => setSortType("ctime_old")),
 		);
 
 		menu.showAtPosition({ x: event.clientX, y: event.clientY });
@@ -226,10 +226,10 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 					SnippetUtils.toggleBatchSnippetsState(
 						plugin.app,
 						fileNames,
-						true
+						true,
 					);
 					loadFiles();
-				})
+				}),
 		);
 
 		menu.addItem((item) =>
@@ -241,10 +241,10 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 					SnippetUtils.toggleBatchSnippetsState(
 						plugin.app,
 						fileNames,
-						false
+						false,
 					);
 					loadFiles();
-				})
+				}),
 		);
 
 		menu.showAtPosition({ x: event.clientX, y: event.clientY });
@@ -266,10 +266,10 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 					}
 					await plugin.app.vault.adapter.write(
 						filePath,
-						"/* CSS Snippet */\n"
+						"/* CSS Snippet */\n",
 					);
 					new Notice(
-						LL.notice.create_file_success({ path: fileName })
+						LL.notice.create_file_success({ path: fileName }),
 					);
 					loadFiles();
 					onFileSelect(fileName);
@@ -296,7 +296,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 					new Notice(
 						LL.notice.file_deleted({
 							fileName: file.name,
-						})
+						}),
 					);
 					loadFiles();
 				} catch (e) {
@@ -329,7 +329,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 					new Notice(
 						LL.notice.rename_file_success({
 							path: newName,
-						})
+						}),
 					);
 					loadFiles();
 					if (file.name === selectedFile) {
@@ -348,17 +348,17 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 		menu.addItem((item) =>
 			item
 				.setTitle(
-					file.enabled ? LL.common.disable() : LL.common.enable()
+					file.enabled ? LL.common.disable() : LL.common.enable(),
 				)
 				.setIcon(file.enabled ? "circle-minus" : "circle-check")
 				.onClick(async () => {
 					SnippetUtils.toggleSnippetState(
 						plugin.app,
 						file.name,
-						!file.enabled
+						!file.enabled,
 					);
 					loadFiles();
-				})
+				}),
 		);
 
 		menu.addSeparator();
@@ -367,14 +367,14 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 			item
 				.setTitle(LL.common.rename())
 				.setIcon("pencil")
-				.onClick(() => handleRename(file))
+				.onClick(() => handleRename(file)),
 		);
 
 		menu.addItem((item) =>
 			item
 				.setTitle(LL.common.delete())
 				.setIcon("trash")
-				.onClick(() => handleDelete(file))
+				.onClick(() => handleDelete(file)),
 		);
 
 		menu.showAtPosition({ x: event.clientX, y: event.clientY });
@@ -471,41 +471,42 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 				)}
 			</div>
 
-			<div className="nav-files-container">
+			<div className="nav-files-container node-insert-event">
 				{filteredFiles.map((file) => (
-					<div
-						key={file.name}
-						className={`nav-file-title tappable is-clickable ${
-							file.name === selectedFile ? "is-active" : ""
-						}`}
-						onClick={() => onFileSelect(file.name)}
-						onContextMenu={(e) => handleContextMenu(e, file)}
-					>
-						<div className="nav-file-title-icon">
-							{file.enabled ? (
-								<Eye
-									size={24}
-									className="svg-icon mod-success"
-								/>
-							) : (
-								<EyeClosed size={24} className="svg-icon" />
-							)}
-						</div>
+					<div key={file.name} className="tree-item nav-file">
 						<div
-							className="nav-file-title-content"
-							aria-label={
-								file.name +
-								"\n\n" +
-								LL.view.snippets.modified({
-									date: formatDate(file.modified),
-								}) +
-								"\n" +
-								LL.view.snippets.created({
-									date: formatDate(file.created),
-								})
-							}
+							className={`tree-item-self nav-file-title tappable is-clickable ${
+								file.name === selectedFile ? "is-active" : ""
+							}`}
+							onClick={() => onFileSelect(file.name)}
+							onContextMenu={(e) => handleContextMenu(e, file)}
 						>
-							{file.nameWithoutExtension}
+							<div className="tree-item-inner nav-file-title-icon">
+								{file.enabled ? (
+									<Eye
+										size={24}
+										className="svg-icon mod-success"
+									/>
+								) : (
+									<EyeClosed size={24} className="svg-icon" />
+								)}
+							</div>
+							<div
+								className="tree-item-inner nav-file-title-content"
+								aria-label={
+									file.name +
+									"\n\n" +
+									LL.view.snippets.modified({
+										date: formatDate(file.modified),
+									}) +
+									"\n" +
+									LL.view.snippets.created({
+										date: formatDate(file.created),
+									})
+								}
+							>
+								{file.nameWithoutExtension}
+							</div>
 						</div>
 					</div>
 				))}

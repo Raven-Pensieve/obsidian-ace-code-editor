@@ -65,7 +65,13 @@
 	}
 
 	.nav-file-title {
+		display: flex;
 		gap: 4px;
+		align-items: center;
+	}
+
+	.nav-file-title-icon {
+		display: flex;
 	}
 }
 
