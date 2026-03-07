@@ -1,3 +1,14 @@
+## [2.0.2](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.1...2.0.2) (2026-03-07)
+
+
+### 🐛 Bug Fixes
+
+* right panel not initialized (#107) ([4d8e964](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/4d8e964090466d396507860b49d414ca2fcb5962)), closes [#107](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/107)
+
+
+### 📝 Documentation
+
+* 用GitHub Socialify 替换徽章 ([c56a2dd](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/c56a2dd81c9842f3784a33da3b3368445097f1fc))
 ## [2.0.1](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.0...2.0.1) (2026-03-04)
 
 
