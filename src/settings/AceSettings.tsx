@@ -199,23 +199,20 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 	async function isFontAvailable(fontName: string): Promise<boolean> {
 		return new Promise((resolve) => {
 			try {
-				// 创建测试元素
-				const testElement = document.createElement("div");
-				testElement.style.position = "absolute";
-				testElement.style.visibility = "hidden";
-				testElement.style.fontSize = "12px";
-				testElement.style.fontFamily = "monospace";
-				testElement.textContent = "mmmmmmmmmmlli";
+				const testDocument = activeDocument;
+				const canvas = testDocument.createElement("canvas");
+				const context = canvas.getContext("2d");
+				if (!context) {
+					resolve(false);
+					return;
+				}
 
-				document.body.appendChild(testElement);
-				const defaultWidth = testElement.offsetWidth;
+				const sampleText = "Mmmmmmmmmmlli";
+				context.font = "12px monospace";
+				const defaultWidth = context.measureText(sampleText).width;
 
-				// 测试目标字体
-				testElement.style.fontFamily = `"${fontName}", monospace`;
-				const testWidth = testElement.offsetWidth;
-
-				// 清理测试元素
-				document.body.removeChild(testElement);
+				context.font = `12px "${fontName}", monospace`;
+				const testWidth = context.measureText(sampleText).width;
 
 				// 如果宽度不同，说明字体可用
 				resolve(defaultWidth !== testWidth);

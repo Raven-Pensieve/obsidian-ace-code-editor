@@ -55,7 +55,7 @@ export class AceService {
 
 	async updateTheme(lightTheme: string, darkTheme: string) {
 		if (!this.editor) return;
-		const themeName = document.body.classList.contains("theme-dark")
+		const themeName = activeDocument.body.classList.contains("theme-dark")
 			? darkTheme
 			: lightTheme;
 

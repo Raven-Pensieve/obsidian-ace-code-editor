@@ -262,16 +262,21 @@ export const Minimap: React.FC<MinimapProps> = ({
 				}
 			};
 
+			const currentDocument = activeDocument;
+
 			const handleMouseUp = () => {
 				setIsDragging(false);
 				isDraggingRef.current = false;
 				updateSlider(); // 最后校准一次
-				document.removeEventListener("mousemove", handleMouseMove);
-				document.removeEventListener("mouseup", handleMouseUp);
+				currentDocument.removeEventListener(
+					"mousemove",
+					handleMouseMove,
+				);
+				currentDocument.removeEventListener("mouseup", handleMouseUp);
 			};
 
-			document.addEventListener("mousemove", handleMouseMove);
-			document.addEventListener("mouseup", handleMouseUp);
+			currentDocument.addEventListener("mousemove", handleMouseMove);
+			currentDocument.addEventListener("mouseup", handleMouseUp);
 		},
 		[editor, updateSlider, config]
 	);
@@ -353,7 +358,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 		window.addEventListener("resize", tick);
 
 		// 初始渲染
-		rAF = requestAnimationFrame(tick);
+		rAF = window.requestAnimationFrame(tick);
 
 		return () => {
 			editor.off("change", tick);

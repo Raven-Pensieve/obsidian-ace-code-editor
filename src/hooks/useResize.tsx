@@ -22,6 +22,7 @@ export const useResize = ({
 			e.preventDefault();
 			e.stopPropagation();
 			setIsResizing(true);
+			const currentDocument = activeDocument;
 
 			const startX = e.clientX;
 			const startWidth =
@@ -43,16 +44,17 @@ export const useResize = ({
 			const handleMouseUp = () => {
 				setIsResizing(false);
 				onResizeEnd?.();
-				document.removeEventListener("mousemove", handleMouseMove);
-				document.removeEventListener("mouseup", handleMouseUp);
-				document.body.style.cursor = "";
-				document.body.style.userSelect = "";
+				currentDocument.removeEventListener(
+					"mousemove",
+					handleMouseMove,
+				);
+				currentDocument.removeEventListener("mouseup", handleMouseUp);
+				currentDocument.body.classList.remove("ace-is-resizing");
 			};
 
-			document.addEventListener("mousemove", handleMouseMove);
-			document.addEventListener("mouseup", handleMouseUp);
-			document.body.style.cursor = "col-resize";
-			document.body.style.userSelect = "none";
+			currentDocument.addEventListener("mousemove", handleMouseMove);
+			currentDocument.addEventListener("mouseup", handleMouseUp);
+			currentDocument.body.classList.add("ace-is-resizing");
 		},
 		[minWidth, maxWidth, resizeRef, onResize, onResizeEnd]
 	);
