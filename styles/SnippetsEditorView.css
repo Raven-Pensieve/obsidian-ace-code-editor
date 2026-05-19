@@ -3,6 +3,12 @@
 	padding: 0 !important;
 }
 
+.ace-is-resizing,
+.ace-is-resizing * {
+	cursor: col-resize !important;
+	user-select: none !important;
+}
+
 .ace-snippets-split-container {
 	display: flex;
 	flex: 1;
