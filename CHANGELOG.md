@@ -1,3 +1,32 @@
+## [2.0.3](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.2...2.0.3) (2026-05-19)
+
+
+### ♻️ Refactor
+
+* 优化解决自动审查 (#112) ([a095d31](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/a095d3117617950a8c296e26c5bff0d3e6962f14)), closes [#112](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/112)
+
+
+### 🐛 Bug Fixes
+
+* 更新i18n配置并移除eslint禁用注释 ([f803093](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/f803093e8f998efc49585559f246c7e121314d08))
+* 添加 ESLint 禁用注释到 i18n 文件 ([5f19517](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/5f195170ab7f54b1400a76a975feb4fe10cdf07c))
+* 修复 ESLint 禁用注释格式 ([f2357f5](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/f2357f584c2eff56a7d7926a5e55047815ba60db))
+
+
+### 👷 Build
+
+* **deps-dev:** bump postcss from 8.5.8 to 8.5.10 (#110) ([44d4640](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/44d464004dedd652ea03db69ef73b26ff43fce99)), closes [#110](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/110)
+
+
+### 🔧 CI
+
+* 简化发布工作流程 ([09a76f0](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/09a76f0047a34a86600e7ebac694a22f1e153a44))
+* 添加构建制品证明生成功能 ([f2fd8e4](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/f2fd8e44e0f145149d910ed9d1fd6c42de64439e))
+
+
+### 🔨 Chore
+
+* 更新 i18n 生成文件的 ESLint 注释 ([33c6a75](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/33c6a75fd5b923b770415b2c4efb08fae054a094))
 ## [2.0.2](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.1...2.0.2) (2026-03-07)
 
 
