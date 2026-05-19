@@ -123,7 +123,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 	};
 
 	const handleBlurCapture = (e: React.FocusEvent) => {
-		requestAnimationFrame(() => {
+		window.requestAnimationFrame(() => {
 			if (!containerRef.current?.contains(e.relatedTarget)) {
 				setShowSuggestions(false);
 				setSelectedIndex(-1);

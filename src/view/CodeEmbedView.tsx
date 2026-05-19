@@ -100,7 +100,7 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 		// 如果有行范围，跳转到指定行
 		if (range) {
 			// 等待一小段时间确保编辑器已完全加载
-			setTimeout(() => {
+			window.setTimeout(() => {
 				const view = leaf.view;
 				// 检查是否是代码编辑器视图（ACE编辑器）
 				if (view && "aceService" in view && view.aceService) {

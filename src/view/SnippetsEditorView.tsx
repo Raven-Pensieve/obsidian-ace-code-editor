@@ -92,7 +92,7 @@ export class SnippetsEditorView extends AceEditorView {
 	): Promise<void> {
 		const viewState = state as Record<string, unknown> | null;
 		if (viewState?.file && typeof viewState.file === "string") {
-			setTimeout(async () => {
+			window.setTimeout(async () => {
 				await this.handleFileSelect(viewState.file as string);
 			}, 100);
 		}
@@ -136,7 +136,7 @@ export class SnippetsEditorView extends AceEditorView {
 				this.leftPanel.toggleClass("is-collapsed", !isCollapsed);
 
 				if (this.aceService.editor) {
-					setTimeout(() => {
+					window.setTimeout(() => {
 						this.aceService.editor?.resize();
 					}, 310);
 				}

@@ -224,7 +224,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 
 		if (this.settings.snippetsManager.location) {
 			this.app.workspace.onLayoutReady(() => {
-				setTimeout(() => {
+				window.setTimeout(() => {
 					this.statusBar = this.addStatusBarItem();
 					this.statusBar.createDiv();
 					this.statusBar.addClass("mod-clickable");
