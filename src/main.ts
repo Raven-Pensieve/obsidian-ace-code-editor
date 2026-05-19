@@ -54,7 +54,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 		await this.saveData(this.settings);
 		SettingsBus.publish();
 		const leaves = this.app.workspace.getLeavesOfType(
-			CODE_EDITOR_VIEW_TYPE
+			CODE_EDITOR_VIEW_TYPE,
 		);
 		leaves.forEach((leaf) => {
 			const view = leaf.view;
@@ -104,9 +104,9 @@ export default class AceCodeEditorPlugin extends Plugin {
 						this,
 						ctx.containerEl,
 						file,
-						subpath
+						subpath,
 					);
-				}
+				},
 			);
 		} catch (e) {
 			throw new Error("Failed to register code editor view" + e);
@@ -152,7 +152,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 					this,
 					embedContainer,
 					file,
-					lineRangeMatch[0] // 传递行范围字符串作为subpath
+					lineRangeMatch[0], // 传递行范围字符串作为subpath
 				);
 
 				// 替换原链接
@@ -166,14 +166,14 @@ export default class AceCodeEditorPlugin extends Plugin {
 
 	private registerEventHandlers() {
 		this.registerEvent(
-			this.app.workspace.on("file-menu", this.handleFileMenu.bind(this))
+			this.app.workspace.on("file-menu", this.handleFileMenu.bind(this)),
 		);
 
 		this.registerEvent(
 			this.app.workspace.on(
 				"editor-menu",
-				this.handleEditorMenu.bind(this)
-			)
+				this.handleEditorMenu.bind(this),
+			),
 		);
 	}
 
@@ -219,19 +219,19 @@ export default class AceCodeEditorPlugin extends Plugin {
 			LL.command.open_css_snippet_manager(),
 			async () => {
 				await this.openPluginView(SNIPPETS_EDITOR_VIEW_TYPE);
-			}
+			},
 		);
 
 		if (this.settings.snippetsManager.location) {
 			this.app.workspace.onLayoutReady(() => {
-				setTimeout(() => {
+				window.setTimeout(() => {
 					this.statusBar = this.addStatusBarItem();
 					this.statusBar.createDiv();
 					this.statusBar.addClass("mod-clickable");
 					this.statusBar.setAttribute("aria-label-position", "top");
 					this.statusBar.setAttribute(
 						"aria-label",
-						LL.command.open_css_snippet_manager()
+						LL.command.open_css_snippet_manager(),
 					);
 					setIcon(this.statusBar, this.settings.snippetsManager.icon);
 					this.statusBar.addEventListener("click", async () => {
@@ -298,7 +298,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 					const cursor = editor.getCursor();
 					const codeBlock = await getCodeBlockAtCursor(
 						editor,
-						cursor
+						cursor,
 					);
 					if (codeBlock) {
 						await this.openCodeBlockEditor(codeBlock);
@@ -309,7 +309,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 
 	async createCodeFile(
 		folderPath?: string,
-		allowFolderSelection: boolean = false
+		allowFolderSelection: boolean = false,
 	): Promise<void> {
 		new CreateCodeFile(this, {
 			folderPath,
@@ -321,7 +321,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 
 	async openSnippetFile(
 		file: string,
-		newTab: boolean = false
+		newTab: boolean = false,
 	): Promise<void> {
 		const adapter = this.app.vault.adapter;
 		const exists = await adapter.exists(`${this.snippetsFolder}/${file}`);
@@ -345,14 +345,14 @@ export default class AceCodeEditorPlugin extends Plugin {
 					this.app,
 					codeBlock.range,
 					newCode,
-					codeBlock.indent
+					codeBlock.indent,
 				),
 		}).open();
 	}
 
 	async openInCodeEditor(
 		filePath: string,
-		newTab: boolean = false
+		newTab: boolean = false,
 	): Promise<void> {
 		const leaf = this.app.workspace.getLeaf(newTab);
 		await leaf.setViewState({
@@ -366,7 +366,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 		const modal = new QuickConfigModal(
 			this.app,
 			this.settings,
-			(newSettings) => this.updateSettings(newSettings)
+			(newSettings) => this.updateSettings(newSettings),
 		);
 		modal.open();
 	}

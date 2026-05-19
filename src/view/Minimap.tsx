@@ -35,7 +35,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 			charWidth: 2, // Minimap 字符宽 (px)
 			sliderRatio: 0.1, // 长文档模式下滑块占视口高度的比例 (0.1 = 10%)
 		}),
-		[]
+		[],
 	);
 
 	// ============================================================================
@@ -88,7 +88,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 			const lastRow = editor.getLastVisibleRow();
 			const visibleRows = lastRow - firstRow;
 			const canvasCapacity = Math.floor(
-				containerHeight / config.lineHeight
+				containerHeight / config.lineHeight,
 			);
 
 			if (totalLines > canvasCapacity) {
@@ -103,7 +103,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 
 		const endLine = Math.min(
 			totalLines,
-			startRow + Math.ceil(containerHeight / config.lineHeight)
+			startRow + Math.ceil(containerHeight / config.lineHeight),
 		);
 
 		// --- 逐行绘制 ---
@@ -134,7 +134,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 						x,
 						y + 0.5,
 						value.length * config.charWidth,
-						config.lineHeight - 1
+						config.lineHeight - 1,
 					);
 				}
 				x += value.length * config.charWidth;
@@ -238,7 +238,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 				// 限制在容器内
 				newSliderTop = Math.max(
 					0,
-					Math.min(newSliderTop, maxSliderTop)
+					Math.min(newSliderTop, maxSliderTop),
 				);
 
 				// 视觉更新
@@ -254,7 +254,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 						session.getScreenLength() * editor.renderer.lineHeight;
 					const maxScrollTop = Math.max(
 						0,
-						totalEditorHeight - editorHeight
+						totalEditorHeight - editorHeight,
 					);
 					const ratio =
 						maxSliderTop > 0 ? newSliderTop / maxSliderTop : 0;
@@ -262,18 +262,23 @@ export const Minimap: React.FC<MinimapProps> = ({
 				}
 			};
 
+			const currentDocument = activeDocument;
+
 			const handleMouseUp = () => {
 				setIsDragging(false);
 				isDraggingRef.current = false;
 				updateSlider(); // 最后校准一次
-				document.removeEventListener("mousemove", handleMouseMove);
-				document.removeEventListener("mouseup", handleMouseUp);
+				currentDocument.removeEventListener(
+					"mousemove",
+					handleMouseMove,
+				);
+				currentDocument.removeEventListener("mouseup", handleMouseUp);
 			};
 
-			document.addEventListener("mousemove", handleMouseMove);
-			document.addEventListener("mouseup", handleMouseUp);
+			currentDocument.addEventListener("mousemove", handleMouseMove);
+			currentDocument.addEventListener("mouseup", handleMouseUp);
 		},
-		[editor, updateSlider, config]
+		[editor, updateSlider, config],
 	);
 
 	// ============================================================================
@@ -312,18 +317,18 @@ export const Minimap: React.FC<MinimapProps> = ({
 				let targetSliderTop = clickY - sliderHeight / 2;
 				const maxSliderTop = Math.max(
 					0,
-					containerHeight - sliderHeight
+					containerHeight - sliderHeight,
 				);
 				targetSliderTop = Math.max(
 					0,
-					Math.min(targetSliderTop, maxSliderTop)
+					Math.min(targetSliderTop, maxSliderTop),
 				);
 
 				const totalEditorHeight =
 					totalLines * editor.renderer.lineHeight;
 				const maxScrollTop = Math.max(
 					0,
-					totalEditorHeight - editorHeight
+					totalEditorHeight - editorHeight,
 				);
 				const ratio =
 					maxSliderTop > 0 ? targetSliderTop / maxSliderTop : 0;
@@ -331,7 +336,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 				session.setScrollTop(ratio * maxScrollTop);
 			}
 		},
-		[editor, config]
+		[editor, config],
 	);
 
 	// ============================================================================
@@ -353,7 +358,7 @@ export const Minimap: React.FC<MinimapProps> = ({
 		window.addEventListener("resize", tick);
 
 		// 初始渲染
-		rAF = requestAnimationFrame(tick);
+		rAF = window.requestAnimationFrame(tick);
 
 		return () => {
 			editor.off("change", tick);

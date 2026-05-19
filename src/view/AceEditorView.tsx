@@ -130,7 +130,7 @@ export abstract class AceEditorView extends TextFileView {
 				this.requestSave();
 			});
 
-			setTimeout(() => {
+			window.setTimeout(() => {
 				editor?.getSession().getUndoManager().reset();
 			}, 0);
 
@@ -163,7 +163,7 @@ export abstract class AceEditorView extends TextFileView {
 		const container = this.getEditorContainer();
 
 		if (!this.minimapContainer) {
-			this.minimapContainer = document.createElement("div");
+			this.minimapContainer = activeDocument.createElement("div");
 			this.minimapContainer.className = "ace-minimap-wrapper";
 			container.appendChild(this.minimapContainer);
 		}

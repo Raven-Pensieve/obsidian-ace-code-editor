@@ -28,7 +28,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 		return suggestions.filter(
 			(suggestion) =>
 				suggestion.toLowerCase().includes(inputValue.toLowerCase()) &&
-				!values.includes(suggestion)
+				!values.includes(suggestion),
 		);
 	}, [suggestions, inputValue, values]);
 
@@ -48,7 +48,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 				if (filteredSuggestions.length > 0) {
 					setShowSuggestions(true);
 					setSelectedIndex((prev) =>
-						prev < filteredSuggestions.length - 1 ? prev + 1 : prev
+						prev < filteredSuggestions.length - 1 ? prev + 1 : prev,
 					);
 				}
 				break;
@@ -98,7 +98,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 			const hasSuggestions = suggestions.some(
 				(s) =>
 					s.toLowerCase().includes(newValue.toLowerCase()) &&
-					!values.includes(s)
+					!values.includes(s),
 			);
 			setShowSuggestions(hasSuggestions);
 			if (hasSuggestions) {
@@ -123,7 +123,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 	};
 
 	const handleBlurCapture = (e: React.FocusEvent) => {
-		requestAnimationFrame(() => {
+		window.requestAnimationFrame(() => {
 			if (!containerRef.current?.contains(e.relatedTarget)) {
 				setShowSuggestions(false);
 				setSelectedIndex(-1);

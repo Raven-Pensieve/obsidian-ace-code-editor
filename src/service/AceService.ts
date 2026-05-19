@@ -1,5 +1,5 @@
 import * as ace from "ace-builds";
-import "ace-builds/esm-resolver";
+// import "ace-builds/esm-resolver";
 // 导入扩展
 import "./AceExtensions";
 // 导入语言包
@@ -20,9 +20,7 @@ import { getAceTheme } from "./AceThemes";
 export class AceService {
 	editor: ace.Ace.Editor | null = null;
 
-	constructor() {
-		// esm-resolver 会自动处理模块路径，无需设置 basePath
-	}
+	constructor() {}
 
 	isEditorInitialized(): boolean {
 		return this.editor !== null;
@@ -40,7 +38,7 @@ export class AceService {
 
 		this.editor.setOptions(this.getEditorOptions(config));
 		this.editor.session.setOptions(
-			this.getEditSessionOptions(config, languageMode)
+			this.getEditSessionOptions(config, languageMode),
 		);
 
 		// 设置键盘处理器
@@ -55,7 +53,7 @@ export class AceService {
 
 	async updateTheme(lightTheme: string, darkTheme: string) {
 		if (!this.editor) return;
-		const themeName = document.body.classList.contains("theme-dark")
+		const themeName = activeDocument.body.classList.contains("theme-dark")
 			? darkTheme
 			: lightTheme;
 
@@ -116,7 +114,7 @@ export class AceService {
 	}
 
 	private getEditorOptions(
-		config: ICodeEditorConfig
+		config: ICodeEditorConfig,
 	): Partial<ace.Ace.EditorOptions> {
 		return {
 			// -- EditorOptions --
@@ -224,7 +222,7 @@ export class AceService {
 
 	private getEditSessionOptions(
 		config: ICodeEditorConfig,
-		languageMode: string
+		languageMode: string,
 	): Partial<ace.Ace.EditSessionOptions> {
 		return {
 			// wrap: "off" | "free" | "printmargin" | boolean | number;
@@ -322,7 +320,7 @@ export class AceService {
 		lineNumber: number,
 		column: number = 0,
 		animate: boolean = false,
-		center: boolean = true
+		center: boolean = true,
 	): void {
 		if (!this.editor) return;
 
@@ -344,7 +342,7 @@ export class AceService {
 	scrollToLine(
 		lineNumber: number,
 		center: boolean = true,
-		animate: boolean = false
+		animate: boolean = false,
 	): void {
 		if (!this.editor) return;
 		this.editor.scrollToLine(lineNumber - 1, center, animate);
@@ -361,7 +359,7 @@ export class AceService {
 		startLine: number,
 		endLine: number,
 		startColumn: number = 0,
-		endColumn?: number
+		endColumn?: number,
 	): void {
 		if (!this.editor) return;
 

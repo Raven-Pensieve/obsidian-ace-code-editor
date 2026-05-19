@@ -4,7 +4,7 @@
 	}
 }
 
-.ace_search.right {
-	right: auto !important;
-	left: 20px !important;
+.workspace-leaf-content[data-type="ace-code-editor"] .ace_search.right {
+	right: auto;
+	left: 20px;
 }

@@ -24,7 +24,7 @@ export class SettingsView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "ACE SettingTab";
+		return "Ace settingtab";
 	}
 
 	async onOpen() {
@@ -41,7 +41,7 @@ export class SettingsView extends ItemView {
 		this.root.render(
 			<StrictMode>
 				<AceSettings />
-			</StrictMode>
+			</StrictMode>,
 		);
 	}
 

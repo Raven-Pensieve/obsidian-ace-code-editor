@@ -43,7 +43,7 @@ export const TabNav: React.FC<TabNavProps> = ({
 			onChange?.(value);
 
 			// 延迟恢复新标签的滚动位置
-			setTimeout(() => {
+			window.setTimeout(() => {
 				if (
 					scrollContainerRef.current &&
 					scrollPositionRef.current[value]
@@ -53,7 +53,7 @@ export const TabNav: React.FC<TabNavProps> = ({
 				}
 			}, 0);
 		},
-		[onChange, currentTab]
+		[onChange, currentTab],
 	);
 
 	// 在组件更新后保持滚动位置

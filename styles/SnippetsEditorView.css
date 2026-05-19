@@ -1,6 +1,12 @@
 .ace-snippets-editor {
 	display: flex;
-	padding: 0 !important;
+	padding: 0;
+}
+
+body.ace-is-resizing,
+body.ace-is-resizing * {
+	cursor: col-resize;
+	user-select: none;
 }
 
 .ace-snippets-split-container {

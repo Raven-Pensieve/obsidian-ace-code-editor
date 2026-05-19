@@ -150,7 +150,7 @@ export const SnippetsNavigation: React.FC<SnippetsNavigationProps> = ({
 			if (prev) {
 				setSearchQuery("");
 			} else {
-				setTimeout(() => searchInputRef.current?.focus(), 0);
+				window.setTimeout(() => searchInputRef.current?.focus(), 0);
 			}
 			return !prev;
 		});

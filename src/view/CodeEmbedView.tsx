@@ -43,7 +43,7 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 				const data = await plugin.app.vault.read(file);
 				aceServiceRef.current = new AceService();
 				aceEditorRef.current = aceServiceRef.current.createEditor(
-					editorRef.current
+					editorRef.current,
 				);
 				aceEditorRef.current.setReadOnly(true); // 设置为只读模式
 				aceServiceRef.current.configureEditor(settings, file.extension);
@@ -61,7 +61,7 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 				// 设置编辑器高度
 				const editorHeight = Math.min(
 					contentLines * (settings.fontSize + 4) + 20,
-					settings.embedMaxHeight
+					settings.embedMaxHeight,
 				);
 				editorRef.current.style.height = `${editorHeight}px`;
 
@@ -100,7 +100,7 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 		// 如果有行范围，跳转到指定行
 		if (range) {
 			// 等待一小段时间确保编辑器已完全加载
-			setTimeout(() => {
+			window.setTimeout(() => {
 				const view = leaf.view;
 				// 检查是否是代码编辑器视图（ACE编辑器）
 				if (view && "aceService" in view && view.aceService) {
@@ -148,7 +148,7 @@ export class CodeEmbedView extends AcePluginComponent implements Embed {
 		plugin: AceCodeEditorPlugin,
 		containerEl: HTMLElement,
 		file: TFile,
-		subpath: string
+		subpath: string,
 	) {
 		super(plugin);
 		this.contentEl = containerEl;
@@ -183,7 +183,7 @@ export class CodeEmbedView extends AcePluginComponent implements Embed {
 					plugin: this.plugin,
 					file: this.file,
 					range: this.range || undefined,
-				})
+				}),
 			);
 		}
 	}
