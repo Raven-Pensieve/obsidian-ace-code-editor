@@ -41,7 +41,7 @@ export class SettingsView extends ItemView {
 		this.root.render(
 			<StrictMode>
 				<AceSettings />
-			</StrictMode>
+			</StrictMode>,
 		);
 	}
 

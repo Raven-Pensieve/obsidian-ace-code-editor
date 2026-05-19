@@ -42,7 +42,10 @@
 
 /* Tab Button Reset and Styling */
 button.ace--Tab {
-	all: unset; /* Reset all styles */
+	appearance: none;
+	background: transparent;
+	border: 0;
+	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -53,13 +56,16 @@ button.ace--Tab {
 	position: relative;
 	color: var(--text-muted);
 	font-size: var(--font-ui-small);
-	transition: color 150ms ease, background-color 150ms ease;
+	transition:
+		color 150ms ease,
+		background-color 150ms ease;
 	user-select: none;
 	white-space: nowrap;
 	font-weight: var(--font-normal);
 	flex-shrink: 0;
 	box-shadow: none;
 	outline: none;
+	margin: 0;
 }
 
 button.ace--Tab:focus-visible {

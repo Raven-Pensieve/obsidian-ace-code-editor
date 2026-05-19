@@ -53,7 +53,7 @@ export const TabNav: React.FC<TabNavProps> = ({
 				}
 			}, 0);
 		},
-		[onChange, currentTab]
+		[onChange, currentTab],
 	);
 
 	// 在组件更新后保持滚动位置

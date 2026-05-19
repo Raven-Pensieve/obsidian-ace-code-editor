@@ -40,11 +40,11 @@ export const Select: React.FC<SelectProps> = ({
 	const totalHeight = options.length * itemHeight;
 	const visibleOptionsEndIndex = Math.min(
 		visibleStartIndex + visibleItems + bufferItems,
-		options.length
+		options.length,
 	);
 	const visibleOptions = options.slice(
 		Math.max(0, visibleStartIndex - bufferItems),
-		visibleOptionsEndIndex
+		visibleOptionsEndIndex,
 	);
 
 	// 处理滚动事件
@@ -54,7 +54,7 @@ export const Select: React.FC<SelectProps> = ({
 			const newStartIndex = Math.floor(scrollTop / itemHeight);
 			setVisibleStartIndex(newStartIndex);
 		},
-		[itemHeight]
+		[itemHeight],
 	);
 
 	// 打开下拉框时滚动到选中项
@@ -63,7 +63,7 @@ export const Select: React.FC<SelectProps> = ({
 			const scrollPosition = selectedIndex * itemHeight;
 			dropdownRef.current.scrollTop = scrollPosition;
 			setVisibleStartIndex(
-				Math.max(0, selectedIndex - Math.floor(visibleItems / 2))
+				Math.max(0, selectedIndex - Math.floor(visibleItems / 2)),
 			);
 		}
 	}, [isOpen, selectedIndex, itemHeight, visibleItems]);
@@ -80,10 +80,7 @@ export const Select: React.FC<SelectProps> = ({
 
 		activeDocument.addEventListener("mousedown", handleClickOutside);
 		return () =>
-			activeDocument.removeEventListener(
-				"mousedown",
-				handleClickOutside,
-			);
+			activeDocument.removeEventListener("mousedown", handleClickOutside);
 	}, []);
 
 	return (

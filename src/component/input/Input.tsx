@@ -9,11 +9,10 @@ import {
 } from "react";
 import "./Input.css";
 
-interface InputProps
-	extends Omit<
-		React.InputHTMLAttributes<HTMLInputElement>,
-		"onChange" | "prefix"
-	> {
+interface InputProps extends Omit<
+	React.InputHTMLAttributes<HTMLInputElement>,
+	"onChange" | "prefix"
+> {
 	value: string | number;
 	prefix?: React.ReactNode;
 	placeholder?: string;
@@ -35,7 +34,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			renderCustomSuggestion,
 			...props
 		},
-		ref
+		ref,
 	) => {
 		const inputRef = useRef<HTMLInputElement>(null);
 		const containerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +51,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			return suggestions.filter(
 				(s) =>
 					s.toLowerCase().includes(stringValue) &&
-					s.toLowerCase() !== stringValue
+					s.toLowerCase() !== stringValue,
 			);
 		}, [suggestions, value]);
 
@@ -98,7 +97,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 		};
 
 		const handleCompositionEnd = (
-			e: React.CompositionEvent<HTMLInputElement>
+			e: React.CompositionEvent<HTMLInputElement>,
 		) => {
 			isComposingRef.current = false;
 			// 中文输入结束后触发onChange
@@ -147,7 +146,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 						setSelectedIndex((prev) =>
 							prev < filteredSuggestions.length - 1
 								? prev + 1
-								: prev
+								: prev,
 						);
 					}
 					break;
@@ -156,7 +155,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 						e.preventDefault();
 						setShowSuggestions(true);
 						setSelectedIndex((prev) =>
-							prev > 0 ? prev - 1 : prev
+							prev > 0 ? prev - 1 : prev,
 						);
 					}
 					break;
@@ -169,7 +168,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 						e.preventDefault();
 						e.stopPropagation(); // 阻止表单提交等其他Enter事件
 						handleSuggestionClick(
-							filteredSuggestions[selectedIndex]
+							filteredSuggestions[selectedIndex],
 						);
 					}
 					break;
@@ -227,7 +226,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 				)}
 			</div>
 		);
-	}
+	},
 );
 
 Input.displayName = "Input";

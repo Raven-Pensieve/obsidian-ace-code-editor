@@ -56,7 +56,7 @@ export const useResize = ({
 			currentDocument.addEventListener("mouseup", handleMouseUp);
 			currentDocument.body.classList.add("ace-is-resizing");
 		},
-		[minWidth, maxWidth, resizeRef, onResize, onResizeEnd]
+		[minWidth, maxWidth, resizeRef, onResize, onResizeEnd],
 	);
 
 	return {
