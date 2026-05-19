@@ -1,5 +1,5 @@
 import * as ace from "ace-builds";
-import "ace-builds/esm-resolver";
+// import "ace-builds/esm-resolver";
 // 导入扩展
 import "./AceExtensions";
 // 导入语言包
@@ -20,9 +20,7 @@ import { getAceTheme } from "./AceThemes";
 export class AceService {
 	editor: ace.Ace.Editor | null = null;
 
-	constructor() {
-		// esm-resolver 会自动处理模块路径，无需设置 basePath
-	}
+	constructor() {}
 
 	isEditorInitialized(): boolean {
 		return this.editor !== null;
