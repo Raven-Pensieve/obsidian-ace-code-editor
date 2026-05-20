@@ -24,7 +24,7 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 			| React.ComponentType<T>
 			| (() => Promise<{ default: React.ComponentType<T> }>),
 		props: Omit<T, "onClose"> & { onClose?: () => void },
-		sizeClass?: string
+		sizeClass?: string,
 	) {
 		super(plugin.app);
 
@@ -50,7 +50,7 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 	private isLazyFactory(
 		component:
 			| React.ComponentType<T>
-			| (() => Promise<{ default: React.ComponentType<T> }>)
+			| (() => Promise<{ default: React.ComponentType<T> }>),
 	): component is () => Promise<{ default: React.ComponentType<T> }> {
 		// Heuristic: Components matching T (which has onClose) must accept props, so length > 0.
 		// Lazy factories usually take 0 arguments.
@@ -66,6 +66,7 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 	}
 
 	private async openAsCustomModal() {
+		const Component = this.Component as React.ComponentType<T>;
 		const el = this.containerEl;
 		el.classList.add("ace-modal-container");
 
@@ -80,7 +81,7 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 			<StrictMode>
 				<div className={`ace-modal ${this.sizeClass}`}>
 					<Suspense fallback={<ModalLoading />}>
-						<this.Component {...this.componentProps} />
+						<Component {...this.componentProps} />
 					</Suspense>
 					<div
 						className="ace-modal-close"
@@ -89,19 +90,20 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 						<X size={18} />
 					</div>
 				</div>
-			</StrictMode>
+			</StrictMode>,
 		);
 	}
 
 	private async openAsObsidianModal() {
+		const Component = this.Component as React.ComponentType<T>;
 		const { contentEl } = this;
 		this.root = createRoot(contentEl);
 		this.root.render(
 			<StrictMode>
 				<Suspense fallback={<ModalLoading />}>
-					<this.Component {...this.componentProps} />
+					<Component {...this.componentProps} />
 				</Suspense>
-			</StrictMode>
+			</StrictMode>,
 		);
 	}
 
