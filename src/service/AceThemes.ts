@@ -50,33 +50,38 @@ import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
 import "ace-builds/src-noconflict/theme-twilight";
 import "ace-builds/src-noconflict/theme-vibrant_ink";
 
+
 // === 社区主题 (由 convert-themes.mjs 自动生成) ===
 import "./themes/active4d";
-import "./themes/all-hallows-eve";
 import "./themes/all-hallows-eve-custom";
+import "./themes/all-hallows-eve";
 import "./themes/amy";
 import "./themes/argonaut";
 import "./themes/barf";
 import "./themes/bbedit";
 import "./themes/bespin";
 import "./themes/birds-of-paradise";
-import "./themes/black-pearl";
 import "./themes/black-pearl-ii";
-import "./themes/blackboard";
+import "./themes/black-pearl";
 import "./themes/blackboard-black";
 import "./themes/blackboard-mod";
 import "./themes/blackboard-new";
+import "./themes/blackboard";
 import "./themes/blacklight";
 import "./themes/bongzilla";
 import "./themes/boys-girls-01";
 import "./themes/brilliance-black";
 import "./themes/brilliance-dull";
+import "./themes/catppuccin-frappe";
+import "./themes/catppuccin-latte";
+import "./themes/catppuccin-macchiato";
+import "./themes/catppuccin-mocha";
 import "./themes/choco";
 import "./themes/claire";
 import "./themes/classic-modified";
 import "./themes/close_to_the_sea";
-import "./themes/clouds";
 import "./themes/clouds-midnight";
+import "./themes/clouds";
 import "./themes/coal-graal";
 import "./themes/cobalt";
 import "./themes/coda";
@@ -85,8 +90,8 @@ import "./themes/cool-glow";
 import "./themes/creeper";
 import "./themes/cssedit";
 import "./themes/daniel-fischer";
-import "./themes/dawn";
 import "./themes/dawn-mod1";
+import "./themes/dawn";
 import "./themes/deluxe";
 import "./themes/django-dark";
 import "./themes/django-smoothy";
@@ -94,16 +99,16 @@ import "./themes/dominion-day";
 import "./themes/eiffel";
 import "./themes/emacs-strict";
 import "./themes/erebus";
-import "./themes/espresso";
 import "./themes/espresso-libre";
 import "./themes/espresso-tutti";
+import "./themes/espresso";
 import "./themes/fade-to-grey";
 import "./themes/fake";
 import "./themes/fluidvision";
 import "./themes/forlatex";
-import "./themes/freckle";
 import "./themes/freckle-mod1";
 import "./themes/freckle-mod2";
+import "./themes/freckle";
 import "./themes/friendship-bracelet";
 import "./themes/funky_dashboard";
 import "./themes/github";
@@ -131,31 +136,31 @@ import "./themes/mac-classic";
 import "./themes/made-of-code";
 import "./themes/magicwb-amiga";
 import "./themes/menage-a-trois";
-import "./themes/merbivore";
 import "./themes/merbivore-soft";
+import "./themes/merbivore";
 import "./themes/midnight";
 import "./themes/minimal-theme";
 import "./themes/monoindustrial";
-import "./themes/monokai";
 import "./themes/monokai-dark";
-import "./themes/monokai-for-textmaters-custom";
 import "./themes/monokai-for-textmaters-custom-philtr";
-import "./themes/monokai-mod";
+import "./themes/monokai-for-textmaters-custom";
 import "./themes/monokai-mod-1";
 import "./themes/monokai-mod-seangaffney";
+import "./themes/monokai-mod";
+import "./themes/monokai";
 import "./themes/multimarkdown";
 import "./themes/notebook";
 import "./themes/notepad2";
 import "./themes/offy";
 import "./themes/pastels-on-dark";
 import "./themes/pastie";
-import "./themes/pengwynn";
 import "./themes/pengwynn-menlo";
+import "./themes/pengwynn";
 import "./themes/plum-dumb";
 import "./themes/putty";
 import "./themes/rails-envy";
-import "./themes/railscasts";
 import "./themes/railscasts-boost";
+import "./themes/railscasts";
 import "./themes/rdark";
 import "./themes/resesif";
 import "./themes/ruby-blue";
@@ -178,27 +183,27 @@ import "./themes/sunburst";
 import "./themes/sweyla650478";
 import "./themes/sweyla674314";
 import "./themes/swyphs-ii";
-import "./themes/tango";
 import "./themes/tango-in-twilight";
+import "./themes/tango";
 import "./themes/tek";
-import "./themes/text-ex-machina";
 import "./themes/text-ex-machina-lighter-comments";
-import "./themes/tomorrow";
-import "./themes/tomorrow-night";
+import "./themes/text-ex-machina";
 import "./themes/tomorrow-night-blue";
 import "./themes/tomorrow-night-bright";
 import "./themes/tomorrow-night-eighties";
+import "./themes/tomorrow-night";
+import "./themes/tomorrow";
 import "./themes/tubster";
-import "./themes/twilight";
 import "./themes/twilight-bright";
 import "./themes/twilight-remix";
+import "./themes/twilight";
 import "./themes/upstream-sunburst";
 import "./themes/upstream-vibrant";
 import "./themes/venom";
 import "./themes/vibrant-fin";
-import "./themes/vibrant-ink";
 import "./themes/vibrant-ink-choppednscrewed";
 import "./themes/vibrant-ink-remix";
+import "./themes/vibrant-ink";
 import "./themes/vibrant-tango";
 import "./themes/vintage-aurora";
 import "./themes/whys-poignant";
@@ -206,7 +211,6 @@ import "./themes/zachstronaut-theme-41";
 import "./themes/zenburn";
 import "./themes/zenburnesque";
 // === END 社区主题 ===
-
 export const AceLightThemesList = [
 	"chrome",
 	"cloud_editor",
@@ -262,6 +266,7 @@ export const AceLightThemesList = [
 	"tango",
 	"twilight-bright",
 	"whys-poignant",
+	"catppuccin-latte",
 ];
 export type AceLightThemes = (typeof AceLightThemesList)[number];
 
@@ -406,6 +411,9 @@ export const AceDarkThemesList = [
 	"zenburn",
 	"zenburnesque",
 	"argonaut",
+	"catppuccin-frappe",
+	"catppuccin-macchiato",
+	"catppuccin-mocha",
 ];
 export type AceDarkThemes = (typeof AceDarkThemesList)[number];
 
