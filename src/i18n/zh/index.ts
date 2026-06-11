@@ -80,6 +80,7 @@ const zh = {
 			session: "会话",
 			editor: "编辑",
 			extend: "扩展",
+			remote: "远程",
 			about: "关于",
 		},
 		desc: "查看<a href='https://docs.ravenhogwarts.top/obsidian-ace-code-editor/' target='_blank'>wiki文档</a>了解更多功能",
@@ -154,6 +155,12 @@ const zh = {
 				always: "始终显示",
 				on_hover: "悬停时显示",
 				hidden: "隐藏",
+			},
+		},
+		remote: {
+			enabled: {
+				name: "启用远程代码嵌入",
+				desc: "从远程 URL（如 GitHub blob 页面）嵌入代码到笔记中",
 			},
 		},
 		about: {

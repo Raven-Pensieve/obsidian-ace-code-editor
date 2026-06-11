@@ -627,6 +627,27 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 		);
 	}, [settings, app]);
 
+	const RemoteSettings = useMemo(() => {
+		return (
+			<>
+				<SettingsItem
+					name={LL.setting.remote.enabled.name()}
+					desc={LL.setting.remote.enabled.desc()}
+				>
+					<Toggle
+						checked={settings.remoteEmbed.enabled}
+						onChange={(value) =>
+							settingsStore.updateSettingByPath("remoteEmbed", {
+								...settings.remoteEmbed,
+								enabled: value,
+							})
+						}
+					/>
+				</SettingsItem>
+			</>
+		);
+	}, [settings, settingsStore]);
+
 	const AboutSettings = useMemo(() => {
 		return (
 			<>
@@ -752,6 +773,11 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				content: ExtendSettings,
 			},
 			{
+				id: "remote",
+				title: LL.setting.tabs.remote(),
+				content: RemoteSettings,
+			},
+			{
 				id: "about",
 				title: LL.setting.tabs.about(),
 				content: AboutSettings,
@@ -762,6 +788,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 			SessionSettings,
 			EditorSettings,
 			ExtendSettings,
+			RemoteSettings,
 			AboutSettings,
 		],
 	);

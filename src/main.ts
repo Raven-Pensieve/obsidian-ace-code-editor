@@ -14,6 +14,7 @@ import { EditCodeBlock } from "./component/modal/EditCodeBlockModal";
 import { QuickConfigModal } from "./component/suggest/QuickConfigModal";
 import { SettingsBus } from "./hooks/useSettings";
 import { LL } from "./i18n/i18n";
+import { isRemoteUrl, readFromUrl } from "./service/remote/RemoteManager";
 import SettingsStore from "./settings/SettingsStore";
 import AceCodeEditorSettingTab from "./settings/SettingsTab";
 import { EmbedCreator } from "./type/obsidian-extend";
@@ -29,6 +30,7 @@ import { getCodeBlockAtCursor, updateCodeBlock } from "./utils/CodeBlock";
 import { SnippetUtils } from "./utils/SnippetUtils";
 import { CodeEditorView } from "./view/CodeEditorView";
 import { CodeEmbedView } from "./view/CodeEmbedView";
+import { RemoteEmbedView } from "./view/RemoteEmbedView";
 import { SettingsView } from "./view/SettingsView";
 import { SnippetsEditorView } from "./view/SnippetsEditorView";
 
@@ -126,9 +128,9 @@ export default class AceCodeEditorPlugin extends Plugin {
 	}
 
 	private registerMarkdownProcessor() {
-		// 注册markdown后处理器，用于处理带行范围的双链
+		// 注册markdown后处理器，用于处理带行范围的双链和远程代码嵌入
 		this.registerMarkdownPostProcessor((element, context) => {
-			// 查找所有的内部链接
+			// ─── 本地文件的行范围嵌入 ───
 			const links = element.querySelectorAll("a.internal-link");
 
 			links.forEach((link: HTMLAnchorElement) => {
@@ -170,13 +172,89 @@ export default class AceCodeEditorPlugin extends Plugin {
 				// 替换原链接
 				link.replaceWith(embedContainer);
 
-				// 加载嵌入视图
-				embedView.onload();
+				// 注册到 markdown 渲染上下文，确保自动清理
+				context.addChild(embedView);
+			});
+
+			// ─── 远程代码嵌入 ───
+			if (!this.settings.remoteEmbed?.enabled) return;
+
+			const embeds = element.querySelectorAll(".internal-embed");
+
+			embeds.forEach((embed: HTMLElement) => {
+				const src = embed.getAttribute("src");
+				if (!src) return;
+
+				// 已处理的跳过
+				if (embed.classList.contains("ace-remote-processed")) return;
+
+				// 仅处理远程 URL
+				if (!isRemoteUrl(src)) return;
+
+				// 提取 subpath（#L 部分）
+				let cleanSrc = src;
+				let subpath = "";
+				const hashIndex = src.lastIndexOf("#");
+				if (hashIndex !== -1) {
+					const afterHash = src.substring(hashIndex + 1);
+					if (/^L\d+(-L\d+)?$/i.test(afterHash)) {
+						subpath = afterHash;
+						cleanSrc = src.substring(0, hashIndex);
+					}
+				}
+
+				embed.classList.add("ace-remote-processed");
+				embed.empty();
+
+				// 构建异步加载函数
+				const loadFn = async () => {
+					const result = await readFromUrl(cleanSrc);
+					if (!result.success) {
+						throw new Error(
+							result.error || "Failed to load remote file",
+						);
+					}
+					return {
+						content: result.content!,
+						extension: result.extension || "txt",
+						sourceUrl: cleanSrc,
+					};
+				};
+
+				const remoteView = new RemoteEmbedView(
+					this,
+					embed,
+					loadFn,
+					subpath,
+				);
+				// 注册到 markdown 渲染上下文，确保文档重新渲染时自动清理
+				context.addChild(remoteView);
 			});
 		});
 	}
 
 	private registerEventHandlers() {
+		// 拦截远程链接的点击，阻止 Obsidian 将其当作本地文件路径解析
+		this.registerDomEvent(
+			document.body,
+			"click",
+			(evt) => {
+				const target = evt.target as HTMLElement;
+				const link = target.closest(
+					"a.internal-link",
+				) as HTMLAnchorElement | null;
+				if (!link) return;
+
+				const href = link.getAttribute("href");
+				if (href && isRemoteUrl(href)) {
+					evt.preventDefault();
+					evt.stopPropagation();
+					window.open(href, "_blank");
+				}
+			},
+			true,
+		);
+
 		this.registerEvent(
 			this.app.workspace.on("file-menu", this.handleFileMenu.bind(this)),
 		);

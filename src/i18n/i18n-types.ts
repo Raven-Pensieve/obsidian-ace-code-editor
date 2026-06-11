@@ -284,6 +284,10 @@ type RootTranslation = {
 			 */
 			extend: string
 			/**
+			 * 远​程
+			 */
+			remote: string
+			/**
 			 * 关​于
 			 */
 			about: string
@@ -474,6 +478,18 @@ type RootTranslation = {
 				 * 隐​藏
 				 */
 				hidden: string
+			}
+		}
+		remote: {
+			enabled: {
+				/**
+				 * 启​用​远​程​代​码​嵌​入
+				 */
+				name: string
+				/**
+				 * 从​远​程​ ​U​R​L​（​如​ ​G​i​t​H​u​b​ ​b​l​o​b​ ​页​面​）​嵌​入​代​码​到​笔​记​中
+				 */
+				desc: string
 			}
 		}
 		about: {
@@ -807,6 +823,10 @@ export type TranslationFunctions = {
 			 */
 			extend: () => LocalizedString
 			/**
+			 * 远程
+			 */
+			remote: () => LocalizedString
+			/**
 			 * 关于
 			 */
 			about: () => LocalizedString
@@ -997,6 +1017,18 @@ export type TranslationFunctions = {
 				 * 隐藏
 				 */
 				hidden: () => LocalizedString
+			}
+		}
+		remote: {
+			enabled: {
+				/**
+				 * 启用远程代码嵌入
+				 */
+				name: () => LocalizedString
+				/**
+				 * 从远程 URL（如 GitHub blob 页面）嵌入代码到笔记中
+				 */
+				desc: () => LocalizedString
 			}
 		}
 		about: {
