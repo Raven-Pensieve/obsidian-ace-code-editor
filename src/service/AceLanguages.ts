@@ -17,6 +17,7 @@
 // import "ace-builds/src-noconflict/mode-batchfile";
 // import "ace-builds/src-noconflict/mode-bibtex";
 // import "ace-builds/src-noconflict/mode-c9search";
+// import "ace-builds/src-noconflict/mode-c_cpp";
 // import "ace-builds/src-noconflict/mode-cirru";
 // import "ace-builds/src-noconflict/mode-clojure";
 // import "ace-builds/src-noconflict/mode-cobol";
@@ -32,7 +33,6 @@
 // import "ace-builds/src-noconflict/mode-csv";
 // import "ace-builds/src-noconflict/mode-curly";
 // import "ace-builds/src-noconflict/mode-cuttlefish";
-// import "ace-builds/src-noconflict/mode-c_cpp";
 // import "ace-builds/src-noconflict/mode-d";
 // import "ace-builds/src-noconflict/mode-dart";
 // import "ace-builds/src-noconflict/mode-diff";
