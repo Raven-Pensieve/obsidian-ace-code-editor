@@ -2,13 +2,12 @@ import { useSettings } from "@src/hooks/useSettings";
 import AceCodeEditorPlugin from "@src/main";
 import { getLanguageMode } from "@src/service/AceLanguages";
 import { AceService } from "@src/service/AceService";
-import { AcePluginComponent } from "@src/type/component";
 import { Embed } from "@src/type/obsidian-extend";
 import { LineRange } from "@src/type/types";
 import { parseLinkWithRange } from "@src/utils/LineRange";
 import { Ace } from "ace-builds";
 import { Maximize2 } from "lucide-react";
-import { TFile } from "obsidian";
+import { MarkdownRenderChild, TFile } from "obsidian";
 import {
 	createElement,
 	useCallback,
@@ -137,8 +136,8 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 	);
 };
 
-export class CodeEmbedView extends AcePluginComponent implements Embed {
-	private contentEl: HTMLElement;
+export class CodeEmbedView extends MarkdownRenderChild implements Embed {
+	plugin: AceCodeEditorPlugin;
 	private root: Root | null = null;
 	private file: TFile;
 	private subpath: string;
@@ -150,8 +149,8 @@ export class CodeEmbedView extends AcePluginComponent implements Embed {
 		file: TFile,
 		subpath: string,
 	) {
-		super(plugin);
-		this.contentEl = containerEl;
+		super(containerEl);
+		this.plugin = plugin;
 		this.file = file;
 		this.subpath = subpath;
 
@@ -164,14 +163,14 @@ export class CodeEmbedView extends AcePluginComponent implements Embed {
 
 	async onload() {
 		super.onload();
-		this.contentEl.addClass("ace-embed-view");
+		this.containerEl.addClass("ace-embed-view");
 
 		// 如果有行范围，添加特殊样式
 		if (this.range) {
-			this.contentEl.addClass("line-range");
+			this.containerEl.addClass("line-range");
 		}
 
-		this.root = createRoot(this.contentEl);
+		this.root = createRoot(this.containerEl);
 
 		await this.loadFile();
 	}

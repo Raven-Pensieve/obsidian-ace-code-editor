@@ -81,6 +81,7 @@ const zh_TW = {
 			session: "會話",
 			editor: "編輯",
 			extend: "擴展",
+			remote: "遠端",
 			about: "關於",
 		},
 		desc: "查看<a href='https://docs.ravenhogwarts.top/obsidian-ace-code-editor/' target='_blank'>wiki文件</a>了解更多功能",
@@ -155,6 +156,12 @@ const zh_TW = {
 				always: "始終顯示",
 				on_hover: "懸停時顯示",
 				hidden: "隱藏",
+			},
+		},
+		remote: {
+			enabled: {
+				name: "啟用遠端程式碼嵌入",
+				desc: "從遠端 URL（如 GitHub blob 頁面）嵌入程式碼到筆記中",
 			},
 		},
 		about: {

@@ -84,6 +84,7 @@ const en = {
 			session: "Session",
 			editor: "Editor",
 			extend: "Extend",
+			remote: "Remote",
 			about: "About",
 		},
 		desc: "View <a href='https://docs.ravenhogwarts.top/en/obsidian-ace-code-editor/' target='_blank'>wiki documentation</a> to learn more features",
@@ -158,6 +159,12 @@ const en = {
 				always: "Always show",
 				on_hover: "Show on hover",
 				hidden: "Hidden",
+			},
+		},
+		remote: {
+			enabled: {
+				name: "Enable remote code embedding",
+				desc: "Embed code from remote URLs (e.g. GitHub blob pages) in your notes",
 			},
 		},
 		about: {

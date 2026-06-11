@@ -3,6 +3,7 @@ import {
 	AceKeyboard,
 	AceLightThemes,
 } from "@src/service/AceThemes";
+import { DEFAULT_REMOTE_SETTINGS, RemoteEmbedSettings } from "@src/type/remote";
 
 export const CODE_EDITOR_VIEW_TYPE = "ace-code-editor";
 export const SNIPPETS_EDITOR_VIEW_TYPE = "ace-snippets-editor";
@@ -31,6 +32,7 @@ export interface ICodeEditorConfig {
 		enabled: boolean;
 		mode: "always" | "hover";
 	};
+	remoteEmbed: RemoteEmbedSettings;
 }
 
 export const DEFAULT_CONFIG: ICodeEditorConfig = {
@@ -56,6 +58,7 @@ export const DEFAULT_CONFIG: ICodeEditorConfig = {
 		enabled: true,
 		mode: "always",
 	},
+	remoteEmbed: DEFAULT_REMOTE_SETTINGS,
 };
 
 export interface ICodeBlock {
