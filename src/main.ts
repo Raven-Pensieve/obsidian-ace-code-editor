@@ -33,9 +33,13 @@ export default class AceCodeEditorPlugin extends Plugin {
 	private snippetsFolder: string = SnippetUtils.getSnippetsFolder(this.app);
 
 	async onload() {
-		await this.aceRuntime.initAceModeBasePath();
-
 		await this.loadSettings();
+
+		this.aceRuntime.onSaveState(async (value) => {
+			this.settings.useLocalAce = value;
+			await this.saveSettings();
+		});
+		await this.aceRuntime.initAceModeBasePath(this.settings.useLocalAce);
 
 		this.registerLeafViews();
 		new MarkdownEmbedProcessor(this).register();

@@ -8,14 +8,12 @@ import usePluginSettings from "@src/hooks/usePluginSettings";
 import useSettingsStore from "@src/hooks/useSettingsStore";
 import { LL } from "@src/i18n/i18n";
 import { languageModeMap } from "@src/service/AceLanguages";
-import { AceRuntimeManager } from "@src/service/AceRuntimeManager";
 import {
 	AceDarkThemesList,
 	AceKeyboardList,
 	AceLightThemesList,
 } from "@src/service/AceThemes";
 import "@styles/styles";
-import * as ace from "ace-builds";
 import parse from "html-react-parser";
 import { Notice, Platform } from "obsidian";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -255,7 +253,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 
 	const [modesStatus, setModesStatus] = useState<
 		"checking" | "local" | "cdn" | "downloading" | "done"
-	>("checking");
+	>(() => (settings.useLocalAce ? "local" : "cdn"));
 	const [progress, setProgress] = useState({ current: 0, total: 0 });
 	const [fileStats, setFileStats] = useState({
 		modes: 0,
@@ -263,14 +261,6 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 		snippets: 0,
 		keybindings: 0,
 	});
-
-	useEffect(() => {
-		(async () => {
-			const exists =
-				await settingsStore.plugin.aceRuntime.checkAceModesExist();
-			setModesStatus(exists ? "local" : "cdn");
-		})();
-	}, []);
 
 	const handleDownload = useCallback(async () => {
 		setModesStatus("downloading");
@@ -297,13 +287,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 	}, []);
 
 	const handleSwitchToCdn = useCallback(async () => {
-		const cdn = `https://cdn.jsdelivr.net/npm/ace-builds@${AceRuntimeManager.ACE_VERSION}/src-noconflict`;
-		// 清除自定义 loader（直接操作内部存储，绕过 key 校验）
-		const aceConfig = ace.config as any;
-		if (aceConfig.$values) delete aceConfig.$values.loader;
-		ace.config.set("modePath", cdn);
-		ace.config.set("workerPath", cdn);
-		ace.config.set("basePath", cdn);
+		await settingsStore.plugin.aceRuntime.switchToCdn();
 		setModesStatus("cdn");
 	}, []);
 
@@ -663,18 +647,16 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				<SettingsItem
 					name={LL.setting.about.runtime_files()}
 					desc={
-						modesStatus === "checking"
-							? LL.setting.about.checking()
-							: modesStatus === "local"
-								? LL.setting.about.local_installed()
-								: modesStatus === "cdn"
-									? LL.setting.about.cdn_loading()
-									: modesStatus === "downloading"
-										? LL.setting.about.downloading({
-												current: progress.current,
-												total: progress.total,
-											})
-										: LL.setting.about.download_done()
+						modesStatus === "local"
+							? LL.setting.about.local_installed()
+							: modesStatus === "cdn"
+								? LL.setting.about.cdn_loading()
+								: modesStatus === "downloading"
+									? LL.setting.about.downloading({
+											current: progress.current,
+											total: progress.total,
+										})
+									: LL.setting.about.download_done()
 					}
 				>
 					{modesStatus === "cdn" && (

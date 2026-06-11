@@ -33,6 +33,8 @@ export interface ICodeEditorConfig {
 		mode: "always" | "hover";
 	};
 	remoteEmbed: RemoteEmbedSettings;
+	/** Ace 运行时加载模式：true=本地, false=CDN */
+	useLocalAce: boolean;
 }
 
 export const DEFAULT_CONFIG: ICodeEditorConfig = {
@@ -59,6 +61,7 @@ export const DEFAULT_CONFIG: ICodeEditorConfig = {
 		mode: "always",
 	},
 	remoteEmbed: DEFAULT_REMOTE_SETTINGS,
+	useLocalAce: false,
 };
 
 export interface ICodeBlock {
