@@ -1,0 +1,80 @@
+import * as ace from "ace-builds";
+
+const cssText = `
+.ace-lazy .ace_gutter {
+  background: #FFFFFF;
+  color: rgb(128, 128, 128);
+}
+
+.ace-lazy .ace_print-margin {
+  width: 1px;
+  background: #e8e8e8;
+}
+
+.ace-lazy {
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+.ace-lazy .ace_cursor {
+  color: #7C7C7C;
+}
+
+.ace-lazy .ace_marker-layer .ace_selection {
+  background: #E3FC8D;
+}
+
+.ace-lazy.ace_multiselect .ace_selection.ace_start {
+  box-shadow: 0 0 3px 0px #FFFFFF;
+  border-radius: 2px;
+}
+
+.ace-lazy .ace_marker-layer .ace_step {
+  background: rgb(198, 219, 174);
+}
+
+.ace-lazy .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid #B6B6B6;
+}
+
+.ace-lazy .ace_marker-layer .ace_active-line {
+  background: rgba(239, 252, 166, 0.56);
+}
+
+.ace-lazy .ace_gutter-active-line {
+  background-color: rgba(239, 252, 166, 0.56);
+}
+
+.ace-lazy .ace_marker-layer .ace_selected-word {
+  border: 1px solid #E3FC8D;
+}
+
+.ace-lazy .ace_fold {
+    background-color: #FF7800;
+    border-color: #000000;
+}
+.ace-lazy .ace_keyword{color:#FF7800;}
+.ace-lazy .ace_constant{color:#3B5BB5;}
+.ace-lazy .ace_support{color:#3B5BB5;}
+.ace-lazy .ace_storage{color:#FF7800;}
+.ace-lazy .ace_invalid.ace_illegal{color:#F8F8F8;
+background-color:#9D1E15;}
+.ace-lazy .ace_invalid.ace_deprecated{font-style:italic;
+color:#990000;}
+.ace-lazy .ace_string{color:#409B1C;}
+.ace-lazy .ace_comment{color:#8C868F;}
+.ace-lazy .ace_meta.ace_tag{color:#3A4A64;}
+`;
+
+(ace as any).define("ace/theme/lazy-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+	module.exports = cssText;
+});
+
+(ace as any).define("ace/theme/lazy", ["require", "exports", "module", "ace/theme/lazy-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+	exports.isDark = false;
+	exports.cssClass = "ace-lazy";
+	exports.cssText = require("./lazy-css");
+	var dom = require("../lib/dom");
+	dom.importCssString(exports.cssText, exports.cssClass, false);
+});

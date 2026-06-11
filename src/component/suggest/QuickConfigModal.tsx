@@ -29,21 +29,21 @@ export class QuickConfigModal {
 				displayName: LL.setting.lightTheme.name(),
 				description: LL.setting.lightTheme.desc(),
 				currentValue: this.settings.lightTheme,
-				options: AceLightThemesList,
+				options: [...AceLightThemesList].sort(),
 			},
 			{
 				key: "darkTheme",
 				displayName: LL.setting.darkTheme.name(),
 				description: LL.setting.darkTheme.desc(),
 				currentValue: this.settings.darkTheme,
-				options: AceDarkThemesList,
+				options: [...AceDarkThemesList].sort(),
 			},
 			{
 				key: "keyboard",
 				displayName: LL.setting.keyboard.name(),
 				description: LL.setting.keyboard.desc(),
 				currentValue: this.settings.keyboard,
-				options: AceKeyboardList,
+				options: [...AceKeyboardList].sort(),
 			},
 		];
 
