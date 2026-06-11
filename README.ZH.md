@@ -39,7 +39,15 @@
 
 ## 许可证
 
-此项目基于 MIT LICENSE 许可 - 详情请参阅 [LICENSE](LICENSE) 文件。
+此项目基于 GPL-3.0 LICENSE 许可 - 详情请参阅 [LICENSE](LICENSE) 文件。
+
+## 致谢
+
+本项目参考或使用了以下项目的代码和想法：
+
+- [Ace Editor](https://github.com/ajaxorg/ace)
+- [TextMate Themes](https://github.com/filmgirl/TextMate-Themes)
+- [Obsidian Import Code](https://github.com/yu4n2h1/obsidian-import-code)
 
 ## Star 历史
 

@@ -38,7 +38,7 @@ An enhanced code editor using Ace editor, providing syntax highlighting, code fo
 
 ## License
 
-This project is licensed under the MIT LICENSE - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 LICENSE - see the [LICENSE](LICENSE) file for details.
 
 ## Star History
 
