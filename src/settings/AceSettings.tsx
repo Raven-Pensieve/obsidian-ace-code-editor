@@ -7,8 +7,8 @@ import { Toggle } from "@src/component/toggle/Toggle";
 import usePluginSettings from "@src/hooks/usePluginSettings";
 import useSettingsStore from "@src/hooks/useSettingsStore";
 import { LL } from "@src/i18n/i18n";
-import AceCodeEditorPlugin from "@src/main";
 import { languageModeMap } from "@src/service/AceLanguages";
+import { AceRuntimeManager } from "@src/service/AceRuntimeManager";
 import {
 	AceDarkThemesList,
 	AceKeyboardList,
@@ -266,7 +266,8 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 
 	useEffect(() => {
 		(async () => {
-			const exists = await settingsStore.plugin.checkAceModesExist();
+			const exists =
+				await settingsStore.plugin.aceRuntime.checkAceModesExist();
 			setModesStatus(exists ? "local" : "cdn");
 		})();
 	}, []);
@@ -275,16 +276,19 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 		setModesStatus("downloading");
 		setProgress({ current: 0, total: 0 });
 		try {
-			const files = await settingsStore.plugin.fetchAceBuildFiles();
+			const files =
+				await settingsStore.plugin.aceRuntime.fetchAceBuildFiles();
 			setFileStats({
 				modes: files.modes.length,
 				workers: files.workers.length,
 				snippets: files.snippetFiles.length,
 				keybindings: files.keybindings.length,
 			});
-			await settingsStore.plugin.downloadAceModes((current, total) => {
-				setProgress({ current, total });
-			});
+			await settingsStore.plugin.aceRuntime.downloadAceModes(
+				(current, total) => {
+					setProgress({ current, total });
+				},
+			);
 			setModesStatus("done");
 		} catch (e) {
 			console.error("下载失败:", e);
@@ -293,7 +297,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 	}, []);
 
 	const handleSwitchToCdn = useCallback(async () => {
-		const cdn = `https://cdn.jsdelivr.net/npm/ace-builds@${AceCodeEditorPlugin.ACE_VERSION}/src-noconflict`;
+		const cdn = `https://cdn.jsdelivr.net/npm/ace-builds@${AceRuntimeManager.ACE_VERSION}/src-noconflict`;
 		// 清除自定义 loader（直接操作内部存储，绕过 key 校验）
 		const aceConfig = ace.config as any;
 		if (aceConfig.$values) delete aceConfig.$values.loader;
