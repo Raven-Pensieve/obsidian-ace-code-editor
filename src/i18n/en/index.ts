@@ -28,6 +28,8 @@ const en = {
 		rename_file_success: "File renamed successfully, {path:string}",
 		create_file_success: "File created successfully, {path:string}",
 		file_deleted: "File {fileName:string} has been deleted",
+		system_fonts_failed:
+			"Unable to get system fonts, loaded basic font list",
 	},
 	view: {
 		snippets: {
@@ -157,6 +159,23 @@ const en = {
 				on_hover: "Show on hover",
 				hidden: "Hidden",
 			},
+		},
+		about: {
+			runtime_files: "Ace Runtime Files",
+			checking: "Checking local runtime environment...",
+			local_installed: "✔ Local runtime installed, available offline",
+			cdn_loading:
+				"Currently loading from CDN. Download locally for a better experience",
+			downloading: "Downloading {current:number}/{total:number}",
+			download_done: "✔ Download complete, switched to local loading",
+			download_btn: "Download locally (mode + worker + snippets ~8MB)",
+			redownload: "Re-download",
+			switch_cdn: "Switch to CDN",
+			installed: "✔ Installed",
+			modes_count: "{count:number} language modes",
+			workers_count: "{count:number} workers",
+			keybindings_count: "{count:number} keybindings",
+			snippets_count: "{count:number} snippets",
 		},
 	},
 } satisfies BaseTranslation;

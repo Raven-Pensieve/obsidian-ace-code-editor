@@ -27,6 +27,7 @@ const zh_TW = {
 		rename_file_success: "檔案重新命名成功，{path:string}",
 		create_file_success: "檔案創建成功，{path:string}",
 		file_deleted: "檔案 {fileName:string} 已刪除",
+		system_fonts_failed: "無法取得系統字體，已載入基礎字體列表",
 	},
 	view: {
 		snippets: {
@@ -155,6 +156,23 @@ const zh_TW = {
 				on_hover: "懸停時顯示",
 				hidden: "隱藏",
 			},
+		},
+		about: {
+			runtime_files: "Ace 執行時檔案",
+			checking: "正在檢查本機執行環境...",
+			local_installed: "✔ 已安裝本機執行時，可離線使用",
+			cdn_loading:
+				"目前使用 CDN 線上載入，建議下載到本機以獲得更好的體驗",
+			downloading: "正在下載 {current:number}/{total:number}",
+			download_done: "✔ 下載完成，已切換為本機載入",
+			download_btn: "下載到本機（mode + worker + snippets ~8MB）",
+			redownload: "重新下載",
+			switch_cdn: "切換為 CDN",
+			installed: "✔ 已安裝",
+			modes_count: "{count:number} 個語言模式",
+			workers_count: "{count:number} 個 worker",
+			keybindings_count: "{count:number} 個鍵盤綁定",
+			snippets_count: "{count:number} 個程式碼片段",
 		},
 	},
 } satisfies BaseTranslation;

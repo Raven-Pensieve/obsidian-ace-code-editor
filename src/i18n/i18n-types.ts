@@ -107,6 +107,10 @@ type RootTranslation = {
 		 * @param {string} fileName
 		 */
 		file_deleted: RequiredParams<'fileName'>
+		/**
+		 * 无​法​获​取​系​统​字​体​，​已​加​载​基​础​字​体​列​表
+		 */
+		system_fonts_failed: string
 	}
 	view: {
 		snippets: {
@@ -472,6 +476,70 @@ type RootTranslation = {
 				hidden: string
 			}
 		}
+		about: {
+			/**
+			 * A​c​e​ ​运​行​时​文​件
+			 */
+			runtime_files: string
+			/**
+			 * 正​在​检​查​本​地​运​行​环​境​.​.​.
+			 */
+			checking: string
+			/**
+			 * ✔​ ​已​安​装​本​地​运​行​时​，​可​离​线​使​用
+			 */
+			local_installed: string
+			/**
+			 * 当​前​使​用​ ​C​D​N​ ​在​线​加​载​，​建​议​下​载​到​本​地​以​获​得​更​好​的​体​验
+			 */
+			cdn_loading: string
+			/**
+			 * 正​在​下​载​ ​{​c​u​r​r​e​n​t​}​/​{​t​o​t​a​l​}
+			 * @param {number} current
+			 * @param {number} total
+			 */
+			downloading: RequiredParams<'current' | 'total'>
+			/**
+			 * ✔​ ​下​载​完​成​，​已​切​换​为​本​地​加​载
+			 */
+			download_done: string
+			/**
+			 * 下​载​到​本​地​（​m​o​d​e​ ​+​ ​w​o​r​k​e​r​ ​+​ ​s​n​i​p​p​e​t​s​ ​~​8​M​B​）
+			 */
+			download_btn: string
+			/**
+			 * 重​新​下​载
+			 */
+			redownload: string
+			/**
+			 * 切​换​为​ ​C​D​N
+			 */
+			switch_cdn: string
+			/**
+			 * ✔​ ​已​安​装
+			 */
+			installed: string
+			/**
+			 * {​c​o​u​n​t​}​ ​个​语​言​模​式
+			 * @param {number} count
+			 */
+			modes_count: RequiredParams<'count'>
+			/**
+			 * {​c​o​u​n​t​}​ ​个​ ​w​o​r​k​e​r
+			 * @param {number} count
+			 */
+			workers_count: RequiredParams<'count'>
+			/**
+			 * {​c​o​u​n​t​}​ ​个​键​盘​绑​定
+			 * @param {number} count
+			 */
+			keybindings_count: RequiredParams<'count'>
+			/**
+			 * {​c​o​u​n​t​}​ ​个​代​码​片​段
+			 * @param {number} count
+			 */
+			snippets_count: RequiredParams<'count'>
+		}
 	}
 }
 
@@ -565,6 +633,10 @@ export type TranslationFunctions = {
 		 * 文件 {fileName} 已删除
 		 */
 		file_deleted: (arg: { fileName: string }) => LocalizedString
+		/**
+		 * 无法获取系统字体，已加载基础字体列表
+		 */
+		system_fonts_failed: () => LocalizedString
 	}
 	view: {
 		snippets: {
@@ -926,6 +998,64 @@ export type TranslationFunctions = {
 				 */
 				hidden: () => LocalizedString
 			}
+		}
+		about: {
+			/**
+			 * Ace 运行时文件
+			 */
+			runtime_files: () => LocalizedString
+			/**
+			 * 正在检查本地运行环境...
+			 */
+			checking: () => LocalizedString
+			/**
+			 * ✔ 已安装本地运行时，可离线使用
+			 */
+			local_installed: () => LocalizedString
+			/**
+			 * 当前使用 CDN 在线加载，建议下载到本地以获得更好的体验
+			 */
+			cdn_loading: () => LocalizedString
+			/**
+			 * 正在下载 {current}/{total}
+			 */
+			downloading: (arg: { current: number, total: number }) => LocalizedString
+			/**
+			 * ✔ 下载完成，已切换为本地加载
+			 */
+			download_done: () => LocalizedString
+			/**
+			 * 下载到本地（mode + worker + snippets ~8MB）
+			 */
+			download_btn: () => LocalizedString
+			/**
+			 * 重新下载
+			 */
+			redownload: () => LocalizedString
+			/**
+			 * 切换为 CDN
+			 */
+			switch_cdn: () => LocalizedString
+			/**
+			 * ✔ 已安装
+			 */
+			installed: () => LocalizedString
+			/**
+			 * {count} 个语言模式
+			 */
+			modes_count: (arg: { count: number }) => LocalizedString
+			/**
+			 * {count} 个 worker
+			 */
+			workers_count: (arg: { count: number }) => LocalizedString
+			/**
+			 * {count} 个键盘绑定
+			 */
+			keybindings_count: (arg: { count: number }) => LocalizedString
+			/**
+			 * {count} 个代码片段
+			 */
+			snippets_count: (arg: { count: number }) => LocalizedString
 		}
 	}
 }

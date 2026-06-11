@@ -1,0 +1,82 @@
+import * as ace from "ace-builds";
+
+const cssText = `
+.ace-idle .ace_gutter {
+  background: #FFFFFF;
+  color: rgb(128, 128, 128);
+}
+
+.ace-idle .ace_print-margin {
+  width: 1px;
+  background: #e8e8e8;
+}
+
+.ace-idle {
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+.ace-idle .ace_cursor {
+  color: #000000;
+}
+
+.ace-idle .ace_marker-layer .ace_selection {
+  background: #BAD6FD;
+}
+
+.ace-idle.ace_multiselect .ace_selection.ace_start {
+  box-shadow: 0 0 3px 0px #FFFFFF;
+  border-radius: 2px;
+}
+
+.ace-idle .ace_marker-layer .ace_step {
+  background: rgb(198, 219, 174);
+}
+
+.ace-idle .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid #BFBFBF;
+}
+
+.ace-idle .ace_marker-layer .ace_active-line {
+  background: rgba(0, 0, 0, 0.071);
+}
+
+.ace-idle .ace_gutter-active-line {
+  background-color: rgba(0, 0, 0, 0.071);
+}
+
+.ace-idle .ace_marker-layer .ace_selected-word {
+  border: 1px solid #BAD6FD;
+}
+
+.ace-idle .ace_fold {
+    background-color: #21439C;
+    border-color: #000000;
+}
+.ace-idle .ace_keyword{color:#FF5600;}
+.ace-idle .ace_constant.ace_language{color:#A535AE;}
+.ace-idle .ace_support.ace_function{color:#A535AE;}
+.ace-idle .ace_support.ace_constant{color:#A535AE;}
+.ace-idle .ace_support.ace_class{color:#A535AE;}
+.ace-idle .ace_support.ace_type{color:#A535AE;}
+.ace-idle .ace_storage{color:#FF5600;}
+.ace-idle .ace_invalid{color:#FFFFFF;
+background-color:#990000;}
+.ace-idle .ace_string{color:#00A33F;}
+.ace-idle .ace_comment{color:#919191;}
+.ace-idle .ace_variable{color:#21439C;}
+.ace-idle .ace_entity.ace_name.ace_function{color:#21439C;}
+`;
+
+(ace as any).define("ace/theme/idle-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+	module.exports = cssText;
+});
+
+(ace as any).define("ace/theme/idle", ["require", "exports", "module", "ace/theme/idle-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+	exports.isDark = false;
+	exports.cssClass = "ace-idle";
+	exports.cssText = require("./idle-css");
+	var dom = require("../lib/dom");
+	dom.importCssString(exports.cssText, exports.cssClass, false);
+});
