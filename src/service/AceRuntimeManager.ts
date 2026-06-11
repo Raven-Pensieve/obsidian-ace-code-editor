@@ -1,6 +1,20 @@
 import * as ace from "ace-builds";
 import { App, PluginManifest, requestUrl } from "obsidian";
 
+// 模块加载时立即设置 CDN 为默认路径，确保 Ace 动态加载（mode/theme/keybinding）在 onload 之前也能正确解析
+ace.config.set(
+	"modePath",
+	`https://cdn.jsdelivr.net/npm/ace-builds@1.44.0/src-noconflict`,
+);
+ace.config.set(
+	"workerPath",
+	`https://cdn.jsdelivr.net/npm/ace-builds@1.44.0/src-noconflict`,
+);
+ace.config.set(
+	"basePath",
+	`https://cdn.jsdelivr.net/npm/ace-builds@1.44.0/src-noconflict`,
+);
+
 export class AceRuntimeManager {
 	/** Ace 版本号（用于 CDN URL） */
 	static readonly ACE_VERSION = "1.44.0";
@@ -8,10 +22,18 @@ export class AceRuntimeManager {
 
 	private readonly app: App;
 	private readonly pluginId: string;
+	private onSaveUseLocalAce?: (value: boolean) => Promise<void>;
 
 	constructor(app: App, manifest: PluginManifest) {
 		this.app = app;
 		this.pluginId = manifest.id;
+	}
+
+	/**
+	 * 注册持久化回调，用于保存 useLocalAce 状态到 data.json
+	 */
+	onSaveState(callback: (value: boolean) => Promise<void>) {
+		this.onSaveUseLocalAce = callback;
 	}
 
 	/**
@@ -54,50 +76,67 @@ export class AceRuntimeManager {
 
 	/**
 	 * 初始化 Ace 运行时加载器
-	 * - 有本地包 → 注册自定义 loader 从 vault 读取文件
-	 * - 没有 → 用 jsDelivr CDN
+	 * - useLocalAce=true → 先验证本地文件存在，再注册自定义 loader
+	 * - useLocalAce=false → 用 jsDelivr CDN
+	 * - 验证结果会通过 onSaveState 持久化
 	 */
-	async initAceModeBasePath() {
-		const localExists = await this.checkAceModesExist();
-		if (localExists) {
-			// 注册自定义模块加载器：绕过 ace.config.set() 的 key 校验，直接写内部存储
-			const aceConfig = ace.config as any;
-			aceConfig.$values = aceConfig.$values || {};
-			aceConfig.$values.loader = async (
-				moduleName: string,
-				afterLoad: (err: Error | null, module?: unknown) => void,
-			) => {
-				try {
-					const parts = moduleName.split("/");
-					if (parts[0] !== "ace") {
-						afterLoad(null, undefined);
-						return;
-					}
-					const type = parts[1];
-					const name = parts.slice(2).join("-");
-					let filePath: string;
-					if (type === "worker") {
-						filePath = `${this.aceWorkersDir}/${type}-${name}.js`;
-					} else {
-						filePath = `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
-					}
-					const content = await this.app.vault.adapter.read(filePath);
-					const script = document.createElement("script");
-					script.textContent = content;
-					document.head.appendChild(script);
-					afterLoad(null, undefined);
-				} catch (e) {
-					console.warn(`Ace 模块加载失败: ${moduleName}`, e);
-					afterLoad(null, undefined);
-				}
-			};
-			console.log("Ace 运行时: 使用本地包");
+	async initAceModeBasePath(useLocalAce?: boolean) {
+		if (useLocalAce) {
+			const localExists = await this.checkAceModesExist();
+			if (localExists) {
+				this.setupLocalLoader();
+			} else {
+				// 本地文件丢失，回退 CDN 并更新状态
+				this.setupCdn();
+				await this.onSaveUseLocalAce?.(false);
+				return;
+			}
 		} else {
-			ace.config.set("modePath", AceRuntimeManager.ACE_CDN);
-			ace.config.set("workerPath", AceRuntimeManager.ACE_CDN);
-			ace.config.set("basePath", AceRuntimeManager.ACE_CDN);
-			console.log("Ace 运行时: 使用 CDN（可在设置中下载到本地）");
+			this.setupCdn();
+			return;
 		}
+		await this.onSaveUseLocalAce?.(true);
+	}
+
+	private setupLocalLoader() {
+		const aceConfig = ace.config as any;
+		aceConfig.$values = aceConfig.$values || {};
+		aceConfig.$values.loader = async (
+			moduleName: string,
+			afterLoad: (err: Error | null, module?: unknown) => void,
+		) => {
+			try {
+				const parts = moduleName.split("/");
+				if (parts[0] !== "ace") {
+					afterLoad(null, undefined);
+					return;
+				}
+				const type = parts[1];
+				const name = parts.slice(2).join("-");
+				let filePath: string;
+				if (type === "worker") {
+					filePath = `${this.aceWorkersDir}/${type}-${name}.js`;
+				} else {
+					filePath = `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
+				}
+				const content = await this.app.vault.adapter.read(filePath);
+				const script = document.createElement("script");
+				script.textContent = content;
+				document.head.appendChild(script);
+				afterLoad(null, undefined);
+			} catch (e) {
+				console.warn(`Ace 模块加载失败: ${moduleName}`, e);
+				afterLoad(null, undefined);
+			}
+		};
+		console.log("Ace 运行时: 使用本地包");
+	}
+
+	private setupCdn() {
+		ace.config.set("modePath", AceRuntimeManager.ACE_CDN);
+		ace.config.set("workerPath", AceRuntimeManager.ACE_CDN);
+		ace.config.set("basePath", AceRuntimeManager.ACE_CDN);
+		console.log("Ace 运行时: 使用 CDN（可在设置中下载到本地）");
 	}
 
 	/**
@@ -216,6 +255,17 @@ export class AceRuntimeManager {
 		}
 
 		// 下载完成后不再需要设置 modePath，自定义 loader 会从 vault 读取
+		await this.onSaveUseLocalAce?.(true);
 		console.log("Ace 运行时: 本地包下载完成");
+	}
+
+	/**
+	 * 切换到 CDN 模式并持久化状态
+	 */
+	async switchToCdn() {
+		const aceConfig = ace.config as any;
+		if (aceConfig.$values) delete aceConfig.$values.loader;
+		this.setupCdn();
+		await this.onSaveUseLocalAce?.(false);
 	}
 }
