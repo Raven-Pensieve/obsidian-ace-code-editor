@@ -1,3 +1,39 @@
+# [2.1.0](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.3...2.1.0) (2026-06-11)
+
+
+### ♻️ Refactor
+
+* 拆分 main 功能代码 ([dc9d3c7](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/dc9d3c741193667330f7aa8a0284767a3acb0add))
+
+
+### ✨ Features
+
+* 实现远程代码嵌入加载 ([e0f61a4](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/e0f61a4cbe404d881bf17d6590ef0c38359b8afc))
+* 增加 Catppuccin 四种主题 ([940b440](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/940b440d3386be51f59650219dc134e3c68bfc9f))
+* 增加本地加载语法包 ([8b9e186](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/8b9e1867b87ef0209638c563783e4971793f8874))
+* 增加更多的主题 ([5d6018a](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/5d6018aa95125b6ed63cafa0e045f94284d49c78))
+
+
+### 🐛 Bug Fixes
+
+* 修复自定义 loader 行为 ([c045347](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/c04534704de7636994ee05c1a50da8d656c6ed64))
+
+
+### 👷 Build
+
+* **deps:** bump fast-uri from 3.1.0 to 3.1.2 (#114) ([3eaeca7](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/3eaeca71a9be41d46bab19bf0f96b8f40d232f1c)), closes [#114](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/114)
+* **deps:** bump handlebars from 4.7.8 to 4.7.9 (#115) ([3b86d7f](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/3b86d7f95e10544fcc291feec16e17d124f19136)), closes [#115](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/115)
+
+
+### 📝 Documentation
+
+* 更新文档 ([396e354](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/396e354681194ace7130b440c6ec4c59f16d21dc))
+
+
+### 🔨 Chore
+
+* 将 TextMate-Themes 替换为 git submodule ([ad93bdb](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/ad93bdbbedb5015f7f310f901863ff252fc4faa2))
+* downgrade React to 18.3.1 (#116) ([b222646](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/b222646296afee45f84a017ae50f6ab6382f9164)), closes [#116](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/issues/116)
 ## [2.0.3](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.2...2.0.3) (2026-05-19)
 
 
