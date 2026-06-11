@@ -18,8 +18,8 @@ export class QuickConfigModal {
 		private app: App,
 		private settings: ICodeEditorConfig,
 		private updateSettings: (
-			newSettings: Partial<ICodeEditorConfig>
-		) => Promise<void>
+			newSettings: Partial<ICodeEditorConfig>,
+		) => Promise<void>,
 	) {}
 
 	public open(): void {
@@ -52,7 +52,7 @@ export class QuickConfigModal {
 			configOptions,
 			(option) => {
 				this.openValueSelector(option);
-			}
+			},
 		);
 
 		modal.modalEl.addClass("ace-quick-config-modal");
@@ -73,7 +73,7 @@ export class QuickConfigModal {
 				await this.updateSettings({
 					[option.key]: selectedValue.value,
 				});
-			}
+			},
 		);
 
 		modal.modalEl.addClass("ace-quick-config-modal");

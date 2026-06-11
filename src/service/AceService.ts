@@ -1,11 +1,10 @@
 import * as ace from "ace-builds";
-// import "ace-builds/esm-resolver";
 // 导入扩展
 import "./AceExtensions";
 // 导入语言包
 // import "./AceLanguages";
 // 导入主题
-// import "./AceThemes";
+import "./AceThemes";
 // 导入键盘绑定
 // import "ace-builds/src-noconflict/keybinding-emacs";
 // import "ace-builds/src-noconflict/keybinding-sublime";

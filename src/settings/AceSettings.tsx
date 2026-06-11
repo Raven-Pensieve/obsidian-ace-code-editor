@@ -7,15 +7,18 @@ import { Toggle } from "@src/component/toggle/Toggle";
 import usePluginSettings from "@src/hooks/usePluginSettings";
 import useSettingsStore from "@src/hooks/useSettingsStore";
 import { LL } from "@src/i18n/i18n";
+import AceCodeEditorPlugin from "@src/main";
 import { languageModeMap } from "@src/service/AceLanguages";
 import {
 	AceDarkThemesList,
 	AceKeyboardList,
 	AceLightThemesList,
 } from "@src/service/AceThemes";
+import "@styles/styles";
+import * as ace from "ace-builds";
 import parse from "html-react-parser";
 import { Notice, Platform } from "obsidian";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SettingsItem } from "./item/SettingItem";
 
 interface FontData {
@@ -93,7 +96,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 
 				setSystemFonts(fonts);
 			} catch (error) {
-				new Notice("无法获取系统字体，已加载基础字体列表");
+				new Notice(LL.notice.system_fonts_failed());
 				console.error("获取系统字体失败:", error);
 				// 使用最基础的字体列表作为最后的降级方案
 				const basicFonts = await getAvailableFonts(
@@ -225,7 +228,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 
 	const lightThemeOptions = useMemo(
 		() =>
-			AceLightThemesList.map((theme) => ({
+			[...AceLightThemesList].sort().map((theme) => ({
 				value: theme,
 				label: theme,
 			})),
@@ -234,7 +237,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 
 	const darkThemeOptions = useMemo(
 		() =>
-			AceDarkThemesList.map((theme) => ({
+			[...AceDarkThemesList].sort().map((theme) => ({
 				value: theme,
 				label: theme,
 			})),
@@ -249,6 +252,56 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 			})),
 		[],
 	);
+
+	const [modesStatus, setModesStatus] = useState<
+		"checking" | "local" | "cdn" | "downloading" | "done"
+	>("checking");
+	const [progress, setProgress] = useState({ current: 0, total: 0 });
+	const [fileStats, setFileStats] = useState({
+		modes: 0,
+		workers: 0,
+		snippets: 0,
+		keybindings: 0,
+	});
+
+	useEffect(() => {
+		(async () => {
+			const exists = await settingsStore.plugin.checkAceModesExist();
+			setModesStatus(exists ? "local" : "cdn");
+		})();
+	}, []);
+
+	const handleDownload = useCallback(async () => {
+		setModesStatus("downloading");
+		setProgress({ current: 0, total: 0 });
+		try {
+			const files = await settingsStore.plugin.fetchAceBuildFiles();
+			setFileStats({
+				modes: files.modes.length,
+				workers: files.workers.length,
+				snippets: files.snippetFiles.length,
+				keybindings: files.keybindings.length,
+			});
+			await settingsStore.plugin.downloadAceModes((current, total) => {
+				setProgress({ current, total });
+			});
+			setModesStatus("done");
+		} catch (e) {
+			console.error("下载失败:", e);
+			setModesStatus("cdn");
+		}
+	}, []);
+
+	const handleSwitchToCdn = useCallback(async () => {
+		const cdn = `https://cdn.jsdelivr.net/npm/ace-builds@${AceCodeEditorPlugin.ACE_VERSION}/src-noconflict`;
+		// 清除自定义 loader（直接操作内部存储，绕过 key 校验）
+		const aceConfig = ace.config as any;
+		if (aceConfig.$values) delete aceConfig.$values.loader;
+		ace.config.set("modePath", cdn);
+		ace.config.set("workerPath", cdn);
+		ace.config.set("basePath", cdn);
+		setModesStatus("cdn");
+	}, []);
 
 	const EditorSettings = useMemo(() => {
 		return <></>;
@@ -581,9 +634,99 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 					name={"wiki"}
 					desc={parse(LL.setting.desc())}
 				></SettingsItem>
+
+				<SettingsItem
+					name={LL.setting.about.runtime_files()}
+					desc={
+						modesStatus === "checking"
+							? LL.setting.about.checking()
+							: modesStatus === "local"
+								? LL.setting.about.local_installed()
+								: modesStatus === "cdn"
+									? LL.setting.about.cdn_loading()
+									: modesStatus === "downloading"
+										? LL.setting.about.downloading({
+												current: progress.current,
+												total: progress.total,
+											})
+										: LL.setting.about.download_done()
+					}
+				>
+					{modesStatus === "cdn" && (
+						<button
+							className="mod-cta"
+							onClick={handleDownload}
+							style={{ marginTop: "8px" }}
+						>
+							{LL.setting.about.download_btn()}
+						</button>
+					)}
+					{modesStatus === "downloading" && (
+						<div style={{ marginTop: "8px" }}>
+							<progress
+								value={progress.current}
+								max={progress.total}
+								style={{ width: "100%" }}
+							/>
+							<div
+								style={{
+									fontSize: "12px",
+									color: "var(--text-muted)",
+									marginTop: "4px",
+								}}
+							>
+								{fileStats.modes > 0 &&
+									LL.setting.about.modes_count({
+										count: fileStats.modes,
+									})}
+								{fileStats.workers > 0 &&
+									` · ${LL.setting.about.workers_count({ count: fileStats.workers })}`}
+								{fileStats.keybindings > 0 &&
+									` · ${LL.setting.about.keybindings_count({ count: fileStats.keybindings })}`}
+								{fileStats.snippets > 0 &&
+									` · ${LL.setting.about.snippets_count({ count: fileStats.snippets })}`}
+							</div>
+						</div>
+					)}
+					{modesStatus === "local" && (
+						<div
+							style={{
+								display: "flex",
+								gap: "8px",
+								marginTop: "8px",
+							}}
+						>
+							<button
+								className="mod-cta"
+								onClick={handleDownload}
+							>
+								{LL.setting.about.redownload()}
+							</button>
+							<button onClick={handleSwitchToCdn}>
+								{LL.setting.about.switch_cdn()}
+							</button>
+						</div>
+					)}
+					{modesStatus === "done" && (
+						<div
+							style={{
+								display: "flex",
+								gap: "8px",
+								marginTop: "8px",
+							}}
+						>
+							<button className="mod-cta" disabled>
+								{LL.setting.about.installed()}
+							</button>
+							<button onClick={handleSwitchToCdn}>
+								{LL.setting.about.switch_cdn()}
+							</button>
+						</div>
+					)}
+				</SettingsItem>
 			</>
 		);
-	}, []);
+	}, [modesStatus, progress, fileStats, handleDownload, handleSwitchToCdn]);
 
 	const settingsTabNavItems: TabNavItem[] = useMemo(
 		() => [
