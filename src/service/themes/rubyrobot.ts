@@ -69,14 +69,14 @@ const cssText = `
 .ace-rubyrobot .ace_entity.ace_name.ace_function{color:#AAAAAA;}
 `;
 
-(ace as any).define("ace/theme/rubyrobot-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/rubyrobot-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/rubyrobot", ["require", "exports", "module", "ace/theme/rubyrobot-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/rubyrobot", ["require", "exports", "module", "ace/theme/rubyrobot-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-rubyrobot";
 	exports.cssText = require("./rubyrobot-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

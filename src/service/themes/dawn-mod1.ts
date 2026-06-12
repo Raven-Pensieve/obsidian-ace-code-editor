@@ -80,14 +80,14 @@ color:#2550A4;}
 .ace-dawn-mod1 .ace_markup.ace_list{color:#9F5922;}
 `;
 
-(ace as any).define("ace/theme/dawn-mod1-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/dawn-mod1-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/dawn-mod1", ["require", "exports", "module", "ace/theme/dawn-mod1-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/dawn-mod1", ["require", "exports", "module", "ace/theme/dawn-mod1-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-dawn-mod1";
 	exports.cssText = require("./dawn-mod1-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

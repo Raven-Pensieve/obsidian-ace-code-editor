@@ -68,14 +68,14 @@ const cssText = `
 .ace-happydeluxe .ace_entity.ace_name.ace_tag{color:#14DED1;}
 `;
 
-(ace as any).define("ace/theme/happydeluxe-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/happydeluxe-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/happydeluxe", ["require", "exports", "module", "ace/theme/happydeluxe-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/happydeluxe", ["require", "exports", "module", "ace/theme/happydeluxe-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-happydeluxe";
 	exports.cssText = require("./happydeluxe-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

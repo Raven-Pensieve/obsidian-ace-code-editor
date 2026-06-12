@@ -81,14 +81,14 @@ color:#FFCA00;}
 .ace-argonaut .ace_entity.ace_name.ace_tag{color:#0065D3;}
 `;
 
-(ace as any).define("ace/theme/argonaut-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/argonaut-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/argonaut", ["require", "exports", "module", "ace/theme/argonaut-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/argonaut", ["require", "exports", "module", "ace/theme/argonaut-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-argonaut";
 	exports.cssText = require("./argonaut-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

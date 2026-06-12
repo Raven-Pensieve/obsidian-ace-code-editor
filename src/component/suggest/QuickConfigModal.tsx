@@ -1,5 +1,7 @@
 import { LL } from "@src/i18n/i18n";
 import {
+	AceCommunityDarkThemesList,
+	AceCommunityLightThemesList,
 	AceDarkThemesList,
 	AceKeyboardList,
 	AceLightThemesList,
@@ -29,14 +31,20 @@ export class QuickConfigModal {
 				displayName: LL.setting.lightTheme.name(),
 				description: LL.setting.lightTheme.desc(),
 				currentValue: this.settings.lightTheme,
-				options: [...AceLightThemesList].sort(),
+				options: [
+					...AceLightThemesList,
+					...AceCommunityLightThemesList,
+				].sort(),
 			},
 			{
 				key: "darkTheme",
 				displayName: LL.setting.darkTheme.name(),
 				description: LL.setting.darkTheme.desc(),
 				currentValue: this.settings.darkTheme,
-				options: [...AceDarkThemesList].sort(),
+				options: [
+					...AceDarkThemesList,
+					...AceCommunityDarkThemesList,
+				].sort(),
 			},
 			{
 				key: "keyboard",

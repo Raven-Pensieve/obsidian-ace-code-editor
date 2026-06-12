@@ -72,14 +72,14 @@ color:#F4B52D;}
 .ace-inkdeep .ace_entity.ace_name.ace_tag{color:#766817;}
 `;
 
-(ace as any).define("ace/theme/inkdeep-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/inkdeep-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/inkdeep", ["require", "exports", "module", "ace/theme/inkdeep-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/inkdeep", ["require", "exports", "module", "ace/theme/inkdeep-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-inkdeep";
 	exports.cssText = require("./inkdeep-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

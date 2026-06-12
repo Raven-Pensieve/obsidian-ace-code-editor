@@ -73,14 +73,14 @@ color:#44444E;}
 .ace-glitterbomb .ace_meta.ace_tag{color:#AAD7EF;}
 `;
 
-(ace as any).define("ace/theme/glitterbomb-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/glitterbomb-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/glitterbomb", ["require", "exports", "module", "ace/theme/glitterbomb-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/glitterbomb", ["require", "exports", "module", "ace/theme/glitterbomb-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-glitterbomb";
 	exports.cssText = require("./glitterbomb-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

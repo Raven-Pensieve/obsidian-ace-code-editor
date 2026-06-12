@@ -85,14 +85,14 @@ background-color:rgba(107, 130, 167, 0.10);}
 .ace-twilight-bright .ace_markup.ace_list{color:#787249;}
 `;
 
-(ace as any).define("ace/theme/twilight-bright-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/twilight-bright-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/twilight-bright", ["require", "exports", "module", "ace/theme/twilight-bright-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/twilight-bright", ["require", "exports", "module", "ace/theme/twilight-bright-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-twilight-bright";
 	exports.cssText = require("./twilight-bright-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

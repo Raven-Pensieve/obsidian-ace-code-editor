@@ -69,14 +69,14 @@ background-color:#990000;}
 .ace-emacs-strict .ace_markup.ace_heading{color:#E27F3F;}
 `;
 
-(ace as any).define("ace/theme/emacs-strict-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/emacs-strict-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/emacs-strict", ["require", "exports", "module", "ace/theme/emacs-strict-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/emacs-strict", ["require", "exports", "module", "ace/theme/emacs-strict-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-emacs-strict";
 	exports.cssText = require("./emacs-strict-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

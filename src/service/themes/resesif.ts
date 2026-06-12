@@ -75,14 +75,14 @@ background-color:rgba(157, 187, 83, 0.059);}
 background-color:rgba(190, 73, 60, 0.10);}
 `;
 
-(ace as any).define("ace/theme/resesif-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/resesif-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/resesif", ["require", "exports", "module", "ace/theme/resesif-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/resesif", ["require", "exports", "module", "ace/theme/resesif-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-resesif";
 	exports.cssText = require("./resesif-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

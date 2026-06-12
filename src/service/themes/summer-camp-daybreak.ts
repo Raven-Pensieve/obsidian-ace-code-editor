@@ -70,14 +70,14 @@ color:#5B522D;}
 .ace-summer-camp-daybreak .ace_entity.ace_name.ace_function{color:#7DDE12;}
 `;
 
-(ace as any).define("ace/theme/summer-camp-daybreak-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/summer-camp-daybreak-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/summer-camp-daybreak", ["require", "exports", "module", "ace/theme/summer-camp-daybreak-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/summer-camp-daybreak", ["require", "exports", "module", "ace/theme/summer-camp-daybreak-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-summer-camp-daybreak";
 	exports.cssText = require("./summer-camp-daybreak-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

@@ -66,14 +66,14 @@ color:#99CC99;}
 .ace-vibrant-fin .ace_entity.ace_name.ace_function{color:#FFCC00;}
 `;
 
-(ace as any).define("ace/theme/vibrant-fin-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vibrant-fin-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/vibrant-fin", ["require", "exports", "module", "ace/theme/vibrant-fin-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vibrant-fin", ["require", "exports", "module", "ace/theme/vibrant-fin-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-vibrant-fin";
 	exports.cssText = require("./vibrant-fin-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

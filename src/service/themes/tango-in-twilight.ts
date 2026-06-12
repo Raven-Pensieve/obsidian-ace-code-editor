@@ -75,14 +75,14 @@ color:#686A78;}
 .ace-tango-in-twilight .ace_markup.ace_list{color:#C4A000;}
 `;
 
-(ace as any).define("ace/theme/tango-in-twilight-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/tango-in-twilight-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/tango-in-twilight", ["require", "exports", "module", "ace/theme/tango-in-twilight-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/tango-in-twilight", ["require", "exports", "module", "ace/theme/tango-in-twilight-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-tango-in-twilight";
 	exports.cssText = require("./tango-in-twilight-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

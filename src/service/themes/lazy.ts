@@ -67,14 +67,14 @@ color:#990000;}
 .ace-lazy .ace_meta.ace_tag{color:#3A4A64;}
 `;
 
-(ace as any).define("ace/theme/lazy-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/lazy-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/lazy", ["require", "exports", "module", "ace/theme/lazy-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/lazy", ["require", "exports", "module", "ace/theme/lazy-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-lazy";
 	exports.cssText = require("./lazy-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

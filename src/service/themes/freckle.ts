@@ -81,14 +81,14 @@ color:#3592A8;}
 .ace-freckle .ace_entity.ace_name.ace_tag{color:#34B9D6;}
 `;
 
-(ace as any).define("ace/theme/freckle-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/freckle-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/freckle", ["require", "exports", "module", "ace/theme/freckle-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/freckle", ["require", "exports", "module", "ace/theme/freckle-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-freckle";
 	exports.cssText = require("./freckle-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

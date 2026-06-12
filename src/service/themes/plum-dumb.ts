@@ -83,14 +83,14 @@ background-color:rgba(0, 204, 255, 0.15);}
 background-color:rgba(51, 51, 204, 0.0);}
 `;
 
-(ace as any).define("ace/theme/plum-dumb-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/plum-dumb-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/plum-dumb", ["require", "exports", "module", "ace/theme/plum-dumb-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/plum-dumb", ["require", "exports", "module", "ace/theme/plum-dumb-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-plum-dumb";
 	exports.cssText = require("./plum-dumb-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

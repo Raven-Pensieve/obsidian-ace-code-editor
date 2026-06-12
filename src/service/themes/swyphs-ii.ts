@@ -66,14 +66,14 @@ color:#575757;}
 .ace-swyphs-ii .ace_entity.ace_other.ace_attribute-name{color:#8B8B8B;}
 `;
 
-(ace as any).define("ace/theme/swyphs-ii-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/swyphs-ii-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/swyphs-ii", ["require", "exports", "module", "ace/theme/swyphs-ii-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/swyphs-ii", ["require", "exports", "module", "ace/theme/swyphs-ii-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-swyphs-ii";
 	exports.cssText = require("./swyphs-ii-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

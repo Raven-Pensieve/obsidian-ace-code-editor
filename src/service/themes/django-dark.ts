@@ -72,14 +72,14 @@ color:#FB9A4B;}
 .ace-django-dark .ace_meta.ace_tag{color:#497958;}
 `;
 
-(ace as any).define("ace/theme/django-dark-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/django-dark-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/django-dark", ["require", "exports", "module", "ace/theme/django-dark-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/django-dark", ["require", "exports", "module", "ace/theme/django-dark-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-django-dark";
 	exports.cssText = require("./django-dark-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

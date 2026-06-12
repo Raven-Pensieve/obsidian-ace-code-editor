@@ -68,14 +68,14 @@ color:#AB2A1D;}
 .ace-vintage-aurora .ace_meta.ace_tag{color:#8090AA;}
 `;
 
-(ace as any).define("ace/theme/vintage-aurora-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vintage-aurora-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/vintage-aurora", ["require", "exports", "module", "ace/theme/vintage-aurora-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vintage-aurora", ["require", "exports", "module", "ace/theme/vintage-aurora-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-vintage-aurora";
 	exports.cssText = require("./vintage-aurora-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

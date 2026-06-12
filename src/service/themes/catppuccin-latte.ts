@@ -80,14 +80,14 @@ color:#1e66f5;}
 .ace-catppuccin-latte .ace_entity.ace_name.ace_tag{color:#1e66f5;}
 `;
 
-(ace as any).define("ace/theme/catppuccin-latte-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/catppuccin-latte-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/catppuccin-latte", ["require", "exports", "module", "ace/theme/catppuccin-latte-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/catppuccin-latte", ["require", "exports", "module", "ace/theme/catppuccin-latte-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-catppuccin-latte";
 	exports.cssText = require("./catppuccin-latte-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

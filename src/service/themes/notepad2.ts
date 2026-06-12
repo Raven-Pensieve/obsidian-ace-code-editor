@@ -71,14 +71,14 @@ color:#000080;}
 .ace-notepad2 .ace_entity.ace_name.ace_tag{color:#0000AF;}
 `;
 
-(ace as any).define("ace/theme/notepad2-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/notepad2-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/notepad2", ["require", "exports", "module", "ace/theme/notepad2-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/notepad2", ["require", "exports", "module", "ace/theme/notepad2-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-notepad2";
 	exports.cssText = require("./notepad2-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

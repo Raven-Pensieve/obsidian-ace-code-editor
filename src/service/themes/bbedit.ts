@@ -76,14 +76,14 @@ background-color:#990000;}
 .ace-bbedit .ace_markup.ace_list{color:#B90690;}
 `;
 
-(ace as any).define("ace/theme/bbedit-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/bbedit-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/bbedit", ["require", "exports", "module", "ace/theme/bbedit-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/bbedit", ["require", "exports", "module", "ace/theme/bbedit-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-bbedit";
 	exports.cssText = require("./bbedit-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

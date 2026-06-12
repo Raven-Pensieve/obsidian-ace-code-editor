@@ -84,14 +84,14 @@ color:#516AD5;}
 .ace-menage-a-trois .ace_markup.ace_list{color:#F9EE98;}
 `;
 
-(ace as any).define("ace/theme/menage-a-trois-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/menage-a-trois-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/menage-a-trois", ["require", "exports", "module", "ace/theme/menage-a-trois-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/menage-a-trois", ["require", "exports", "module", "ace/theme/menage-a-trois-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-menage-a-trois";
 	exports.cssText = require("./menage-a-trois-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

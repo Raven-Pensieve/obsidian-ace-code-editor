@@ -73,14 +73,14 @@ background-color:#212223;}
 .ace-sidewalkchalk .ace_entity.ace_name{color:#5F88B8;}
 `;
 
-(ace as any).define("ace/theme/sidewalkchalk-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/sidewalkchalk-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/sidewalkchalk", ["require", "exports", "module", "ace/theme/sidewalkchalk-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/sidewalkchalk", ["require", "exports", "module", "ace/theme/sidewalkchalk-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-sidewalkchalk";
 	exports.cssText = require("./sidewalkchalk-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

@@ -67,14 +67,14 @@ color:#AB2A1D;}
 .ace-blackboard-black .ace_meta.ace_tag{color:#7F90AA;}
 `;
 
-(ace as any).define("ace/theme/blackboard-black-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/blackboard-black-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/blackboard-black", ["require", "exports", "module", "ace/theme/blackboard-black-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/blackboard-black", ["require", "exports", "module", "ace/theme/blackboard-black-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-blackboard-black";
 	exports.cssText = require("./blackboard-black-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

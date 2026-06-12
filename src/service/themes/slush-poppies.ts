@@ -66,14 +66,14 @@ const cssText = `
 .ace-slush-poppies .ace_entity.ace_name.ace_function{color:#800000;}
 `;
 
-(ace as any).define("ace/theme/slush-poppies-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/slush-poppies-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/slush-poppies", ["require", "exports", "module", "ace/theme/slush-poppies-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/slush-poppies", ["require", "exports", "module", "ace/theme/slush-poppies-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-slush-poppies";
 	exports.cssText = require("./slush-poppies-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

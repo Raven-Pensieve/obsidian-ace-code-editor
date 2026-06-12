@@ -74,14 +74,14 @@ color:#FB9A4B;}
 .ace-django-smoothy .ace_meta.ace_tag{color:#E8E8E7;}
 `;
 
-(ace as any).define("ace/theme/django-smoothy-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/django-smoothy-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/django-smoothy", ["require", "exports", "module", "ace/theme/django-smoothy-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/django-smoothy", ["require", "exports", "module", "ace/theme/django-smoothy-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-django-smoothy";
 	exports.cssText = require("./django-smoothy-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

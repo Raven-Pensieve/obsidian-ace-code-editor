@@ -9,6 +9,8 @@ import useSettingsStore from "@src/hooks/useSettingsStore";
 import { LL } from "@src/i18n/i18n";
 import { languageModeMap } from "@src/service/AceLanguages";
 import {
+	AceCommunityDarkThemesList,
+	AceCommunityLightThemesList,
 	AceDarkThemesList,
 	AceKeyboardList,
 	AceLightThemesList,
@@ -226,19 +228,23 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 
 	const lightThemeOptions = useMemo(
 		() =>
-			[...AceLightThemesList].sort().map((theme) => ({
-				value: theme,
-				label: theme,
-			})),
+			[...AceLightThemesList, ...AceCommunityLightThemesList]
+				.sort()
+				.map((theme) => ({
+					value: theme,
+					label: theme,
+				})),
 		[],
 	);
 
 	const darkThemeOptions = useMemo(
 		() =>
-			[...AceDarkThemesList].sort().map((theme) => ({
-				value: theme,
-				label: theme,
-			})),
+			[...AceDarkThemesList, ...AceCommunityDarkThemesList]
+				.sort()
+				.map((theme) => ({
+					value: theme,
+					label: theme,
+				})),
 		[],
 	);
 
