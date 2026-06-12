@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.1.0...2.1.1) (2026-06-12)
+
+
+### 🐛 Bug Fixes
+
+* 扩展 ace 定义，修复 any ([06c1a75](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/06c1a7599293ffbc902323772c2cec4b3c2984f7))
+* 外部主题文件去重 ([12cd4c2](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/12cd4c2d59e7eac7cc7e1681aa8a856442f52024))
 # [2.1.0](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.0.3...2.1.0) (2026-06-11)
 
 
