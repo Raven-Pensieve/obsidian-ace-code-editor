@@ -31,6 +31,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@types/ace": "^0.0.52",
 		"@types/node": "^25.9.0",
 		"@types/plist": "^3.0.5",
 		"@types/react": "^18.3.12",
@@ -50,7 +51,6 @@
 		"typescript-eslint": "^8.59.4"
 	},
 	"dependencies": {
-		"@types/ace": "^0.0.52",
 		"ace-builds": "^1.44.0",
 		"html-react-parser": "^6.1.1",
 		"lucide-react": "^1.17.0",

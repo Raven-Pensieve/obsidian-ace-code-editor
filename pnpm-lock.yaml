@@ -11,9 +11,6 @@ importers:
 
   .:
     dependencies:
-      '@types/ace':
-        specifier: ^0.0.52
-        version: 0.0.52
       ace-builds:
         specifier: ^1.44.0
         version: 1.44.0
@@ -39,6 +36,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.0)
+      '@types/ace':
+        specifier: ^0.0.52
+        version: 0.0.52
       '@types/node':
         specifier: ^25.9.0
         version: 25.9.1
