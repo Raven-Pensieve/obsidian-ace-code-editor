@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { App, Component, Debouncer, Events, TFile } from "obsidian";
 
 declare module "obsidian" {
