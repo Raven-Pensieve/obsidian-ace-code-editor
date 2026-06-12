@@ -71,14 +71,14 @@ color:#60606D;}
 .ace-spectacular .ace_meta.ace_tag{color:#9EFFFF;}
 `;
 
-(ace as any).define("ace/theme/spectacular-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/spectacular-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/spectacular", ["require", "exports", "module", "ace/theme/spectacular-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/spectacular", ["require", "exports", "module", "ace/theme/spectacular-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-spectacular";
 	exports.cssText = require("./spectacular-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

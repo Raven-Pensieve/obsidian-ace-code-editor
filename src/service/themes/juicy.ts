@@ -72,14 +72,14 @@ color:#999999;}
 .ace-juicy .ace_entity.ace_name.ace_tag{color:#FF0000;}
 `;
 
-(ace as any).define("ace/theme/juicy-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/juicy-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/juicy", ["require", "exports", "module", "ace/theme/juicy-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/juicy", ["require", "exports", "module", "ace/theme/juicy-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-juicy";
 	exports.cssText = require("./juicy-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

@@ -82,14 +82,14 @@ color:#FD971F;}
 .ace-rails-envy .ace_entity.ace_name.ace_tag{color:#52F9F9;}
 `;
 
-(ace as any).define("ace/theme/rails-envy-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/rails-envy-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/rails-envy", ["require", "exports", "module", "ace/theme/rails-envy-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/rails-envy", ["require", "exports", "module", "ace/theme/rails-envy-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-rails-envy";
 	exports.cssText = require("./rails-envy-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

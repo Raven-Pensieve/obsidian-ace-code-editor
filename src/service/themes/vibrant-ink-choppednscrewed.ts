@@ -68,14 +68,14 @@ const cssText = `
 .ace-vibrant-ink-choppednscrewed .ace_entity.ace_name.ace_function{color:#F8CC49;}
 `;
 
-(ace as any).define("ace/theme/vibrant-ink-choppednscrewed-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vibrant-ink-choppednscrewed-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/vibrant-ink-choppednscrewed", ["require", "exports", "module", "ace/theme/vibrant-ink-choppednscrewed-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vibrant-ink-choppednscrewed", ["require", "exports", "module", "ace/theme/vibrant-ink-choppednscrewed-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-vibrant-ink-choppednscrewed";
 	exports.cssText = require("./vibrant-ink-choppednscrewed-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

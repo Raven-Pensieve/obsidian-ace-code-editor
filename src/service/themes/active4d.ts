@@ -75,14 +75,14 @@ color:#0053FF;}
 .ace-active4d .ace_entity.ace_name.ace_tag{color:#016CFF;}
 `;
 
-(ace as any).define("ace/theme/active4d-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/active4d-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/active4d", ["require", "exports", "module", "ace/theme/active4d-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/active4d", ["require", "exports", "module", "ace/theme/active4d-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-active4d";
 	exports.cssText = require("./active4d-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

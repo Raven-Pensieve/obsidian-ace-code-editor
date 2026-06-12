@@ -77,14 +77,14 @@ color:#808080;}
 .ace-ryan-light .ace_entity.ace_name.ace_tag{color:#2D439B;}
 `;
 
-(ace as any).define("ace/theme/ryan-light-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/ryan-light-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/ryan-light", ["require", "exports", "module", "ace/theme/ryan-light-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/ryan-light", ["require", "exports", "module", "ace/theme/ryan-light-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-ryan-light";
 	exports.cssText = require("./ryan-light-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

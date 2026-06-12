@@ -82,14 +82,14 @@ color:#FFD2A6;}
 .ace-erebus .ace_entity.ace_name.ace_tag{color:#D95757;}
 `;
 
-(ace as any).define("ace/theme/erebus-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/erebus-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/erebus", ["require", "exports", "module", "ace/theme/erebus-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/erebus", ["require", "exports", "module", "ace/theme/erebus-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-erebus";
 	exports.cssText = require("./erebus-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

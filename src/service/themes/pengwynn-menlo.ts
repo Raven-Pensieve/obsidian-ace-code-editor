@@ -77,14 +77,14 @@ color:#5B5B5B;}
 .ace-pengwynn-menlo .ace_entity.ace_name.ace_tag{color:#E8BF6A;}
 `;
 
-(ace as any).define("ace/theme/pengwynn-menlo-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/pengwynn-menlo-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/pengwynn-menlo", ["require", "exports", "module", "ace/theme/pengwynn-menlo-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/pengwynn-menlo", ["require", "exports", "module", "ace/theme/pengwynn-menlo-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-pengwynn-menlo";
 	exports.cssText = require("./pengwynn-menlo-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

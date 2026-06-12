@@ -69,14 +69,14 @@ background-color:#990000;}
 .ace-idle .ace_entity.ace_name.ace_function{color:#21439C;}
 `;
 
-(ace as any).define("ace/theme/idle-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/idle-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/idle", ["require", "exports", "module", "ace/theme/idle-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/idle", ["require", "exports", "module", "ace/theme/idle-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-idle";
 	exports.cssText = require("./idle-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

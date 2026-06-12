@@ -69,14 +69,14 @@ background-color:rgba(255, 0, 0, 0.18);}
 .ace-dominion-day .ace_entity.ace_name.ace_tag{color:#471062;}
 `;
 
-(ace as any).define("ace/theme/dominion-day-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/dominion-day-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/dominion-day", ["require", "exports", "module", "ace/theme/dominion-day-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/dominion-day", ["require", "exports", "module", "ace/theme/dominion-day-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-dominion-day";
 	exports.cssText = require("./dominion-day-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

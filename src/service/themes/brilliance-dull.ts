@@ -85,14 +85,14 @@ background-color:rgba(0, 0, 0, 0.50);}
 background-color:rgba(51, 51, 51, 0.50);}
 `;
 
-(ace as any).define("ace/theme/brilliance-dull-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/brilliance-dull-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/brilliance-dull", ["require", "exports", "module", "ace/theme/brilliance-dull-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/brilliance-dull", ["require", "exports", "module", "ace/theme/brilliance-dull-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-brilliance-dull";
 	exports.cssText = require("./brilliance-dull-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

@@ -67,14 +67,14 @@ color:#66FF66;}
 .ace-forlatex .ace_variable.ace_parameter{color:#FF0080;}
 `;
 
-(ace as any).define("ace/theme/forlatex-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/forlatex-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/forlatex", ["require", "exports", "module", "ace/theme/forlatex-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/forlatex", ["require", "exports", "module", "ace/theme/forlatex-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-forlatex";
 	exports.cssText = require("./forlatex-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

@@ -73,14 +73,14 @@ color:#3C802C;}
 .ace-coda .ace_entity.ace_name.ace_tag{color:#881181;}
 `;
 
-(ace as any).define("ace/theme/coda-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/coda-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/coda", ["require", "exports", "module", "ace/theme/coda-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/coda", ["require", "exports", "module", "ace/theme/coda-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-coda";
 	exports.cssText = require("./coda-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

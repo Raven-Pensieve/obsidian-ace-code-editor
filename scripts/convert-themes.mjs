@@ -27,6 +27,39 @@ const OUTPUT_DIR = path.join(ROOT, "src", "service", "themes");
 const ACE_THEMES_FILE = path.join(ROOT, "src", "service", "AceThemes.ts");
 
 // ============================================================
+// 黑名单：不需要转换的 .tmTheme 文件名（不含路径）
+// 添加后运行 convert-themes.mjs 不会处理这些文件
+// ============================================================
+const BLACKLIST = new Set([
+	// 与 ace-builds 官方主题重复，无需自行转换
+	// Light Themes
+	"Clouds.tmTheme", // -> clouds
+	"Dawn.tmTheme", // -> dawn
+	"GitHub.tmTheme", // -> github
+	"iPlastic.tmTheme", // -> iplastic
+	"Solarized (light).tmTheme", // -> solarized-light
+	"Tomorrow.tmTheme", // -> tomorrow
+
+	// Dark Themes
+	"Clouds Midnight.tmTheme", // -> clouds-midnight
+	"Cobalt.tmTheme", // -> cobalt
+	"Merbivore.tmTheme", // -> merbivore
+	"Merbivore Soft.tmTheme", // -> merbivore-soft
+	"Monokai.tmTheme", // -> monokai
+	"Solarized (dark).tmTheme", // -> solarized-dark
+	"Tomorrow Night.tmTheme", // -> tomorrow-night
+	"Tomorrow-Night-Blue.tmTheme", // -> tomorrow-night-blue
+	"Tomorrow-Night-Bright.tmTheme", // -> tomorrow-night-bright
+	"Tomorrow-Night-Eighties.tmTheme", // -> tomorrow-night-eighties
+	"Tomorrow-Night.tmTheme", // -> tomorrow-night
+	"Twilight.tmTheme", // -> twilight
+	"Vibrant Ink.tmTheme", // -> vibrant-ink
+	"idleFingers.tmTheme", // -> idle_fingers
+	"monoindustrial.tmTheme", // -> mono_industrial
+	"Pastels on Dark.tmTheme", // -> pastel_on_dark
+]);
+
+// ============================================================
 // 以下核心函数来自 Ace 官方 tool/tmtheme.js
 // https://github.com/ajaxorg/ace/blob/master/tool/tmtheme.js
 // ============================================================
@@ -381,15 +414,15 @@ function generateThemeModule(name, css, isDark, cssClass) {
 
 const cssText = \`${escapedCss}\`;
 
-(ace as any).define("ace/theme/${name}-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/${name}-css", ["require", "exports", "module"], function (require, exports, module) {
 \tmodule.exports = cssText;
 });
 
-(ace as any).define("ace/theme/${name}", ["require", "exports", "module", "ace/theme/${name}-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/${name}", ["require", "exports", "module", "ace/theme/${name}-css", "ace/lib/dom"], function (require, exports, module) {
 \texports.isDark = ${isDark};
 \texports.cssClass = "${cssClass}";
 \texports.cssText = require("./${name}-css");
-\tvar dom = require("../lib/dom");
+\tconst dom = require("../lib/dom");
 \tdom.importCssString(exports.cssText, exports.cssClass, false);
 });
 `;
@@ -399,19 +432,94 @@ const cssText = \`${escapedCss}\`;
 // AceThemes.ts 自动更新
 // ============================================================
 
-function updateAceThemes(convertedThemes) {
-	if (convertedThemes.length === 0) {
-		console.log("\n没有新主题需要更新到 AceThemes.ts");
-		return;
+/**
+ * 获取黑名单对应的主题标识名集合
+ */
+function getBlacklistedNames() {
+	const names = new Set();
+	for (const fileName of BLACKLIST) {
+		const name = themeNameFromFileName(fileName);
+		if (name) names.add(name);
+	}
+	return names;
+}
+
+/**
+ * 清理黑名单主题文件
+ */
+function cleanupBlacklistedThemeFiles() {
+	const blacklistedNames = getBlacklistedNames();
+	if (blacklistedNames.size === 0) return;
+
+	let removedFiles = 0;
+	for (const name of blacklistedNames) {
+		const filePath = path.join(OUTPUT_DIR, `${name}.ts`);
+		if (fs.existsSync(filePath)) {
+			fs.unlinkSync(filePath);
+			removedFiles++;
+		}
+	}
+	if (removedFiles > 0) {
+		console.log(`🗑 已清理 ${removedFiles} 个黑名单主题文件`);
+	}
+}
+
+/**
+ * 移除文件中所有社区主题列表声明和标记，防止重复
+ * 必须在 replaceCommunityLists 之前调用
+ */
+function removeAllCommunityLists(content) {
+	const listMarker =
+		"// === 社区主题列表 (由 convert-themes.mjs 自动生成) ===";
+	const listEndMarker = "// === END 社区主题列表 ===";
+
+	// 移除完整的标记块（含开始和结束标记之间的全部内容）
+	while (true) {
+		const start = content.indexOf(listMarker);
+		if (start === -1) break;
+		const end = content.indexOf(listEndMarker, start);
+		if (end === -1) break;
+		content =
+			content.substring(0, start) +
+			content.substring(end + listEndMarker.length);
 	}
 
+	// 移除孤立的结束标记
+	content = content.replace(/\/\/ === END 社区主题列表 ===\n?/g, "");
+
+	// 移除孤立的社区列表声明
+	content = content.replace(
+		/export const AceCommunityLightThemesList = \[[\s\S]*?\] as const;\n?/g,
+		"",
+	);
+	content = content.replace(
+		/export const AceCommunityDarkThemesList = \[[\s\S]*?\] as const;\n?/g,
+		"",
+	);
+
+	// 清理多余空行
+	content = content.replace(/\n{3,}/g, "\n\n");
+
+	return content;
+}
+
+function updateAceThemes(convertedThemes) {
 	let content = fs.readFileSync(ACE_THEMES_FILE, "utf8");
 
+	// === 先移除所有社区主题列表声明，防止重复 ===
+	content = removeAllCommunityLists(content);
+
 	// === 添加 import 语句 ===
-	// 收集所有已有的主题文件（包含之前转换的）
+	// 收集所有已有的主题文件，排除黑名单
+	const blacklistedNames = getBlacklistedNames();
 	const allThemeFiles = fs.existsSync(OUTPUT_DIR)
-		? fs.readdirSync(OUTPUT_DIR).filter((f) => f.endsWith(".ts"))
+		? fs.readdirSync(OUTPUT_DIR).filter((f) => {
+				if (!f.endsWith(".ts")) return false;
+				const name = f.replace(/\.ts$/, "");
+				return !blacklistedNames.has(name);
+			})
 		: [];
+
 	const allImports = allThemeFiles.map(
 		(f) => `import "./themes/${f.replace(/\.ts$/, "")}";`,
 	);
@@ -428,7 +536,6 @@ function updateAceThemes(convertedThemes) {
 	const importBlock = `\n${marker}\n${importLines}\n${endMarker}\n\n`;
 
 	if (before.includes(marker)) {
-		// 替换已有区块
 		const markerStart = before.indexOf(marker);
 		const markerEndIdx = before.indexOf(endMarker);
 		if (markerEndIdx !== -1) {
@@ -441,42 +548,99 @@ function updateAceThemes(convertedThemes) {
 
 	content = before + after;
 
-	// === 更新主题列表 ===
+	// === 完全重建社区主题列表（两个列表放在一起） ===
 	const lightThemes = convertedThemes.filter((t) => !t.isDark);
 	const darkThemes = convertedThemes.filter((t) => t.isDark);
 
-	if (lightThemes.length > 0) {
-		const newNames = lightThemes.map((t) => `\t"${t.name}"`);
-		content = insertIntoList(content, "AceLightThemesList", newNames);
-	}
-	if (darkThemes.length > 0) {
-		const newNames = darkThemes.map((t) => `\t"${t.name}"`);
-		content = insertIntoList(content, "AceDarkThemesList", newNames);
-	}
+	content = replaceCommunityLists(
+		content,
+		lightThemes.map((t) => t.name),
+		darkThemes.map((t) => t.name),
+	);
 
 	fs.writeFileSync(ACE_THEMES_FILE, content, "utf8");
 	console.log(`\n✓ 已更新 AceThemes.ts`);
 }
 
-function insertIntoList(content, listName, newEntries) {
-	const listStart = content.indexOf(`export const ${listName} = [`);
-	if (listStart === -1) return content;
+/**
+ * 在 AceDarkThemesList 后面完全替换社区主题列表区域
+ * 两个列表放在一起，用标记注释包裹
+ */
+function replaceCommunityLists(content, lightEntries, darkEntries) {
+	const darkListStart = content.indexOf("export const AceDarkThemesList = [");
+	if (darkListStart === -1) return content;
 
-	const listEnd = content.indexOf("];", listStart);
-	if (listEnd === -1) return content;
+	// 查找 AceDarkThemesList 的结束位置（"] as const;"）
+	const endPattern = "] as const;";
+	const darkListEnd = content.indexOf(endPattern, darkListStart);
+	if (darkListEnd === -1) return content;
 
-	const listContent = content.substring(listStart, listEnd + 2);
+	const insertPos = darkListEnd + endPattern.length;
 
-	// 过滤已存在的条目
-	const existingEntries = newEntries.filter(
-		(entry) => !listContent.includes(entry),
-	);
-	if (existingEntries.length === 0) return content;
+	const listMarker =
+		"// === 社区主题列表 (由 convert-themes.mjs 自动生成) ===";
+	const listEndMarker = "// === END 社区主题列表 ===";
 
-	const insertText = existingEntries.join(",\n") + ",\n";
-	return (
-		content.substring(0, listEnd) + insertText + content.substring(listEnd)
-	);
+	// 检查是否已有社区列表区域（在 AceDarkThemesList 之后）
+	const existingMarker = content.indexOf(listMarker, darkListStart);
+
+	if (existingMarker !== -1 && existingMarker > insertPos) {
+		// 替换已有区域
+		const existingEnd = content.indexOf(listEndMarker, existingMarker);
+		if (existingEnd !== -1) {
+			const afterBlock = content.substring(
+				existingEnd + listEndMarker.length,
+			);
+			const before = content.substring(0, existingMarker);
+			const block = buildCommunityBlock(
+				lightEntries,
+				darkEntries,
+				listMarker,
+				listEndMarker,
+			);
+			return before + "\n" + block + afterBlock;
+		}
+	}
+
+	// 首次插入：放在 AceDarkThemesList ] as const; 后面
+	const before = content.substring(0, insertPos);
+	const after = content.substring(insertPos);
+	const block =
+		"\n\n" +
+		buildCommunityBlock(
+			lightEntries,
+			darkEntries,
+			listMarker,
+			listEndMarker,
+		) +
+		"\n";
+	return before + block + after;
+}
+
+function buildCommunityBlock(
+	lightEntries,
+	darkEntries,
+	listMarker,
+	listEndMarker,
+) {
+	const lightEntriesText =
+		lightEntries.length > 0
+			? lightEntries.map((e) => `\t"${e}",`).join("\n")
+			: "";
+	const darkEntriesText =
+		darkEntries.length > 0
+			? darkEntries.map((e) => `\t"${e}",`).join("\n")
+			: "";
+
+	return `${listMarker}
+export const AceCommunityLightThemesList = [
+${lightEntriesText}
+] as const;
+
+export const AceCommunityDarkThemesList = [
+${darkEntriesText}
+] as const;
+${listEndMarker}`;
 }
 
 // ============================================================
@@ -520,27 +684,41 @@ function main() {
 		for (const arg of userArgs) {
 			const normalizedName = themeNameFromFileName(arg);
 			// 优先精确匹配文件名（去掉 .tmTheme 后缀）
-			let match = allFiles.find((f) => f.replace(/\.tmTheme$/, "") === arg);
+			let match = allFiles.find(
+				(f) => f.replace(/\.tmTheme$/, "") === arg,
+			);
 			// 其次匹配标准化后的名称
-			if (!match) match = allFiles.find((f) => themeNameFromFileName(f) === normalizedName);
+			if (!match)
+				match = allFiles.find(
+					(f) => themeNameFromFileName(f) === normalizedName,
+				);
 			// 最后模糊匹配
-			if (!match) match = allFiles.find((f) => f.toLowerCase().includes(arg.toLowerCase()));
+			if (!match)
+				match = allFiles.find((f) =>
+					f.toLowerCase().includes(arg.toLowerCase()),
+				);
 			if (match) {
+				if (BLACKLIST.has(match)) {
+					console.warn(`⊗ 跳过黑名单中的主题: ${match}`);
+					continue;
+				}
 				tmThemeFiles.push(path.join(TM_THEMES_DIR, match));
 			} else {
 				console.warn(`⚠ 未找到匹配的主题: ${arg}`);
 			}
 		}
 	} else {
-		// 转换所有 .tmTheme 文件
+		// 转换所有 .tmTheme 文件（排除黑名单）
 		tmThemeFiles = fs
 			.readdirSync(TM_THEMES_DIR)
-			.filter((f) => f.endsWith(".tmTheme"))
+			.filter((f) => f.endsWith(".tmTheme") && !BLACKLIST.has(f))
 			.map((f) => path.join(TM_THEMES_DIR, f));
 	}
 
 	if (tmThemeFiles.length === 0) {
-		console.log("⚠ 没有找到 .tmTheme 文件");
+		console.log("⚠ 没有找到需要转换的 .tmTheme 文件");
+		// 仍然执行清理（可能需要移除已有的黑名单主题）
+		cleanupBlacklistedThemeFiles();
 		process.exit(0);
 	}
 
@@ -589,13 +767,16 @@ function main() {
 		}
 	}
 
+	// 清理黑名单主题文件
+	cleanupBlacklistedThemeFiles();
+
 	if (convertedThemes.length > 0) {
 		console.log("\n📝 更新 AceThemes.ts...");
 		updateAceThemes(convertedThemes);
 	}
 
 	console.log(
-		`\n✅ 完成！共转换 ${convertedThemes.length} / ${tmThemeFiles.length} 个主题`,
+		`\n✅ 完成！共转换 ${convertedThemes.length} / ${tmThemeFiles.length} 个主题（黑名单排除 ${BLACKLIST.size} 个）`,
 	);
 }
 

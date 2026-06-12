@@ -78,14 +78,14 @@ color:#EFAC32;}
 .ace-birds-of-paradise .ace_entity.ace_name.ace_tag{color:#EFCB43;}
 `;
 
-(ace as any).define("ace/theme/birds-of-paradise-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/birds-of-paradise-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/birds-of-paradise", ["require", "exports", "module", "ace/theme/birds-of-paradise-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/birds-of-paradise", ["require", "exports", "module", "ace/theme/birds-of-paradise-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-birds-of-paradise";
 	exports.cssText = require("./birds-of-paradise-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

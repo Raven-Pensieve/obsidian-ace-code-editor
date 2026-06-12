@@ -69,14 +69,14 @@ const cssText = `
 .ace-sweyla674314 .ace_entity.ace_name{color:#2B9E2B;}
 `;
 
-(ace as any).define("ace/theme/sweyla674314-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/sweyla674314-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/sweyla674314", ["require", "exports", "module", "ace/theme/sweyla674314-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/sweyla674314", ["require", "exports", "module", "ace/theme/sweyla674314-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-sweyla674314";
 	exports.cssText = require("./sweyla674314-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

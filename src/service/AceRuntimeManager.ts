@@ -1,6 +1,16 @@
 import * as ace from "ace-builds";
 import { App, PluginManifest, requestUrl } from "obsidian";
 
+/** jsDelivr API 返回的文件树节点 */
+interface JsDelivrFileNode {
+	type: "file" | "directory";
+	name: string;
+	files?: JsDelivrFileNode[];
+	hash?: string;
+	time?: string;
+	size?: number;
+}
+
 // 模块加载时立即设置 CDN 为默认路径，确保 Ace 动态加载（mode/theme/keybinding）在 onload 之前也能正确解析
 ace.config.set(
 	"modePath",
@@ -99,7 +109,7 @@ export class AceRuntimeManager {
 	}
 
 	private setupLocalLoader() {
-		const aceConfig = ace.config as any;
+		const aceConfig = ace.config as unknown as AceConfigInternal;
 		aceConfig.$values = aceConfig.$values || {};
 		aceConfig.$values.loader = async (
 			moduleName: string,
@@ -158,8 +168,8 @@ export class AceRuntimeManager {
 		let snippetFiles: string[] = [];
 
 		// 在根文件树中找到 src-noconflict 目录
-		const srcNoconflict = (tree.files ?? []).find(
-			(f: any) => f.type === "directory" && f.name === "src-noconflict",
+		const srcNoconflict = ((tree.files ?? []) as JsDelivrFileNode[]).find(
+			(f) => f.type === "directory" && f.name === "src-noconflict",
 		);
 		if (!srcNoconflict?.files) {
 			throw new Error("jsDelivr API 返回结构异常: 未找到 src-noconflict");
@@ -171,10 +181,10 @@ export class AceRuntimeManager {
 				if (name === "snippets" && entry.files) {
 					snippetFiles = entry.files
 						.filter(
-							(f: any) =>
+							(f) =>
 								f.type === "file" && f.name.endsWith(".js"),
 						)
-						.map((f: any) => f.name);
+						.map((f) => f.name);
 				}
 				continue;
 			}
@@ -263,7 +273,7 @@ export class AceRuntimeManager {
 	 * 切换到 CDN 模式并持久化状态
 	 */
 	async switchToCdn() {
-		const aceConfig = ace.config as any;
+		const aceConfig = ace.config as unknown as AceConfigInternal;
 		if (aceConfig.$values) delete aceConfig.$values.loader;
 		this.setupCdn();
 		await this.onSaveUseLocalAce?.(false);

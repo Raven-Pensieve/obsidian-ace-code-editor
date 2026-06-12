@@ -85,14 +85,14 @@ color:#0000FF;}
 .ace-magicwb-amiga .ace_markup.ace_list{color:#4D4E60;}
 `;
 
-(ace as any).define("ace/theme/magicwb-amiga-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/magicwb-amiga-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/magicwb-amiga", ["require", "exports", "module", "ace/theme/magicwb-amiga-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/magicwb-amiga", ["require", "exports", "module", "ace/theme/magicwb-amiga-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-magicwb-amiga";
 	exports.cssText = require("./magicwb-amiga-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

@@ -88,14 +88,14 @@ color:#FF9358;}
 .ace-espresso-libre .ace_entity.ace_name.ace_tag{font-weight:bold;}
 `;
 
-(ace as any).define("ace/theme/espresso-libre-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/espresso-libre-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/espresso-libre", ["require", "exports", "module", "ace/theme/espresso-libre-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/espresso-libre", ["require", "exports", "module", "ace/theme/espresso-libre-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-espresso-libre";
 	exports.cssText = require("./espresso-libre-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

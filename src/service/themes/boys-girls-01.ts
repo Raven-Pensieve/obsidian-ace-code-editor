@@ -75,14 +75,14 @@ font-weight:bold;}
 font-weight:bold;}
 `;
 
-(ace as any).define("ace/theme/boys-girls-01-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/boys-girls-01-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/boys-girls-01", ["require", "exports", "module", "ace/theme/boys-girls-01-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/boys-girls-01", ["require", "exports", "module", "ace/theme/boys-girls-01-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-boys-girls-01";
 	exports.cssText = require("./boys-girls-01-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

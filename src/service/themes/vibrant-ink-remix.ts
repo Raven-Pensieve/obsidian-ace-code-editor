@@ -72,14 +72,14 @@ const cssText = `
 .ace-vibrant-ink-remix .ace_entity.ace_name.ace_tag{color:#E95126;}
 `;
 
-(ace as any).define("ace/theme/vibrant-ink-remix-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vibrant-ink-remix-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/vibrant-ink-remix", ["require", "exports", "module", "ace/theme/vibrant-ink-remix-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/vibrant-ink-remix", ["require", "exports", "module", "ace/theme/vibrant-ink-remix-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-vibrant-ink-remix";
 	exports.cssText = require("./vibrant-ink-remix-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

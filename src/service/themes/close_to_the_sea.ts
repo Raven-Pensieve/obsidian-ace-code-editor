@@ -73,14 +73,14 @@ color:#78B2C7;}
 .ace-close-to-the-sea .ace_entity.ace_name.ace_function{color:#EA511B;}
 `;
 
-(ace as any).define("ace/theme/close_to_the_sea-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/close_to_the_sea-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/close_to_the_sea", ["require", "exports", "module", "ace/theme/close_to_the_sea-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/close_to_the_sea", ["require", "exports", "module", "ace/theme/close_to_the_sea-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-close-to-the-sea";
 	exports.cssText = require("./close_to_the_sea-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

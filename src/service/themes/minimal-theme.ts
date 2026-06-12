@@ -72,14 +72,14 @@ color:#706D5B;}
 .ace-minimal-theme .ace_markup.ace_list{background-color:#0F0040;}
 `;
 
-(ace as any).define("ace/theme/minimal-theme-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/minimal-theme-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/minimal-theme", ["require", "exports", "module", "ace/theme/minimal-theme-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/minimal-theme", ["require", "exports", "module", "ace/theme/minimal-theme-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-minimal-theme";
 	exports.cssText = require("./minimal-theme-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

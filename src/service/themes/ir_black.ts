@@ -81,14 +81,14 @@ background-color:#632D04;}
 .ace-ir-black .ace_markup.ace_list{color:#E1D4B9;}
 `;
 
-(ace as any).define("ace/theme/ir_black-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/ir_black-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/ir_black", ["require", "exports", "module", "ace/theme/ir_black-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/ir_black", ["require", "exports", "module", "ace/theme/ir_black-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-ir-black";
 	exports.cssText = require("./ir_black-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

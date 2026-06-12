@@ -62,14 +62,14 @@ color:#0066FF;}
 .ace-zachstronaut-theme-41 .ace_entity.ace_other.ace_attribute-name{color:#9865FF;}
 `;
 
-(ace as any).define("ace/theme/zachstronaut-theme-41-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/zachstronaut-theme-41-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/zachstronaut-theme-41", ["require", "exports", "module", "ace/theme/zachstronaut-theme-41-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/zachstronaut-theme-41", ["require", "exports", "module", "ace/theme/zachstronaut-theme-41-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = true;
 	exports.cssClass = "ace-zachstronaut-theme-41";
 	exports.cssText = require("./zachstronaut-theme-41-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

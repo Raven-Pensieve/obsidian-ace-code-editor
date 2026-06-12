@@ -67,14 +67,14 @@ color:#990000;}
 .ace-lazyinkdeep .ace_meta.ace_tag{color:#3A4A64;}
 `;
 
-(ace as any).define("ace/theme/lazyinkdeep-css", ["require", "exports", "module"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/lazyinkdeep-css", ["require", "exports", "module"], function (require, exports, module) {
 	module.exports = cssText;
 });
 
-(ace as any).define("ace/theme/lazyinkdeep", ["require", "exports", "module", "ace/theme/lazyinkdeep-css", "ace/lib/dom"], function (require: any, exports: any, module: any) {
+ace.define("ace/theme/lazyinkdeep", ["require", "exports", "module", "ace/theme/lazyinkdeep-css", "ace/lib/dom"], function (require, exports, module) {
 	exports.isDark = false;
 	exports.cssClass = "ace-lazyinkdeep";
 	exports.cssText = require("./lazyinkdeep-css");
-	var dom = require("../lib/dom");
+	const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });
