@@ -1,3 +1,14 @@
+## [2.1.2](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.1.1...2.1.2) (2026-06-14)
+
+
+### 🐛 Bug Fixes
+
+* 尝试修复 warning ([ac41428](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/ac41428ae947d8fe78352ea73c2001e6bf145afd))
+* 尝试修复动态 <script> 元素创建 ([817609c](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/817609c4c90eb99b9cc0051aefb58557d459147d))
+* 从插件本地目录读取 Ace 模块文件 ([e6f58bb](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/e6f58bb95539ec41bc25c83f935b4c2b62b2d78c))
+* 改成运行时只走本地加载，并补了缺失本地包时的引导流程。 ([0b86319](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/0b863198a18ea1e230c073017a09f3e539c1bd24))
+* 移除 import(blobUrl) ([f534eb3](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/f534eb3b2bc58b31048eb0e142c4a2d9798e58be))
+* Function / eval 类用法 ([44188c3](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/commit/44188c38fe40a787177a8e5ccd56b9e93cfb1579))
 ## [2.1.1](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.1.0...2.1.1) (2026-06-12)
 
 
