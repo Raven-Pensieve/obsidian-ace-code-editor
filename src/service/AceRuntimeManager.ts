@@ -124,7 +124,9 @@ export class AceRuntimeManager {
 			const filePath =
 				type === "worker"
 					? `${this.aceWorkersDir}/${type}-${name}.js`
-					: `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
+					: type === "snippets"
+						? `${this.aceModesDir}/snippets/${name}.js`
+						: `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
 			const content = await this.app.vault.adapter.read(filePath);
 			return {
 				content,
@@ -190,11 +192,7 @@ export class AceRuntimeManager {
 						moduleName,
 						moduleType,
 					);
-					const executeModule = new Function(
-						"ace",
-						`${content}\n//# sourceURL=${sourceUrl}`,
-					);
-					executeModule(ace);
+					await this.evaluateAceModule(content, sourceUrl);
 					return aceRequire?.(moduleName);
 				})().finally(() => {
 					AceRuntimeManager.pendingModuleLoads.delete(cacheKey);
@@ -208,6 +206,19 @@ export class AceRuntimeManager {
 					onLoad?.(undefined);
 				});
 		};
+	}
+
+	private async evaluateAceModule(content: string, sourceUrl: string) {
+		const blob = new Blob([`${content}\n//# sourceURL=${sourceUrl}`], {
+			type: "text/javascript",
+		});
+		const blobUrl = URL.createObjectURL(blob);
+		try {
+			(globalThis as { ace?: unknown }).ace = ace;
+			await import(/* webpackIgnore: true */ blobUrl);
+		} finally {
+			URL.revokeObjectURL(blobUrl);
+		}
 	}
 
 	/**
