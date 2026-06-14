@@ -2,13 +2,28 @@
 // used by theme registration and runtime management.
 
 /** Callback signature for ace.define() factory functions */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface AceDomModule {
+	importCssString(
+		cssText: string,
+		cssClass: string,
+		includeAsStyleTag?: boolean,
+	): void;
+}
+
+interface AceThemeExports extends Record<string, unknown> {
+	isDark: boolean;
+	cssClass: string;
+	cssText: string;
+}
+
 type AceDefineFactory = (
-	require: (path: string) => any,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	exports: any,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	module: { exports: any },
+	require: {
+		(path: "../lib/dom"): AceDomModule;
+		(path: `./${string}-css`): string;
+		(path: string): unknown;
+	},
+	exports: AceThemeExports,
+	module: { exports: unknown },
 ) => void;
 
 /**

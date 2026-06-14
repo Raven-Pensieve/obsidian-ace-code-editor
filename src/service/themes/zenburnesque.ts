@@ -76,6 +76,6 @@ ace.define("ace/theme/zenburnesque", ["require", "exports", "module", "ace/theme
 	exports.isDark = true;
 	exports.cssClass = "ace-zenburnesque";
 	exports.cssText = require("./zenburnesque-css");
-	const dom = require("../lib/dom");
+  const dom = require("../lib/dom");
 	dom.importCssString(exports.cssText, exports.cssClass, false);
 });

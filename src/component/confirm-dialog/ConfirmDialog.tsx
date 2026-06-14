@@ -7,7 +7,7 @@ import "./ConfirmDialog.css";
 interface ConfirmDialogProps {
 	title: string;
 	message: string;
-	onConfirm: () => void;
+	onConfirm: () => void | Promise<void>;
 }
 
 interface ConfirmDialogViewProps extends ConfirmDialogProps {
@@ -32,7 +32,7 @@ export const ConfirmDialogView: React.FC<ConfirmDialogViewProps> = ({
 	}, [children]);
 
 	const handleSubmit = () => {
-		onConfirm();
+		void onConfirm();
 	};
 
 	return (
@@ -87,7 +87,7 @@ export class ConfirmDialog extends BaseModal<ConfirmDialogViewProps> {
 		const viewProps = {
 			...props,
 			onConfirm: () => {
-				props.onConfirm();
+				void props.onConfirm();
 				this.close();
 			},
 		};

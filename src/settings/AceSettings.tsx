@@ -9,11 +9,11 @@ import useSettingsStore from "@src/hooks/useSettingsStore";
 import { LL } from "@src/i18n/i18n";
 import { languageModeMap } from "@src/service/AceLanguages";
 import {
-    AceCommunityDarkThemesList,
-    AceCommunityLightThemesList,
-    AceDarkThemesList,
-    AceKeyboardList,
-    AceLightThemesList,
+	AceCommunityDarkThemesList,
+	AceCommunityLightThemesList,
+	AceDarkThemesList,
+	AceKeyboardList,
+	AceLightThemesList,
 } from "@src/service/AceThemes";
 import "@styles/styles";
 import parse from "html-react-parser";
@@ -35,9 +35,7 @@ declare global {
 	}
 }
 
-interface AceSettingsProps {}
-
-export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
+export const AceSettings: React.FC = () => {
 	const settingsStore = useSettingsStore();
 	const settings = usePluginSettings(settingsStore);
 	const app = settingsStore.app;
@@ -110,7 +108,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 			}
 		}
 
-		loadSystemFonts();
+		void loadSystemFonts();
 	}, []);
 
 	// 异步检测字体可用性并返回可用字体列表
@@ -269,9 +267,11 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 	});
 
 	useEffect(() => {
-		void settingsStore.plugin.aceRuntime.isRuntimeInstalled().then((ready) => {
-			setModesStatus(ready ? "local" : "missing");
-		});
+		void settingsStore.plugin.aceRuntime
+			.isRuntimeInstalled()
+			.then((ready) => {
+				setModesStatus(ready ? "local" : "missing");
+			});
 	}, [settingsStore.plugin.aceRuntime]);
 
 	const handleDownload = useCallback(async () => {
@@ -657,15 +657,15 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 						modesStatus === "checking"
 							? LL.setting.about.checking()
 							: modesStatus === "local"
-							? LL.setting.about.local_installed()
+								? LL.setting.about.local_installed()
 								: modesStatus === "missing"
-								? LL.setting.about.cdn_loading()
-								: modesStatus === "downloading"
-									? LL.setting.about.downloading({
-											current: progress.current,
-											total: progress.total,
-										})
-									: LL.setting.about.download_done()
+									? LL.setting.about.cdn_loading()
+									: modesStatus === "downloading"
+										? LL.setting.about.downloading({
+												current: progress.current,
+												total: progress.total,
+											})
+										: LL.setting.about.download_done()
 					}
 				>
 					{modesStatus === "missing" && (

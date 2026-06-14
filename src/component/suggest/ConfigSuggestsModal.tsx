@@ -15,12 +15,12 @@ export interface ConfigValue<T = string | number | boolean> {
 }
 
 export class ConfigSuggestModal<
-	T = string | number | boolean
+	T = string | number | boolean,
 > extends FuzzySuggestModal<ConfigOption<T>> {
 	constructor(
 		app: App,
 		private configOptions: ConfigOption<T>[],
-		private callback: (option: ConfigOption<T>) => void
+		private callback: (option: ConfigOption<T>) => void | Promise<void>,
 	) {
 		super(app);
 		this.configOptions = configOptions;
@@ -42,7 +42,7 @@ export class ConfigSuggestModal<
 	}
 
 	onChooseItem(item: ConfigOption<T>, evt: MouseEvent | KeyboardEvent): void {
-		this.callback(item);
+		void this.callback(item);
 	}
 
 	renderSuggestion(item: FuzzyMatch<ConfigOption<T>>, el: HTMLElement): void {
@@ -60,12 +60,12 @@ export class ConfigSuggestModal<
 }
 
 export class ConfigValueSuggestModal<
-	T = string | number | boolean
+	T = string | number | boolean,
 > extends FuzzySuggestModal<ConfigValue<T>> {
 	constructor(
 		app: App,
 		private configValues: ConfigValue<T>[],
-		private callback: (value: ConfigValue<T>) => void
+		private callback: (value: ConfigValue<T>) => void | Promise<void>,
 	) {
 		super(app);
 		this.configValues = configValues;
@@ -87,7 +87,7 @@ export class ConfigValueSuggestModal<
 	}
 
 	onChooseItem(item: ConfigValue<T>, evt: MouseEvent | KeyboardEvent): void {
-		this.callback(item);
+		void this.callback(item);
 	}
 
 	renderSuggestion(item: FuzzyMatch<ConfigValue<T>>, el: HTMLElement) {

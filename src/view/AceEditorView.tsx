@@ -4,7 +4,7 @@ import { ICodeEditorConfig } from "@src/type/types";
 import { ObsidianUtils } from "@src/utils/ObsidianUtils";
 import { Scope, TFile, TextFileView, WorkspaceLeaf } from "obsidian";
 import { StrictMode } from "react";
-import { Root, createRoot } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { Minimap } from "./Minimap";
 
 export abstract class AceEditorView extends TextFileView {
@@ -45,7 +45,7 @@ export abstract class AceEditorView extends TextFileView {
 
 		this.registerEvent(
 			this.app.workspace.on("css-change", () => {
-				this.aceService.updateTheme(
+				void this.aceService.updateTheme(
 					this.config.lightTheme,
 					this.config.darkTheme,
 				);
@@ -104,7 +104,7 @@ export abstract class AceEditorView extends TextFileView {
 
 	updateEditorConfig(newConfig: ICodeEditorConfig) {
 		this.config = newConfig;
-		this.aceService.configureEditor(
+		void this.aceService.configureEditor(
 			this.config,
 			this.getFileExtension(this.file),
 		);
@@ -115,7 +115,7 @@ export abstract class AceEditorView extends TextFileView {
 		const container = this.getEditorContainer();
 
 		this.aceService.createEditor(container);
-		this.aceService.configureEditor(
+		void this.aceService.configureEditor(
 			this.config,
 			this.getFileExtension(this.file),
 		);
@@ -268,7 +268,7 @@ export abstract class AceEditorView extends TextFileView {
 			newFontSize = this.aceService.increaseFontSize(1);
 		}
 		this.config.fontSize = newFontSize;
-		this.plugin.updateSettings({ fontSize: newFontSize });
+		void this.plugin.updateSettings({ fontSize: newFontSize });
 	}
 
 	/**

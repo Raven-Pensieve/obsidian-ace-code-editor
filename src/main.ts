@@ -11,12 +11,12 @@ import SettingsStore from "./settings/SettingsStore";
 import AceCodeEditorSettingTab from "./settings/SettingsTab";
 import { EmbedCreator } from "./type/obsidian-extend";
 import {
-    CODE_EDITOR_VIEW_TYPE,
-    DEFAULT_CONFIG,
-    ICodeBlock,
-    ICodeEditorConfig,
-    SETTINGS_VIEW_TYPE,
-    SNIPPETS_EDITOR_VIEW_TYPE,
+	CODE_EDITOR_VIEW_TYPE,
+	DEFAULT_CONFIG,
+	ICodeBlock,
+	ICodeEditorConfig,
+	SETTINGS_VIEW_TYPE,
+	SNIPPETS_EDITOR_VIEW_TYPE,
 } from "./type/types";
 import { getCodeBlockAtCursor, updateCodeBlock } from "./utils/CodeBlock";
 import { SnippetUtils } from "./utils/SnippetUtils";
@@ -56,7 +56,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 	async loadSettings() {
 		const savedData = await this.loadData();
 		this.settings = this.validateAndMergeSettings(savedData);
-		this.saveSettings();
+		await this.saveSettings();
 	}
 
 	async saveSettings() {
@@ -193,8 +193,8 @@ export default class AceCodeEditorPlugin extends Plugin {
 						LL.command.open_css_snippet_manager(),
 					);
 					setIcon(this.statusBar, this.settings.snippetsManager.icon);
-					this.statusBar.addEventListener("click", async () => {
-						await this.openPluginView(SNIPPETS_EDITOR_VIEW_TYPE);
+					this.statusBar.addEventListener("click", () => {
+						void this.openPluginView(SNIPPETS_EDITOR_VIEW_TYPE);
 					});
 				}, 500);
 			});
@@ -226,7 +226,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 				item.setTitle(LL.command.create_code_file())
 					.setIcon("code-xml")
 					.onClick(() => {
-						this.createCodeFile(file.path);
+						void this.createCodeFile(file.path);
 					});
 			});
 		}
@@ -236,7 +236,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 				item.setTitle(LL.command.create_code_file())
 					.setIcon("code-xml")
 					.onClick(() => {
-						this.createCodeFile(file.parent?.path || "");
+						void this.createCodeFile(file.parent?.path || "");
 					});
 			});
 			menu.addItem((item) => {

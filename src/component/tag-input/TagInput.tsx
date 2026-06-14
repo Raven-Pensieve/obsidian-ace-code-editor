@@ -4,7 +4,7 @@ import "./TagInput.css";
 
 interface TagInputProps {
 	values: string[];
-	onChange: (values: string[]) => void;
+	onChange: (values: string[]) => void | Promise<void>;
 	suggestions?: string[];
 	placeholder?: string;
 	renderCustomSuggestion?: (suggestion: string) => React.ReactNode;
@@ -34,7 +34,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 
 	const addValue = (value: string) => {
 		if (value && !values.includes(value)) {
-			onChange([...values, value.trim()]);
+			void onChange([...values, value.trim()]);
 			setInputValue("");
 			setShowSuggestions(false);
 			setSelectedIndex(-1);
@@ -157,7 +157,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 			newValues.splice(dragOverTag, 0, draggedItem);
 
 			// 更新状态
-			onChange(newValues);
+			void onChange(newValues);
 		}
 
 		// 重置拖拽状态

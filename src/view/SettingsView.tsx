@@ -4,7 +4,7 @@ import { SETTINGS_VIEW_TYPE } from "@src/type/types";
 import { IconName, ItemView, WorkspaceLeaf } from "obsidian";
 import { StrictMode } from "react";
 
-import { createRoot, Root } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 
 export class SettingsView extends ItemView {
 	plugin: AceCodeEditorPlugin;

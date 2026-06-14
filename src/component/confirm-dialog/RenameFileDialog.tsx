@@ -7,7 +7,7 @@ interface RenameFileDialogProps {
 	title: string;
 	message: string;
 	oldName: string;
-	onRename: (newName: string) => void;
+	onRename: (newName: string) => void | Promise<void>;
 	onClose?: () => void;
 }
 
@@ -39,7 +39,7 @@ const RenameFileDialogView: React.FC<RenameFileDialogViewProps> = ({
 			onClose();
 			return;
 		}
-		onRename(finalName);
+		void onRename(finalName);
 		onClose();
 	};
 

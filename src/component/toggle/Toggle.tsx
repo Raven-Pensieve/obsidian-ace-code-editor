@@ -3,7 +3,7 @@ import "./Toggle.css";
 
 interface ToggleProps {
 	checked: boolean;
-	onChange: (checked: boolean) => void;
+	onChange: (checked: boolean) => void | Promise<void>;
 	className?: string;
 	"aria-label"?: string;
 }
@@ -15,17 +15,17 @@ export const Toggle: React.FC<ToggleProps> = ({
 	"aria-label": ariaLabel,
 }) => {
 	const handleChange = useCallback(() => {
-		onChange(!checked);
+		void onChange(!checked);
 	}, [checked, onChange]);
 
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent) => {
 			if (e.key === "Enter" || e.key === " ") {
 				e.preventDefault();
-				onChange(!checked);
+				void onChange(!checked);
 			}
 		},
-		[checked, onChange]
+		[checked, onChange],
 	);
 	return (
 		<div

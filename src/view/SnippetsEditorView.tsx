@@ -5,7 +5,7 @@ import { SNIPPETS_EDITOR_VIEW_TYPE } from "@src/type/types";
 import { SnippetUtils } from "@src/utils/SnippetUtils";
 import { WorkspaceLeaf } from "obsidian";
 import { StrictMode } from "react";
-import { createRoot, Root } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { AceEditorView } from "./AceEditorView";
 
 export class SnippetsEditorView extends AceEditorView {
@@ -92,13 +92,13 @@ export class SnippetsEditorView extends AceEditorView {
 	): Promise<void> {
 		const viewState = state as Record<string, unknown> | null;
 		if (viewState?.file && typeof viewState.file === "string") {
-			window.setTimeout(async () => {
-				await this.handleFileSelect(viewState.file as string);
+			window.setTimeout(() => {
+				void this.handleFileSelect(viewState.file as string);
 			}, 100);
 		}
 	}
 
-	async save(clear?: boolean | undefined): Promise<void> {
+	async save(clear?: boolean): Promise<void> {
 		if (!this.currentFile) {
 			return;
 		}
@@ -108,7 +108,7 @@ export class SnippetsEditorView extends AceEditorView {
 				`${this.snippetsFolder}/${this.currentFile}`,
 				content,
 			);
-			this.app.customCss.requestLoadSnippets();
+			void this.app.customCss.requestLoadSnippets();
 		} catch (error) {
 			console.error("Failed to save snippet file", error);
 		}
@@ -116,7 +116,7 @@ export class SnippetsEditorView extends AceEditorView {
 
 	requestSave = () => {
 		if (this.currentFile) {
-			this.save();
+			void this.save();
 		}
 	};
 
@@ -183,7 +183,9 @@ export class SnippetsEditorView extends AceEditorView {
 				<SnippetsNavigation
 					plugin={this.plugin}
 					selectedFile={this.currentFile}
-					onFileSelect={(file) => this.handleFileSelect(file)}
+					onFileSelect={(file) => {
+						void this.handleFileSelect(file);
+					}}
 					onResize={() => {
 						this.aceService.editor?.resize();
 					}}

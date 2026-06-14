@@ -5,7 +5,7 @@ import { AceService } from "@src/service/AceService";
 import { Embed } from "@src/type/obsidian-extend";
 import { LineRange } from "@src/type/types";
 import { parseLinkWithRange } from "@src/utils/LineRange";
-import { Ace } from "ace-builds";
+import type { Ace } from "ace-builds";
 import { Maximize2 } from "lucide-react";
 import { MarkdownRenderChild, TFile } from "obsidian";
 import {
@@ -16,7 +16,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { createRoot, Root } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 
 interface CodeEmbedContainerProps {
 	plugin: AceCodeEditorPlugin;
@@ -45,7 +45,10 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 					editorRef.current,
 				);
 				aceEditorRef.current.setReadOnly(true); // 设置为只读模式
-				aceServiceRef.current.configureEditor(settings, file.extension);
+				void aceServiceRef.current.configureEditor(
+					settings,
+					file.extension,
+				);
 
 				let contentLines: number;
 				// 如果有行范围，使用行范围显示，否则显示全部内容
@@ -69,7 +72,7 @@ const CodeEmbedContainer: React.FC<CodeEmbedContainerProps> = ({
 			}
 		};
 
-		initializeEditor();
+		void initializeEditor();
 
 		return () => {
 			if (aceServiceRef.current) {
