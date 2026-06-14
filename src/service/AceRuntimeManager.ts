@@ -29,14 +29,22 @@ export class AceRuntimeManager {
 	/** Ace 版本号（用于 CDN URL） */
 	static readonly ACE_VERSION = "1.44.0";
 	static readonly ACE_CDN = `https://cdn.jsdelivr.net/npm/ace-builds@${AceRuntimeManager.ACE_VERSION}/src-noconflict`;
+	private static readonly pendingModuleLoads = new Map<
+		string,
+		Promise<unknown>
+	>();
 
 	private readonly app: App;
 	private readonly pluginId: string;
 	private onSaveUseLocalAce?: (value: boolean) => Promise<void>;
+	private readonly originalLoadModule?: AceConfigInternal["loadModule"];
 
 	constructor(app: App, manifest: PluginManifest) {
 		this.app = app;
 		this.pluginId = manifest.id;
+		this.originalLoadModule = (
+			ace.config as unknown as AceConfigInternal
+		).loadModule?.bind(ace.config);
 	}
 
 	/**
@@ -109,36 +117,20 @@ export class AceRuntimeManager {
 	}
 
 	private setupLocalLoader() {
-		const aceConfig = ace.config as unknown as AceConfigInternal;
-		aceConfig.$values = aceConfig.$values || {};
-		aceConfig.$values.loader = async (
-			moduleName: string,
-			afterLoad: (err: Error | null, module?: unknown) => void,
-		) => {
-			try {
-				const parts = moduleName.split("/");
-				if (parts[0] !== "ace") {
-					afterLoad(null, undefined);
-					return;
-				}
-				const type = parts[1];
-				const name = parts.slice(2).join("-");
-				let filePath: string;
-				if (type === "worker") {
-					filePath = `${this.aceWorkersDir}/${type}-${name}.js`;
-				} else {
-					filePath = `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
-				}
-				const content = await this.app.vault.adapter.read(filePath);
-				const script = document.createElement("script");
-				script.textContent = content;
-				document.head.appendChild(script);
-				afterLoad(null, undefined);
-			} catch (e) {
-				console.warn(`Ace 模块加载失败: ${moduleName}`, e);
-				afterLoad(null, undefined);
-			}
-		};
+		this.installCustomModuleLoader(async (moduleName) => {
+			const parts = moduleName.split("/");
+			const type = parts[1];
+			const name = parts.slice(2).join("-");
+			const filePath =
+				type === "worker"
+					? `${this.aceWorkersDir}/${type}-${name}.js`
+					: `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
+			const content = await this.app.vault.adapter.read(filePath);
+			return {
+				content,
+				sourceUrl: filePath.replace(/\\/g, "/"),
+			};
+		});
 		console.log("Ace 运行时: 使用本地包");
 	}
 
@@ -146,7 +138,76 @@ export class AceRuntimeManager {
 		ace.config.set("modePath", AceRuntimeManager.ACE_CDN);
 		ace.config.set("workerPath", AceRuntimeManager.ACE_CDN);
 		ace.config.set("basePath", AceRuntimeManager.ACE_CDN);
+		this.installCustomModuleLoader(async (moduleName, moduleType) => {
+			const aceConfig = ace.config as unknown as AceConfigInternal;
+			const sourceUrl = aceConfig.moduleUrl?.(moduleName, moduleType);
+			if (!sourceUrl) {
+				throw new Error(`无法解析 Ace CDN 模块地址: ${moduleName}`);
+			}
+			const resp = await requestUrl({ url: sourceUrl });
+			return { content: resp.text, sourceUrl };
+		});
 		console.log("Ace 运行时: 使用 CDN（可在设置中下载到本地）");
+	}
+
+	private installCustomModuleLoader(
+		loadSource: (
+			moduleName: string,
+			moduleType?: string,
+		) => Promise<{ content: string; sourceUrl: string }>,
+	) {
+		const aceConfig = ace.config as unknown as AceConfigInternal;
+		const fallbackLoadModule = this.originalLoadModule;
+		aceConfig.loadModule = (moduleId, onLoad) => {
+			const moduleName =
+				typeof moduleId === "string" ? moduleId : moduleId[1];
+			const moduleType =
+				typeof moduleId === "string" ? undefined : moduleId[0];
+
+			if (!moduleName.startsWith("ace/") || moduleType === "worker") {
+				fallbackLoadModule?.(moduleId, onLoad);
+				return;
+			}
+
+			const aceRequire = (
+				ace as unknown as { require?: (name: string) => unknown }
+			).require;
+			try {
+				const loaded = aceRequire?.(moduleName);
+				if (loaded) {
+					onLoad?.(loaded);
+					return;
+				}
+			} catch {
+				// ignore and continue loading
+			}
+
+			const cacheKey = `${moduleType ?? "module"}:${moduleName}`;
+			const pending =
+				AceRuntimeManager.pendingModuleLoads.get(cacheKey) ??
+				(async () => {
+					const { content, sourceUrl } = await loadSource(
+						moduleName,
+						moduleType,
+					);
+					const executeModule = new Function(
+						"ace",
+						`${content}\n//# sourceURL=${sourceUrl}`,
+					);
+					executeModule(ace);
+					return aceRequire?.(moduleName);
+				})().finally(() => {
+					AceRuntimeManager.pendingModuleLoads.delete(cacheKey);
+				});
+
+			AceRuntimeManager.pendingModuleLoads.set(cacheKey, pending);
+			pending
+				.then((module) => onLoad?.(module))
+				.catch((error) => {
+					console.warn(`Ace 模块加载失败: ${moduleName}`, error);
+					onLoad?.(undefined);
+				});
+		};
 	}
 
 	/**
@@ -181,8 +242,7 @@ export class AceRuntimeManager {
 				if (name === "snippets" && entry.files) {
 					snippetFiles = entry.files
 						.filter(
-							(f) =>
-								f.type === "file" && f.name.endsWith(".js"),
+							(f) => f.type === "file" && f.name.endsWith(".js"),
 						)
 						.map((f) => f.name);
 				}

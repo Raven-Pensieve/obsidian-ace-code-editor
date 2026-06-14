@@ -23,6 +23,11 @@ interface AceConfigInternal {
 		) => void;
 		[key: string]: unknown;
 	};
+	loadModule?: (
+		moduleId: string | [string, string],
+		onLoad?: (module?: unknown) => void,
+	) => void;
+	moduleUrl?: (name: string, component?: string) => string;
 }
 
 declare module "ace-builds" {

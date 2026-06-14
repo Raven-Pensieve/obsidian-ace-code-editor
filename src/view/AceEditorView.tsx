@@ -214,7 +214,9 @@ export abstract class AceEditorView extends TextFileView {
 	protected registerAceKeybindings() {
 		if (this.config.keyboard) {
 			this.aceService.setKeyboardHandler(
-				`ace/keyboard/${this.config.keyboard}`,
+				this.config.keyboard === "default"
+					? null
+					: `ace/keyboard/${this.config.keyboard}`,
 			);
 		}
 
