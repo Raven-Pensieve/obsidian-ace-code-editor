@@ -152,9 +152,15 @@ export class AceRuntimeManager {
 			const cacheKey = `${moduleType ?? "module"}:${moduleName}`;
 			const pending =
 				AceRuntimeManager.pendingModuleLoads.get(cacheKey) ??
-				new Promise<unknown>((resolve) => {
-					fallbackLoadModule?.(moduleId, resolve);
-				}).finally(() => {
+				(async () => {
+					const filePath = this.getLocalModuleFilePath(moduleName);
+					const content = await this.app.vault.adapter.read(filePath);
+					const script = document.createElement("script");
+					script.textContent = `${content}\n//# sourceURL=${filePath.replace(/\\/g, "/")}`;
+					document.head.appendChild(script);
+					script.remove();
+					return aceRequire?.(moduleName);
+				})().finally(() => {
 					AceRuntimeManager.pendingModuleLoads.delete(cacheKey);
 				});
 
@@ -163,9 +169,22 @@ export class AceRuntimeManager {
 				.then((module) => onLoad?.(module))
 				.catch((error) => {
 					console.warn(`Ace 模块加载失败: ${moduleName}`, error);
-					onLoad?.(undefined);
+					fallbackLoadModule?.(moduleId, onLoad);
 				});
 		};
+	}
+
+	private getLocalModuleFilePath(moduleName: string) {
+		const parts = moduleName.split("/");
+		const type = parts[1];
+		const name = parts.slice(2).join("-");
+		if (type === "worker") {
+			return `${this.aceWorkersDir}/${type}-${name}.js`;
+		}
+		if (type === "snippets") {
+			return `${this.aceModesDir}/snippets/${name}.js`;
+		}
+		return `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
 	}
 
 	/**
