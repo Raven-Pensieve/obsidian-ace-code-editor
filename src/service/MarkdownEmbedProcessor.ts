@@ -1,26 +1,22 @@
 import { MarkdownPostProcessorContext, TFile } from "obsidian";
-import { isRemoteUrl, readFromUrl } from "./remote/RemoteManager";
-import { RemoteEmbedView } from "../view/RemoteEmbedView";
-import { CodeEmbedView } from "../view/CodeEmbedView";
 import AceCodeEditorPlugin from "../main";
+import { CodeEmbedView } from "../view/CodeEmbedView";
+import { RemoteEmbedView } from "../view/RemoteEmbedView";
+import { isRemoteUrl, readFromUrl } from "./remote/RemoteManager";
 
 export class MarkdownEmbedProcessor {
 	constructor(private plugin: AceCodeEditorPlugin) {}
 
 	register() {
-		this.plugin.registerMarkdownPostProcessor(
-			this.process.bind(this),
-		);
+		this.plugin.registerMarkdownPostProcessor(this.process.bind(this));
 
 		// 拦截远程链接的点击，阻止 Obsidian 将其当作本地文件路径解析
 		this.plugin.registerDomEvent(
-			document.body,
+			activeDocument.body,
 			"click",
 			(evt) => {
 				const target = evt.target as HTMLElement;
-				const link = target.closest(
-					"a.internal-link",
-				) as HTMLAnchorElement | null;
+				const link = target.closest("a.internal-link");
 				if (!link) return;
 
 				const href = link.getAttribute("href");
@@ -34,7 +30,10 @@ export class MarkdownEmbedProcessor {
 		);
 	}
 
-	private process(element: HTMLElement, context: MarkdownPostProcessorContext) {
+	private process(
+		element: HTMLElement,
+		context: MarkdownPostProcessorContext,
+	) {
 		this.processLocalLineRangeEmbeds(element, context);
 		this.processRemoteEmbeds(element, context);
 	}
@@ -49,7 +48,7 @@ export class MarkdownEmbedProcessor {
 	) {
 		const links = element.querySelectorAll("a.internal-link");
 
-		links.forEach((link: HTMLAnchorElement) => {
+		links.forEach((link) => {
 			const href = link.getAttribute("href");
 			if (!href) return;
 

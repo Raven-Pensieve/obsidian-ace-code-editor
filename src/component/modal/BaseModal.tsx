@@ -1,8 +1,14 @@
 import AceCodeEditorPlugin from "@src/main";
 import { X } from "lucide-react";
 import { Modal } from "obsidian";
-import { StrictMode, Suspense, lazy } from "react";
-import { Root, createRoot } from "react-dom/client";
+import {
+	StrictMode,
+	Suspense,
+	lazy,
+	type ComponentType,
+	type LazyExoticComponent,
+} from "react";
+import { createRoot, type Root } from "react-dom/client";
 
 const ModalLoading: React.FC = () => (
 	<div className="ace-modal-loading">
@@ -14,15 +20,13 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 	private root: Root | null = null;
 	private componentProps: T;
 	private sizeClass: string | undefined;
-	private Component:
-		| React.ComponentType<T>
-		| React.LazyExoticComponent<React.ComponentType<T>>;
+	private Component: ComponentType<T> | LazyExoticComponent<ComponentType<T>>;
 
 	constructor(
 		plugin: AceCodeEditorPlugin,
 		component:
-			| React.ComponentType<T>
-			| (() => Promise<{ default: React.ComponentType<T> }>),
+			| ComponentType<T>
+			| (() => Promise<{ default: ComponentType<T> }>),
 		props: Omit<T, "onClose"> & { onClose?: () => void },
 		sizeClass?: string,
 	) {
@@ -49,9 +53,9 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 
 	private isLazyFactory(
 		component:
-			| React.ComponentType<T>
-			| (() => Promise<{ default: React.ComponentType<T> }>),
-	): component is () => Promise<{ default: React.ComponentType<T> }> {
+			| ComponentType<T>
+			| (() => Promise<{ default: ComponentType<T> }>),
+	): component is () => Promise<{ default: ComponentType<T> }> {
 		// Heuristic: Components matching T (which has onClose) must accept props, so length > 0.
 		// Lazy factories usually take 0 arguments.
 		return typeof component === "function" && component.length === 0;
@@ -65,8 +69,8 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 		}
 	}
 
-	private async openAsCustomModal() {
-		const Component = this.Component as React.ComponentType<T>;
+	private openAsCustomModal() {
+		const Component = this.Component as ComponentType<T>;
 		const el = this.containerEl;
 		el.classList.add("ace-modal-container");
 
@@ -94,8 +98,8 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 		);
 	}
 
-	private async openAsObsidianModal() {
-		const Component = this.Component as React.ComponentType<T>;
+	private openAsObsidianModal() {
+		const Component = this.Component as ComponentType<T>;
 		const { contentEl } = this;
 		this.root = createRoot(contentEl);
 		this.root.render(
@@ -107,7 +111,7 @@ export class BaseModal<T extends { onClose: () => void }> extends Modal {
 		);
 	}
 
-	async onClose() {
+	onClose() {
 		this.root?.unmount();
 		this.root = null;
 		this.containerEl.empty();

@@ -8,7 +8,7 @@ import { ConfirmDialogView } from "./ConfirmDialog";
 interface CreateFileDialogProps {
 	title: string;
 	message: string;
-	onCreate: (fileName: string) => void;
+	onCreate: (fileName: string) => void | Promise<void>;
 	onClose?: () => void;
 }
 
@@ -35,7 +35,7 @@ const CreateFileDialogView: React.FC<CreateFileDialogViewProps> = ({
 			return;
 		}
 		const finalName = fileName.trim() + ".css";
-		onCreate(finalName);
+		void onCreate(finalName);
 		onClose();
 	};
 

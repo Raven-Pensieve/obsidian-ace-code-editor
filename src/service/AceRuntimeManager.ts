@@ -155,9 +155,9 @@ export class AceRuntimeManager {
 				(async () => {
 					const filePath = this.getLocalModuleFilePath(moduleName);
 					const content = await this.app.vault.adapter.read(filePath);
-					const script = document.createElement("script");
+					const script = activeDocument.createElement("script");
 					script.textContent = `${content}\n//# sourceURL=${filePath.replace(/\\/g, "/")}`;
-					document.head.appendChild(script);
+					activeDocument.head.appendChild(script);
 					script.remove();
 					return aceRequire?.(moduleName);
 				})().finally(() => {
@@ -362,15 +362,11 @@ class AceRuntimeInstallModal extends Modal {
 		this.progressEl = contentEl.createEl("progress", {
 			attr: { value: "0", max: "1" },
 		});
-		this.progressEl.style.width = "100%";
-		this.progressEl.style.display = "none";
+		this.progressEl.addClass("ace-runtime-install-progress");
 
 		const actions = contentEl.createDiv({
 			cls: "ace-runtime-install-actions",
 		});
-		actions.style.display = "flex";
-		actions.style.gap = "8px";
-		actions.style.justifyContent = "flex-end";
 
 		this.laterButton = actions.createEl("button", {
 			text: LL.common.cancel(),
@@ -383,7 +379,7 @@ class AceRuntimeInstallModal extends Modal {
 		});
 		this.downloadButton.onclick = async () => {
 			this.setDownloading(true);
-			this.progressEl.style.display = "block";
+			this.progressEl.show();
 			try {
 				await this.onDownload((current, total) => {
 					this.progressEl.max = total;

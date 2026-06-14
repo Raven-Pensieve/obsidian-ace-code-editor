@@ -108,7 +108,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 		const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
 			// focus时延迟设置value，避免光标位置问题
-			window.setTimeout(forceSetValue, 10);
+			window.setTimeout(() => {
+				forceSetValue();
+			}, 10);
 			props.onFocus?.(e);
 			if (suggestions.length > 0) {
 				setShowSuggestions(true);
@@ -117,7 +119,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 		const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
 			// blur时延迟设置value
-			window.setTimeout(forceSetValue, 150);
+			window.setTimeout(() => {
+				forceSetValue();
+			}, 150);
 			props.onBlur?.(e);
 
 			// 延迟隐藏建议，以便点击建议项

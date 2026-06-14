@@ -5,9 +5,9 @@ import { AceService } from "@src/service/AceService";
 import { LineRange } from "@src/type/types";
 import { parseLineRange } from "@src/utils/LineRange";
 import { ExternalLink } from "lucide-react";
-import { createElement, useEffect, useMemo, useRef, useState } from "react";
-import { createRoot, Root } from "react-dom/client";
 import { MarkdownRenderChild } from "obsidian";
+import { createElement, useEffect, useMemo, useRef, useState } from "react";
+import { createRoot, type Root } from "react-dom/client";
 
 // ─── 远程嵌入容器 Props ───
 
@@ -43,7 +43,7 @@ const RemoteEmbedContainer: React.FC<RemoteEmbedContainerProps> = ({
 				editorRef.current,
 			);
 			editor.setReadOnly(true);
-			aceServiceRef.current.configureEditor(settings, extension);
+			void aceServiceRef.current.configureEditor(settings, extension);
 
 			if (range) {
 				aceServiceRef.current.setValueWithLineRange(content, range);
@@ -65,13 +65,13 @@ const RemoteEmbedContainer: React.FC<RemoteEmbedContainerProps> = ({
 			setLang(languageMode);
 		};
 
-		initialize();
+		void initialize();
 
 		return () => {
 			aceServiceRef.current?.destroy();
 			aceServiceRef.current = null;
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- editor instance is intentionally created once per mount
 	}, []);
 
 	const displayLabel = useMemo(() => {

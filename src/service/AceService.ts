@@ -1,3 +1,4 @@
+import type { Ace } from "ace-builds";
 import * as ace from "ace-builds";
 // 导入扩展
 import "./AceExtensions";
@@ -17,7 +18,7 @@ import { getLanguageMode } from "./AceLanguages";
 import { getAceTheme } from "./AceThemes";
 
 export class AceService {
-	editor: ace.Ace.Editor | null = null;
+	editor: Ace.Editor | null = null;
 
 	constructor() {}
 
@@ -25,7 +26,7 @@ export class AceService {
 		return this.editor !== null;
 	}
 
-	createEditor(element: HTMLElement): ace.Ace.Editor {
+	createEditor(element: HTMLElement): Ace.Editor {
 		this.editor = ace.edit(element);
 		return this.editor;
 	}
@@ -47,7 +48,7 @@ export class AceService {
 			this.editor.setKeyboardHandler(`ace/keyboard/${config.keyboard}`);
 		}
 
-		this.updateTheme(config.lightTheme, config.darkTheme);
+		await this.updateTheme(config.lightTheme, config.darkTheme);
 	}
 
 	async updateTheme(lightTheme: string, darkTheme: string) {
@@ -114,7 +115,7 @@ export class AceService {
 
 	private getEditorOptions(
 		config: ICodeEditorConfig,
-	): Partial<ace.Ace.EditorOptions> {
+	): Partial<Ace.EditorOptions> {
 		return {
 			// -- EditorOptions --
 			// selectionStyle: "fullLine" | "screenLine" | "text" | "line";
@@ -222,7 +223,7 @@ export class AceService {
 	private getEditSessionOptions(
 		config: ICodeEditorConfig,
 		languageMode: string,
-	): Partial<ace.Ace.EditSessionOptions> {
+	): Partial<Ace.EditSessionOptions> {
 		return {
 			// wrap: "off" | "free" | "printmargin" | boolean | number;
 			wrap: config.wrap,
@@ -251,7 +252,7 @@ export class AceService {
 		};
 	}
 
-	getEditor(): ace.Ace.Editor | null {
+	getEditor(): Ace.Editor | null {
 		return this.editor;
 	}
 

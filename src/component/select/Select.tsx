@@ -9,7 +9,7 @@ export interface SelectOption {
 
 interface SelectProps {
 	value: unknown;
-	onChange: (value: unknown) => void;
+	onChange: (value: unknown) => void | Promise<void>;
 	options: SelectOption[];
 	placeholder?: string;
 	className?: string;
@@ -135,7 +135,7 @@ export const Select: React.FC<SelectProps> = ({
 										height: `${itemHeight}px`,
 									}}
 									onClick={() => {
-										onChange(option.value);
+										void onChange(option.value);
 										setIsOpen(false);
 									}}
 								>

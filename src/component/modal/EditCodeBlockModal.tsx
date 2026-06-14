@@ -2,7 +2,7 @@ import { LL } from "@src/i18n/i18n";
 import AceCodeEditorPlugin from "@src/main";
 import { AceService } from "@src/service/AceService";
 import { ICodeBlock, ICodeEditorConfig } from "@src/type/types";
-import { Ace } from "ace-builds";
+import type { Ace } from "ace-builds";
 import { useEffect, useRef } from "react";
 import { BaseModal } from "./BaseModal";
 
@@ -30,7 +30,7 @@ const EditCodeBlockView: React.FC<EditCodeBlockViewProps> = ({
 		if (editorRef.current && !aceEditorRef.current) {
 			aceServiceRef.current = new AceService();
 			aceEditorRef.current = aceServiceRef.current.createEditor(
-				editorRef.current
+				editorRef.current,
 			);
 			aceServiceRef.current.configureEditor(config, codeBlock.language);
 			aceServiceRef.current.setValue(codeBlock.code);

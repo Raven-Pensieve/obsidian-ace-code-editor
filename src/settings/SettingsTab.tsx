@@ -2,7 +2,7 @@ import { SettingsStoreContext } from "@src/context/SettingsStoreContext";
 import AceCodeEditorPlugin from "@src/main";
 import { App, PluginSettingTab } from "obsidian";
 import { StrictMode } from "react";
-import { createRoot, Root } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { AceSettings } from "./AceSettings";
 
 export default class AceCodeEditorSettingTab extends PluginSettingTab {
@@ -42,7 +42,7 @@ export default class AceCodeEditorSettingTab extends PluginSettingTab {
 				>
 					<AceSettings />
 				</SettingsStoreContext.Provider>
-			</StrictMode>
+			</StrictMode>,
 		);
 	}
 }

@@ -1,12 +1,12 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import "./SettingItem.css";
 
 interface SettingsItemProps {
 	name: string;
-	desc?: string | React.ReactNode;
-	icon?: React.ReactNode;
-	children?: React.ReactNode;
+	desc?: string | ReactNode;
+	icon?: ReactNode;
+	children?: ReactNode;
 	collapsible?: boolean;
 	defaultCollapsed?: boolean;
 }

@@ -1,8 +1,8 @@
-import * as ace from "ace-builds";
+import type { Ace } from "ace-builds";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface MinimapProps {
-	editor: ace.Ace.Editor | null;
+	editor: Ace.Editor | null;
 	enabled: boolean;
 	mode?: "always" | "hover";
 }

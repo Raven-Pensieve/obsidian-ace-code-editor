@@ -15,9 +15,9 @@ export class CodeEditorView extends AceEditorView {
 	async onLoadFile(file: TFile): Promise<void> {
 		// 只配置编辑器，不重新初始化
 		if (this.aceService.isEditorInitialized()) {
-			this.aceService.configureEditor(
+			void this.aceService.configureEditor(
 				this.config,
-				this.getFileExtension(file)
+				this.getFileExtension(file),
 			);
 		}
 

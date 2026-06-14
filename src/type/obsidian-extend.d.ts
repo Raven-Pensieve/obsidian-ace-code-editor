@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { App, Component, Debouncer, Events, TFile } from "obsidian";
 
 declare module "obsidian" {
@@ -29,7 +28,7 @@ interface EmbedContext {
 	depth: number;
 	displayMode?: boolean;
 	showInline?: boolean;
-	state?: any;
+	state?: unknown;
 }
 
 interface EmbedRegistry extends Events {
