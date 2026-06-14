@@ -91,7 +91,7 @@ export class AceService {
 		return this.editor?.isFocused() ?? false;
 	}
 
-	setKeyboardHandler(handler: string): void {
+	setKeyboardHandler(handler: string | null): void {
 		if (!this.editor) return;
 		this.editor.setKeyboardHandler(handler);
 	}
