@@ -506,7 +506,7 @@ type RootTranslation = {
 			 */
 			local_installed: string
 			/**
-			 * 当​前​使​用​ ​C​D​N​ ​在​线​加​载​，​建​议​下​载​到​本​地​以​获​得​更​好​的​体​验
+			 * 尚​未​安​装​本​地​运​行​时​包​。​下​载​后​即​可​启​用​语​法​模​式​、​代​码​片​段​和​ ​w​o​r​k​e​r​。
 			 */
 			cdn_loading: string
 			/**
@@ -516,7 +516,7 @@ type RootTranslation = {
 			 */
 			downloading: RequiredParams<'current' | 'total'>
 			/**
-			 * ✔​ ​下​载​完​成​，​已​切​换​为​本​地​加​载
+			 * ✔​ ​下​载​完​成​，​本​地​运​行​时​已​就​绪
 			 */
 			download_done: string
 			/**
@@ -1045,7 +1045,7 @@ export type TranslationFunctions = {
 			 */
 			local_installed: () => LocalizedString
 			/**
-			 * 当前使用 CDN 在线加载，建议下载到本地以获得更好的体验
+			 * 尚未安装本地运行时包。下载后即可启用语法模式、代码片段和 worker。
 			 */
 			cdn_loading: () => LocalizedString
 			/**
@@ -1053,7 +1053,7 @@ export type TranslationFunctions = {
 			 */
 			downloading: (arg: { current: number, total: number }) => LocalizedString
 			/**
-			 * ✔ 下载完成，已切换为本地加载
+			 * ✔ 下载完成，本地运行时已就绪
 			 */
 			download_done: () => LocalizedString
 			/**

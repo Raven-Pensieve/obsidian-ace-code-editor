@@ -172,9 +172,9 @@ const en = {
 			checking: "Checking local runtime environment...",
 			local_installed: "✔ Local runtime installed, available offline",
 			cdn_loading:
-				"Currently loading from CDN. Download locally for a better experience",
+				"Local runtime package is not installed yet. Download it to enable syntax modes, snippets, and workers.",
 			downloading: "Downloading {current:number}/{total:number}",
-			download_done: "✔ Download complete, switched to local loading",
+			download_done: "✔ Download complete, local runtime is ready",
 			download_btn: "Download locally (mode + worker + snippets ~8MB)",
 			redownload: "Re-download",
 			switch_cdn: "Switch to CDN",

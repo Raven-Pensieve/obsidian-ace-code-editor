@@ -168,9 +168,9 @@ const zh = {
 			checking: "正在检查本地运行环境...",
 			local_installed: "✔ 已安装本地运行时，可离线使用",
 			cdn_loading:
-				"当前使用 CDN 在线加载，建议下载到本地以获得更好的体验",
+				"尚未安装本地运行时包。下载后即可启用语法模式、代码片段和 worker。",
 			downloading: "正在下载 {current:number}/{total:number}",
-			download_done: "✔ 下载完成，已切换为本地加载",
+			download_done: "✔ 下载完成，本地运行时已就绪",
 			download_btn: "下载到本地（mode + worker + snippets ~8MB）",
 			redownload: "重新下载",
 			switch_cdn: "切换为 CDN",

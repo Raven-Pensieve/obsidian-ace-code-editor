@@ -169,9 +169,9 @@ const zh_TW = {
 			checking: "正在檢查本機執行環境...",
 			local_installed: "✔ 已安裝本機執行時，可離線使用",
 			cdn_loading:
-				"目前使用 CDN 線上載入，建議下載到本機以獲得更好的體驗",
+				"尚未安裝本機執行時套件。下載後即可啟用語法模式、程式碼片段與 worker。",
 			downloading: "正在下載 {current:number}/{total:number}",
-			download_done: "✔ 下載完成，已切換為本機載入",
+			download_done: "✔ 下載完成，本機執行時已就緒",
 			download_btn: "下載到本機（mode + worker + snippets ~8MB）",
 			redownload: "重新下載",
 			switch_cdn: "切換為 CDN",

@@ -1,5 +1,6 @@
+import { LL } from "@src/i18n/i18n";
 import * as ace from "ace-builds";
-import { App, PluginManifest, requestUrl } from "obsidian";
+import { App, Modal, Notice, PluginManifest, requestUrl } from "obsidian";
 
 /** jsDelivr API 返回的文件树节点 */
 interface JsDelivrFileNode {
@@ -10,20 +11,6 @@ interface JsDelivrFileNode {
 	time?: string;
 	size?: number;
 }
-
-// 模块加载时立即设置 CDN 为默认路径，确保 Ace 动态加载（mode/theme/keybinding）在 onload 之前也能正确解析
-ace.config.set(
-	"modePath",
-	`https://cdn.jsdelivr.net/npm/ace-builds@1.44.0/src-noconflict`,
-);
-ace.config.set(
-	"workerPath",
-	`https://cdn.jsdelivr.net/npm/ace-builds@1.44.0/src-noconflict`,
-);
-ace.config.set(
-	"basePath",
-	`https://cdn.jsdelivr.net/npm/ace-builds@1.44.0/src-noconflict`,
-);
 
 export class AceRuntimeManager {
 	/** Ace 版本号（用于 CDN URL） */
@@ -38,6 +25,8 @@ export class AceRuntimeManager {
 	private readonly pluginId: string;
 	private onSaveUseLocalAce?: (value: boolean) => Promise<void>;
 	private readonly originalLoadModule?: AceConfigInternal["loadModule"];
+	private runtimeInstalled = false;
+	private runtimePromptOpen = false;
 
 	constructor(app: App, manifest: PluginManifest) {
 		this.app = app;
@@ -67,6 +56,14 @@ export class AceRuntimeManager {
 		return `${this.app.vault.configDir}/plugins/${this.pluginId}/ace-workers`;
 	}
 
+	get aceModesUrl(): string {
+		return `app://obsidian.md/plugins/${this.pluginId}/ace-modes`;
+	}
+
+	get aceWorkersUrl(): string {
+		return `app://obsidian.md/plugins/${this.pluginId}/ace-workers`;
+	}
+
 	/**
 	 * 检查本地运行时文件是否完整
 	 * 检测标记: mode-javascript.js + worker-javascript.js + snippets/javascript.js + keybinding-vim.js
@@ -93,30 +90,23 @@ export class AceRuntimeManager {
 	}
 
 	/**
-	 * 初始化 Ace 运行时加载器
-	 * - useLocalAce=true → 先验证本地文件存在，再注册自定义 loader
-	 * - useLocalAce=false → 用 jsDelivr CDN
-	 * - 验证结果会通过 onSaveState 持久化
+	 * 初始化 Ace 运行时加载器。
+	 * 仅支持本地运行时；若本地包缺失则进入受限模式并提示用户下载。
 	 */
-	async initAceModeBasePath(useLocalAce?: boolean) {
-		if (useLocalAce) {
-			const localExists = await this.checkAceModesExist();
-			if (localExists) {
-				this.setupLocalLoader();
-			} else {
-				// 本地文件丢失，回退 CDN 并更新状态
-				this.setupCdn();
-				await this.onSaveUseLocalAce?.(false);
-				return;
-			}
-		} else {
-			this.setupCdn();
+	async initAceModeBasePath() {
+		this.setupLocalLoader();
+		this.runtimeInstalled = await this.checkAceModesExist();
+		await this.onSaveUseLocalAce?.(true);
+		if (this.runtimeInstalled) {
+			console.log("Ace 运行时: 使用本地包");
 			return;
 		}
-		await this.onSaveUseLocalAce?.(true);
+		console.warn("Ace 运行时: 本地包缺失，进入受限模式");
+		void this.promptInstallRuntime();
 	}
 
 	private setupLocalLoader() {
+		this.setupLocalPaths();
 		this.installCustomModuleLoader(async (moduleName) => {
 			const parts = moduleName.split("/");
 			const type = parts[1];
@@ -133,23 +123,12 @@ export class AceRuntimeManager {
 				sourceUrl: filePath.replace(/\\/g, "/"),
 			};
 		});
-		console.log("Ace 运行时: 使用本地包");
 	}
 
-	private setupCdn() {
-		ace.config.set("modePath", AceRuntimeManager.ACE_CDN);
-		ace.config.set("workerPath", AceRuntimeManager.ACE_CDN);
-		ace.config.set("basePath", AceRuntimeManager.ACE_CDN);
-		this.installCustomModuleLoader(async (moduleName, moduleType) => {
-			const aceConfig = ace.config as unknown as AceConfigInternal;
-			const sourceUrl = aceConfig.moduleUrl?.(moduleName, moduleType);
-			if (!sourceUrl) {
-				throw new Error(`无法解析 Ace CDN 模块地址: ${moduleName}`);
-			}
-			const resp = await requestUrl({ url: sourceUrl });
-			return { content: resp.text, sourceUrl };
-		});
-		console.log("Ace 运行时: 使用 CDN（可在设置中下载到本地）");
+	private setupLocalPaths() {
+		ace.config.set("modePath", this.aceModesUrl);
+		ace.config.set("workerPath", this.aceWorkersUrl);
+		ace.config.set("basePath", this.aceModesUrl);
 	}
 
 	private installCustomModuleLoader(
@@ -165,6 +144,12 @@ export class AceRuntimeManager {
 				typeof moduleId === "string" ? moduleId : moduleId[1];
 			const moduleType =
 				typeof moduleId === "string" ? undefined : moduleId[0];
+
+			if (!this.runtimeInstalled && moduleType !== "theme") {
+				void this.promptInstallRuntime();
+				onLoad?.(undefined);
+				return;
+			}
 
 			if (!moduleName.startsWith("ace/") || moduleType === "worker") {
 				fallbackLoadModule?.(moduleId, onLoad);
@@ -209,6 +194,7 @@ export class AceRuntimeManager {
 	}
 
 	private async evaluateAceModule(content: string, sourceUrl: string) {
+		this.assertTrustedAceModuleSource(sourceUrl, content);
 		const blob = new Blob([`${content}\n//# sourceURL=${sourceUrl}`], {
 			type: "text/javascript",
 		});
@@ -218,6 +204,21 @@ export class AceRuntimeManager {
 			await import(/* webpackIgnore: true */ blobUrl);
 		} finally {
 			URL.revokeObjectURL(blobUrl);
+		}
+	}
+
+	private assertTrustedAceModuleSource(contentUrl: string, content: string) {
+		const normalizedUrl = contentUrl.replace(/\\/g, "/");
+		const localPrefix = `${this.app.vault.configDir}/plugins/${this.pluginId}/`;
+		const normalizedLocalPrefix = localPrefix.replace(/\\/g, "/");
+		const isTrustedSource = normalizedUrl.startsWith(normalizedLocalPrefix);
+
+		if (!isTrustedSource) {
+			throw new Error(`拒绝加载非信任 Ace 模块来源: ${contentUrl}`);
+		}
+
+		if (!content.startsWith("ace.define(")) {
+			throw new Error(`Ace 模块内容格式异常: ${contentUrl}`);
 		}
 	}
 
@@ -335,18 +336,114 @@ export class AceRuntimeManager {
 			onProgress?.(i + 1, total);
 		}
 
-		// 下载完成后不再需要设置 modePath，自定义 loader 会从 vault 读取
+		this.runtimeInstalled = true;
+		this.setupLocalPaths();
 		await this.onSaveUseLocalAce?.(true);
+		new Notice(LL.setting.about.download_done());
 		console.log("Ace 运行时: 本地包下载完成");
 	}
 
-	/**
-	 * 切换到 CDN 模式并持久化状态
-	 */
-	async switchToCdn() {
-		const aceConfig = ace.config as unknown as AceConfigInternal;
-		if (aceConfig.$values) delete aceConfig.$values.loader;
-		this.setupCdn();
-		await this.onSaveUseLocalAce?.(false);
+	async isRuntimeInstalled() {
+		this.runtimeInstalled = await this.checkAceModesExist();
+		return this.runtimeInstalled;
+	}
+
+	private async promptInstallRuntime() {
+		if (this.runtimePromptOpen || this.runtimeInstalled) {
+			return;
+		}
+		this.runtimePromptOpen = true;
+		new AceRuntimeInstallModal(
+			this.app,
+			async (onProgress) => {
+				await this.downloadAceModes(onProgress);
+			},
+			() => {
+				this.runtimePromptOpen = false;
+			},
+		).open();
+	}
+}
+
+class AceRuntimeInstallModal extends Modal {
+	private readonly onDownload: (
+		onProgress: (current: number, total: number) => void,
+	) => Promise<void>;
+	private readonly onModalClose: () => void;
+	private statusEl!: HTMLParagraphElement;
+	private progressEl!: HTMLProgressElement;
+	private downloadButton!: HTMLButtonElement;
+	private laterButton!: HTMLButtonElement;
+
+	constructor(
+		app: App,
+		onDownload: (
+			onProgress: (current: number, total: number) => void,
+		) => Promise<void>,
+		onModalClose: () => void,
+	) {
+		super(app);
+		this.onDownload = onDownload;
+		this.onModalClose = onModalClose;
+	}
+
+	onOpen() {
+		const { contentEl } = this;
+		contentEl.empty();
+		contentEl.createEl("h2", { text: LL.setting.about.runtime_files() });
+		this.statusEl = contentEl.createEl("p", {
+			text: LL.setting.about.cdn_loading(),
+		});
+		this.progressEl = contentEl.createEl("progress", {
+			attr: { value: "0", max: "1" },
+		});
+		this.progressEl.style.width = "100%";
+		this.progressEl.style.display = "none";
+
+		const actions = contentEl.createDiv({
+			cls: "ace-runtime-install-actions",
+		});
+		actions.style.display = "flex";
+		actions.style.gap = "8px";
+		actions.style.justifyContent = "flex-end";
+
+		this.laterButton = actions.createEl("button", {
+			text: LL.common.cancel(),
+		});
+		this.laterButton.onclick = () => this.close();
+
+		this.downloadButton = actions.createEl("button", {
+			text: LL.setting.about.download_btn(),
+			cls: "mod-cta",
+		});
+		this.downloadButton.onclick = async () => {
+			this.setDownloading(true);
+			this.progressEl.style.display = "block";
+			try {
+				await this.onDownload((current, total) => {
+					this.progressEl.max = total;
+					this.progressEl.value = current;
+					this.statusEl.setText(
+						LL.setting.about.downloading({ current, total }),
+					);
+				});
+				this.close();
+			} catch (error) {
+				console.error("Ace runtime 下载失败:", error);
+				new Notice(String(error));
+				this.statusEl.setText(LL.setting.about.cdn_loading());
+				this.setDownloading(false);
+			}
+		};
+	}
+
+	onClose() {
+		this.onModalClose();
+		this.contentEl.empty();
+	}
+
+	private setDownloading(downloading: boolean) {
+		this.downloadButton.disabled = downloading;
+		this.laterButton.disabled = downloading;
 	}
 }
