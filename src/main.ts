@@ -11,12 +11,12 @@ import SettingsStore from "./settings/SettingsStore";
 import AceCodeEditorSettingTab from "./settings/SettingsTab";
 import { EmbedCreator } from "./type/obsidian-extend";
 import {
-	CODE_EDITOR_VIEW_TYPE,
-	DEFAULT_CONFIG,
-	ICodeBlock,
-	ICodeEditorConfig,
-	SETTINGS_VIEW_TYPE,
-	SNIPPETS_EDITOR_VIEW_TYPE,
+    CODE_EDITOR_VIEW_TYPE,
+    DEFAULT_CONFIG,
+    ICodeBlock,
+    ICodeEditorConfig,
+    SETTINGS_VIEW_TYPE,
+    SNIPPETS_EDITOR_VIEW_TYPE,
 } from "./type/types";
 import { getCodeBlockAtCursor, updateCodeBlock } from "./utils/CodeBlock";
 import { SnippetUtils } from "./utils/SnippetUtils";
@@ -39,7 +39,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 			this.settings.useLocalAce = value;
 			await this.saveSettings();
 		});
-		await this.aceRuntime.initAceModeBasePath(this.settings.useLocalAce);
+		await this.aceRuntime.initAceModeBasePath();
 
 		this.registerLeafViews();
 		new MarkdownEmbedProcessor(this).register();
@@ -83,6 +83,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 					...savedData,
 				};
 			}
+			validatedSettings.useLocalAce = true;
 		} catch (error) {
 			throw new Error("Failed to validate and merge settings" + error);
 		}

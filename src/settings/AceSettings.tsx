@@ -9,11 +9,11 @@ import useSettingsStore from "@src/hooks/useSettingsStore";
 import { LL } from "@src/i18n/i18n";
 import { languageModeMap } from "@src/service/AceLanguages";
 import {
-	AceCommunityDarkThemesList,
-	AceCommunityLightThemesList,
-	AceDarkThemesList,
-	AceKeyboardList,
-	AceLightThemesList,
+    AceCommunityDarkThemesList,
+    AceCommunityLightThemesList,
+    AceDarkThemesList,
+    AceKeyboardList,
+    AceLightThemesList,
 } from "@src/service/AceThemes";
 import "@styles/styles";
 import parse from "html-react-parser";
@@ -258,8 +258,8 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 	);
 
 	const [modesStatus, setModesStatus] = useState<
-		"checking" | "local" | "cdn" | "downloading" | "done"
-	>(() => (settings.useLocalAce ? "local" : "cdn"));
+		"checking" | "local" | "missing" | "downloading" | "done"
+	>("checking");
 	const [progress, setProgress] = useState({ current: 0, total: 0 });
 	const [fileStats, setFileStats] = useState({
 		modes: 0,
@@ -267,6 +267,12 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 		snippets: 0,
 		keybindings: 0,
 	});
+
+	useEffect(() => {
+		void settingsStore.plugin.aceRuntime.isRuntimeInstalled().then((ready) => {
+			setModesStatus(ready ? "local" : "missing");
+		});
+	}, [settingsStore.plugin.aceRuntime]);
 
 	const handleDownload = useCallback(async () => {
 		setModesStatus("downloading");
@@ -288,13 +294,8 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 			setModesStatus("done");
 		} catch (e) {
 			console.error("下载失败:", e);
-			setModesStatus("cdn");
+			setModesStatus("missing");
 		}
-	}, []);
-
-	const handleSwitchToCdn = useCallback(async () => {
-		await settingsStore.plugin.aceRuntime.switchToCdn();
-		setModesStatus("cdn");
 	}, []);
 
 	const EditorSettings = useMemo(() => {
@@ -653,9 +654,11 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 				<SettingsItem
 					name={LL.setting.about.runtime_files()}
 					desc={
-						modesStatus === "local"
+						modesStatus === "checking"
+							? LL.setting.about.checking()
+							: modesStatus === "local"
 							? LL.setting.about.local_installed()
-							: modesStatus === "cdn"
+								: modesStatus === "missing"
 								? LL.setting.about.cdn_loading()
 								: modesStatus === "downloading"
 									? LL.setting.about.downloading({
@@ -665,7 +668,7 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 									: LL.setting.about.download_done()
 					}
 				>
-					{modesStatus === "cdn" && (
+					{modesStatus === "missing" && (
 						<button
 							className="mod-cta"
 							onClick={handleDownload}
@@ -715,9 +718,6 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 							>
 								{LL.setting.about.redownload()}
 							</button>
-							<button onClick={handleSwitchToCdn}>
-								{LL.setting.about.switch_cdn()}
-							</button>
 						</div>
 					)}
 					{modesStatus === "done" && (
@@ -731,15 +731,12 @@ export const AceSettings: React.FC<AceSettingsProps> = ({}) => {
 							<button className="mod-cta" disabled>
 								{LL.setting.about.installed()}
 							</button>
-							<button onClick={handleSwitchToCdn}>
-								{LL.setting.about.switch_cdn()}
-							</button>
 						</div>
 					)}
 				</SettingsItem>
 			</>
 		);
-	}, [modesStatus, progress, fileStats, handleDownload, handleSwitchToCdn]);
+	}, [modesStatus, progress, fileStats, handleDownload]);
 
 	const settingsTabNavItems: TabNavItem[] = useMemo(
 		() => [
