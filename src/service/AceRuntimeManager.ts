@@ -107,22 +107,7 @@ export class AceRuntimeManager {
 
 	private setupLocalLoader() {
 		this.setupLocalPaths();
-		this.installCustomModuleLoader(async (moduleName) => {
-			const parts = moduleName.split("/");
-			const type = parts[1];
-			const name = parts.slice(2).join("-");
-			const filePath =
-				type === "worker"
-					? `${this.aceWorkersDir}/${type}-${name}.js`
-					: type === "snippets"
-						? `${this.aceModesDir}/snippets/${name}.js`
-						: `${this.aceModesDir}/${type === "keyboard" ? "keybinding" : type}-${name}.js`;
-			const content = await this.app.vault.adapter.read(filePath);
-			return {
-				content,
-				sourceUrl: filePath.replace(/\\/g, "/"),
-			};
-		});
+		this.installCustomModuleLoader();
 	}
 
 	private setupLocalPaths() {
@@ -131,12 +116,7 @@ export class AceRuntimeManager {
 		ace.config.set("basePath", this.aceModesUrl);
 	}
 
-	private installCustomModuleLoader(
-		loadSource: (
-			moduleName: string,
-			moduleType?: string,
-		) => Promise<{ content: string; sourceUrl: string }>,
-	) {
+	private installCustomModuleLoader() {
 		const aceConfig = ace.config as unknown as AceConfigInternal;
 		const fallbackLoadModule = this.originalLoadModule;
 		aceConfig.loadModule = (moduleId, onLoad) => {
@@ -172,14 +152,9 @@ export class AceRuntimeManager {
 			const cacheKey = `${moduleType ?? "module"}:${moduleName}`;
 			const pending =
 				AceRuntimeManager.pendingModuleLoads.get(cacheKey) ??
-				(async () => {
-					const { content, sourceUrl } = await loadSource(
-						moduleName,
-						moduleType,
-					);
-					await this.evaluateAceModule(content, sourceUrl);
-					return aceRequire?.(moduleName);
-				})().finally(() => {
+				new Promise<unknown>((resolve) => {
+					fallbackLoadModule?.(moduleId, resolve);
+				}).finally(() => {
 					AceRuntimeManager.pendingModuleLoads.delete(cacheKey);
 				});
 
@@ -191,35 +166,6 @@ export class AceRuntimeManager {
 					onLoad?.(undefined);
 				});
 		};
-	}
-
-	private async evaluateAceModule(content: string, sourceUrl: string) {
-		this.assertTrustedAceModuleSource(sourceUrl, content);
-		const blob = new Blob([`${content}\n//# sourceURL=${sourceUrl}`], {
-			type: "text/javascript",
-		});
-		const blobUrl = URL.createObjectURL(blob);
-		try {
-			(globalThis as { ace?: unknown }).ace = ace;
-			await import(/* webpackIgnore: true */ blobUrl);
-		} finally {
-			URL.revokeObjectURL(blobUrl);
-		}
-	}
-
-	private assertTrustedAceModuleSource(contentUrl: string, content: string) {
-		const normalizedUrl = contentUrl.replace(/\\/g, "/");
-		const localPrefix = `${this.app.vault.configDir}/plugins/${this.pluginId}/`;
-		const normalizedLocalPrefix = localPrefix.replace(/\\/g, "/");
-		const isTrustedSource = normalizedUrl.startsWith(normalizedLocalPrefix);
-
-		if (!isTrustedSource) {
-			throw new Error(`拒绝加载非信任 Ace 模块来源: ${contentUrl}`);
-		}
-
-		if (!content.startsWith("ace.define(")) {
-			throw new Error(`Ace 模块内容格式异常: ${contentUrl}`);
-		}
 	}
 
 	/**
