@@ -1,3 +1,4 @@
+## [2.1.3](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.1.2...2.1.3) (2026-06-14)
 ## [2.1.2](https://github.com/Raven-Pensieve/obsidian-ace-code-editor/compare/2.1.1...2.1.2) (2026-06-14)
 
 
