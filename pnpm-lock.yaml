@@ -62,22 +62,22 @@ importers:
         version: 10.4.0
       eslint-plugin-obsidianmd:
         specifier: ^0.3.0
-        version: 0.3.0(@eslint/js@10.0.1(eslint@10.4.0))(@eslint/json@0.14.0)(@typescript-eslint/parser@8.59.4(eslint@10.4.0)(typescript@5.9.3))(eslint@10.4.0)(obsidian@1.13.1(@codemirror/state@6.6.0)(@codemirror/view@6.43.1))(typescript-eslint@8.59.4(eslint@10.4.0)(typescript@5.9.3))
+        version: 0.3.0(@eslint/js@10.0.1(eslint@10.4.0))(@eslint/json@0.14.0)(@typescript-eslint/parser@8.59.4(eslint@10.4.0)(typescript@5.9.3))(eslint@10.4.0)(obsidian@1.13.1(@codemirror/state@6.5.0)(@codemirror/view@6.38.6))(typescript-eslint@8.59.4(eslint@10.4.0)(typescript@5.9.3))
       globals:
         specifier: ^17.6.0
         version: 17.6.0
       obsidian:
         specifier: ^1.13.1
-        version: 1.13.1(@codemirror/state@6.6.0)(@codemirror/view@6.43.1)
+        version: 1.13.1(@codemirror/state@6.5.0)(@codemirror/view@6.38.6)
       plist:
         specifier: ^5.0.0
         version: 5.0.0
       postcss:
-        specifier: ^8.5.10
-        version: 8.5.15
+        specifier: ^8.5.23
+        version: 8.5.23
       postcss-nesting:
         specifier: ^14.0.0
-        version: 14.0.0(postcss@8.5.15)
+        version: 14.0.0(postcss@8.5.23)
       tslib:
         specifier: 2.8.1
         version: 2.8.1
@@ -101,11 +101,11 @@ packages:
     resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
     engines: {node: '>=6.9.0'}
 
-  '@codemirror/state@6.6.0':
-    resolution: {integrity: sha512-4nbvra5R5EtiCzr9BTHiTLc+MLXK2QGiAVYMyi8PkQd3SR+6ixar/Q/01Fa21TBIDOZXgeWV4WppsQolSreAPQ==}
+  '@codemirror/state@6.5.0':
+    resolution: {integrity: sha512-MwBHVK60IiIHDcoMet78lxt6iw5gJOGSbNbOIVBHWVXIH4/Nq1+GQgLLGgI1KlnN86WDXsPudVaqYHKBIx7Eyw==}
 
-  '@codemirror/view@6.43.1':
-    resolution: {integrity: sha512-+BIjw/AG3tDQ4pJgTLPYdAW25eDE66YsvM4LKyVPgGzVgZ4a9Wj1SRX8kPVKgBDdPt8oHtZ15F0qx7p0oOHdHw==}
+  '@codemirror/view@6.38.6':
+    resolution: {integrity: sha512-qiS0z1bKs5WOvHIAC0Cybmv4AJSkAXgX5aD6Mqd2epSLlVJsQl8NG23jCVouIgkh4All/mrbdsf2UOLFnJw0tw==}
 
   '@conventional-changelog/git-client@2.7.0':
     resolution: {integrity: sha512-j7A8/LBEQ+3rugMzPXoKYzyUPpw/0CBQCyvtTR7Lmu4olG4yRC/Tfkq79Mr3yuPs0SUitlO2HwGP3gitMJnRFw==}
@@ -385,8 +385,8 @@ packages:
     resolution: {integrity: sha512-e5+YUKENATs1JgYHMzTr2MW/NDcXGfYFAuOQU8gJgF/kEh4EqKgfGrfLI67bMD4tbhZVlkigz/9YYwWcbOFthg==}
     engines: {node: '>=10.13.0'}
 
-  '@marijn/find-cluster-break@1.0.2':
-    resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
+  '@marijn/find-cluster-break@1.0.3':
+    resolution: {integrity: sha512-FY+MKLBoTsLNJF/eLWaOsXGdz6uh3Iu1axjPf6TUq92IYumcTcXWHoS747JARLkcdlJ/Waiaxc5wQfFO8jC6NA==}
 
   '@microsoft/eslint-plugin-sdl@1.1.0':
     resolution: {integrity: sha512-dxdNHOemLnBhfY3eByrujX9KyLigcNtW8sU+axzWv5nLGcsSBeKW2YYyTpfPo1hV8YPOmIGnfA4fZHyKVtWqBQ==}
@@ -1320,6 +1320,7 @@ packages:
   conventional-changelog-atom@5.1.0:
     resolution: {integrity: sha512-fw7GpI9jHNCWGBnTsPRI452ypQbNupGwsjrXfozvRNE0c92pJRpoj9rXfzDKUYJcsmk0H4XKaQjhjelwI9z27w==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-cli@5.0.0:
     resolution: {integrity: sha512-9Y8fucJe18/6ef6ZlyIlT2YQUbczvoQZZuYmDLaGvcSBP+M6h+LAvf7ON7waRxKJemcCII8Yqu5/8HEfskTxJQ==}
@@ -1330,6 +1331,7 @@ packages:
   conventional-changelog-codemirror@5.1.0:
     resolution: {integrity: sha512-iXhy63YczB+yWA9DrsYbquSYLvWKsK9M3WC+xQPEm8cOn4oXzKpmTp2uH3qi7+i10oTcGJTvq9lsBpZmMADaNg==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-conventionalcommits@8.0.0:
     resolution: {integrity: sha512-eOvlTO6OcySPyyyk8pKz2dP4jjElYunj9hn9/s0OB+gapTO8zwS9UQWrZ1pmF2hFs3vw1xhonOLGcGjy/zgsuA==}
@@ -1338,26 +1340,32 @@ packages:
   conventional-changelog-core@8.0.0:
     resolution: {integrity: sha512-EATUx5y9xewpEe10UEGNpbSHRC6cVZgO+hXQjofMqpy+gFIrcGvH3Fl6yk2VFKh7m+ffenup2N7SZJYpyD9evw==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Please use conventional-changelog instead.
 
   conventional-changelog-ember@5.1.0:
     resolution: {integrity: sha512-XNcgGcdJt7wh341BBML0CI8DKpqE5lKD1WahzFHGZFvKTzJr1rZW976cw7beqKLOBbzdrH9ZIkE/s2TfbOuM3g==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-eslint@6.1.0:
     resolution: {integrity: sha512-beWr3qzuEMN9gznMWa8PhTVfGkGXoq+XnUzViNXg5KygrgV728ZRqZngz3uPhz5+ayUhPrpNFYqIE0qHWz9NAw==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-express@5.1.0:
     resolution: {integrity: sha512-g/s9eLohrefYTSNQaB6+k0ONbiVx41YOKBbIOIM3ST/NtedAgppCJnrpKXVN9sOmpPkN4vjFwURlfvpEDUjoeg==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-jquery@6.1.0:
     resolution: {integrity: sha512-/sFhULybhFrMg+qc8MHHHSj7kTVMfx5C7rSM6Z9EjduVoAQJdGRq/wpv/SWPMQ+KPNSYHqDLwm/x2Z5hOcYvqQ==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-jshint@5.2.0:
     resolution: {integrity: sha512-OaatyvHXP1fjI7Mx0b1IkmhbhTsVHsytnsQSkOj4rhGbFMoTcfvbwm/vAtCzRMXOxojK1EDMBBmBj1pM9KNy/Q==}
     engines: {node: '>=18'}
+    deprecated: This preset is deprecated. Please use conventional-changelog-conventionalcommits or conventional-changelog-angular instead.
 
   conventional-changelog-preset-loader@5.0.0:
     resolution: {integrity: sha512-SetDSntXLk8Jh1NOAl1Gu5uLiCNSYenB5tm0YVeZKePRIgDW9lQImromTwLa3c/Gae298tsgOM+/CYT9XAl0NA==}
@@ -1381,8 +1389,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  crelt@1.0.6:
-    resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
+  crelt@1.0.7:
+    resolution: {integrity: sha512-aK6BbWfhf4U/wCcLHKPJl/xa6VkVstRaPywWtMKGwuOLc/wZTyQYuoxgvZnNsBvv7Kg3YTBQYYBCggcviQczuA==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -1738,11 +1746,13 @@ packages:
   git-raw-commits@5.0.1:
     resolution: {integrity: sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-semver-tags@8.0.1:
     resolution: {integrity: sha512-zMbamckSNdlT4U48IMFa2Cn6FTzM+2yF6/gEmStPJI8PiLxd/bT6dw10+mc6u5Qe4fhrc/y9nU290FWjQhAV7g==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   glob-parent@6.0.2:
@@ -2049,8 +2059,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  nanoid@3.3.12:
-    resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
+  nanoid@3.3.18:
+    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -2162,8 +2172,8 @@ packages:
     resolution: {integrity: sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==}
     engines: {node: '>=4'}
 
-  postcss@8.5.15:
-    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
+  postcss@8.5.23:
+    resolution: {integrity: sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==}
     engines: {node: ^10 || ^12 || >=14}
 
   prelude-ls@1.2.1:
@@ -2603,14 +2613,14 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.28.5': {}
 
-  '@codemirror/state@6.6.0':
+  '@codemirror/state@6.5.0':
     dependencies:
-      '@marijn/find-cluster-break': 1.0.2
+      '@marijn/find-cluster-break': 1.0.3
 
-  '@codemirror/view@6.43.1':
+  '@codemirror/view@6.38.6':
     dependencies:
-      '@codemirror/state': 6.6.0
-      crelt: 1.0.6
+      '@codemirror/state': 6.5.0
+      crelt: 1.0.7
       style-mod: 4.1.3
       w3c-keyname: 2.2.8
 
@@ -2800,7 +2810,7 @@ snapshots:
 
   '@hutson/parse-repository-url@5.0.0': {}
 
-  '@marijn/find-cluster-break@1.0.2': {}
+  '@marijn/find-cluster-break@1.0.3': {}
 
   '@microsoft/eslint-plugin-sdl@1.1.0(eslint@10.4.0)':
     dependencies:
@@ -3972,7 +3982,7 @@ snapshots:
       '@simple-libs/stream-utils': 1.2.0
       meow: 13.2.0
 
-  crelt@1.0.6: {}
+  crelt@1.0.7: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -4299,7 +4309,7 @@ snapshots:
     dependencies:
       eslint: 10.4.0
 
-  eslint-plugin-obsidianmd@0.3.0(@eslint/js@10.0.1(eslint@10.4.0))(@eslint/json@0.14.0)(@typescript-eslint/parser@8.59.4(eslint@10.4.0)(typescript@5.9.3))(eslint@10.4.0)(obsidian@1.13.1(@codemirror/state@6.6.0)(@codemirror/view@6.43.1))(typescript-eslint@8.59.4(eslint@10.4.0)(typescript@5.9.3)):
+  eslint-plugin-obsidianmd@0.3.0(@eslint/js@10.0.1(eslint@10.4.0))(@eslint/json@0.14.0)(@typescript-eslint/parser@8.59.4(eslint@10.4.0)(typescript@5.9.3))(eslint@10.4.0)(obsidian@1.13.1(@codemirror/state@6.5.0)(@codemirror/view@6.38.6))(typescript-eslint@8.59.4(eslint@10.4.0)(typescript@5.9.3)):
     dependencies:
       '@eslint/config-helpers': 0.4.2
       '@eslint/js': 10.0.1(eslint@10.4.0)
@@ -4316,7 +4326,7 @@ snapshots:
       eslint-plugin-no-unsanitized: 4.1.5(eslint@10.4.0)
       eslint-plugin-security: 2.1.1
       globals: 14.0.0
-      obsidian: 1.13.1(@codemirror/state@6.6.0)(@codemirror/view@6.43.1)
+      obsidian: 1.13.1(@codemirror/state@6.5.0)(@codemirror/view@6.38.6)
       semver: 7.8.0
       typescript: 5.4.5
       typescript-eslint: 8.59.4(eslint@10.4.0)(typescript@5.9.3)
@@ -4819,7 +4829,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  nanoid@3.3.12: {}
+  nanoid@3.3.18: {}
 
   natural-compare@1.4.0: {}
 
@@ -4880,10 +4890,10 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
-  obsidian@1.13.1(@codemirror/state@6.6.0)(@codemirror/view@6.43.1):
+  obsidian@1.13.1(@codemirror/state@6.5.0)(@codemirror/view@6.38.6):
     dependencies:
-      '@codemirror/state': 6.6.0
-      '@codemirror/view': 6.43.1
+      '@codemirror/state': 6.5.0
+      '@codemirror/view': 6.38.6
       '@types/codemirror': 5.60.8
       moment: 2.29.4
 
@@ -4933,11 +4943,11 @@ snapshots:
 
   possible-typed-array-names@1.1.0: {}
 
-  postcss-nesting@14.0.0(postcss@8.5.15):
+  postcss-nesting@14.0.0(postcss@8.5.23):
     dependencies:
       '@csstools/selector-resolve-nested': 4.0.0(postcss-selector-parser@7.1.1)
       '@csstools/selector-specificity': 6.0.0(postcss-selector-parser@7.1.1)
-      postcss: 8.5.15
+      postcss: 8.5.23
       postcss-selector-parser: 7.1.1
 
   postcss-selector-parser@7.1.1:
@@ -4945,9 +4955,9 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss@8.5.15:
+  postcss@8.5.23:
     dependencies:
-      nanoid: 3.3.12
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
