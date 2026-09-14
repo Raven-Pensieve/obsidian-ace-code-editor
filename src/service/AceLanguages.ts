@@ -278,6 +278,7 @@ export const languageModeMap = {
 	html: ["html", "htm", "shtml", "xhtml", "mdoc", "asp", "aspx", "jshtm"],
 	html_elixir: ["html_elixir"],
 	html_ruby: ["html_ruby"],
+	hlsl: ["hlsl", "hlsli"],
 	ini: ["ini", "gitconfig"],
 	io: ["io"],
 	ion: ["ion"],
@@ -452,6 +453,11 @@ export const languageWorkerMap = [
 ];
 
 export async function getLanguageMode(language: string): Promise<string> {
+	const aliasStart = "run-";
+	if (language.startsWith(aliasStart)) {
+		language = language.slice(aliasStart.length);
+	}
+
 	for (const [mode, aliases] of Object.entries(languageModeMap)) {
 		// 检查传入的language是否在别名数组中
 		if (aliases.includes(language)) {

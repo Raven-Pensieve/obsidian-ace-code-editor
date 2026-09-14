@@ -39,7 +39,7 @@ export default class AceCodeEditorPlugin extends Plugin {
 			this.settings.useLocalAce = value;
 			await this.saveSettings();
 		});
-		await this.aceRuntime.initAceModeBasePath();
+		await this.aceRuntime.initAceModeBasePath(this.settings.useLocalAce);
 
 		this.registerLeafViews();
 		new MarkdownEmbedProcessor(this).register();
@@ -83,7 +83,6 @@ export default class AceCodeEditorPlugin extends Plugin {
 					...savedData,
 				};
 			}
-			validatedSettings.useLocalAce = true;
 		} catch (error) {
 			throw new Error("Failed to validate and merge settings" + error);
 		}

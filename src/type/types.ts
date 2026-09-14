@@ -33,7 +33,7 @@ export interface ICodeEditorConfig {
 		mode: "always" | "hover";
 	};
 	remoteEmbed: RemoteEmbedSettings;
-	/** 兼容旧配置保留字段；运行时始终使用本地加载 */
+	/** Ace 运行时加载模式：true=本地, false=CDN */
 	useLocalAce: boolean;
 }
 
