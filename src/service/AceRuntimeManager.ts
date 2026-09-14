@@ -7,6 +7,7 @@ import {
 	getCustomAceModeFile,
 	isCustomAceModeModule,
 } from "./AceRuntimeAssets";
+import { installAceModuleLoader } from "./AceModuleLoader";
 
 /** jsDelivr API 返回的文件树节点 */
 interface JsDelivrFileNode {
@@ -22,11 +23,6 @@ export class AceRuntimeManager {
 	/** Ace 版本号（用于 CDN URL） */
 	static readonly ACE_VERSION = "1.44.0";
 	static readonly ACE_CDN = `https://cdn.jsdelivr.net/npm/ace-builds@${AceRuntimeManager.ACE_VERSION}/src-noconflict`;
-	private static readonly pendingModuleLoads = new Map<
-		string,
-		Promise<unknown>
-	>();
-
 	private readonly app: App;
 	private readonly pluginId: string;
 	private onSaveUseLocalAce?: (value: boolean) => Promise<void>;
@@ -164,55 +160,24 @@ export class AceRuntimeManager {
 	) {
 		const aceConfig = ace.config as unknown as AceConfigInternal;
 		const fallbackLoadModule = this.originalLoadModule;
-		aceConfig.loadModule = (moduleId, onLoad) => {
-			const moduleName =
-				typeof moduleId === "string" ? moduleId : moduleId[1];
-			const moduleType =
-				typeof moduleId === "string" ? undefined : moduleId[0];
-
-			if (!moduleName.startsWith("ace/") || moduleType === "worker") {
-				fallbackLoadModule?.(moduleId, onLoad);
-				return;
-			}
-
-			const aceRequire = (
-				ace as unknown as { require?: (name: string) => unknown }
-			).require;
-			try {
-				const loaded = aceRequire?.(moduleName);
-				if (loaded) {
-					onLoad?.(loaded);
-					return;
-				}
-			} catch {
-				// ignore and continue loading
-			}
-
-			const cacheKey = `${moduleType ?? "module"}:${moduleName}`;
-			const pending =
-				AceRuntimeManager.pendingModuleLoads.get(cacheKey) ??
-				(async () => {
-					const { content, sourceUrl } = await loadSource(
-						moduleName,
-						moduleType,
-					);
-					const script = activeDocument.createElement("script");
-					script.textContent = `${content}\n//# sourceURL=${sourceUrl}`;
-					activeDocument.head.appendChild(script);
-					script.remove();
-					return aceRequire?.(moduleName);
-				})().finally(() => {
-					AceRuntimeManager.pendingModuleLoads.delete(cacheKey);
-				});
-
-			AceRuntimeManager.pendingModuleLoads.set(cacheKey, pending);
-			pending
-				.then((module) => onLoad?.(module))
-				.catch((error) => {
-					console.warn(`Ace 模块加载失败: ${moduleName}`, error);
-					onLoad?.(undefined);
-				});
-		};
+		const aceRequire = (
+			ace as unknown as { require: (name: string) => unknown }
+		).require;
+		installAceModuleLoader({
+			config: aceConfig,
+			fallbackLoadModule,
+			requireModule: aceRequire,
+			loadSource,
+			evaluateSource: (content, sourceUrl) => {
+				const script = activeDocument.createElement("script");
+				script.textContent = `${content}\n//# sourceURL=${sourceUrl}`;
+				activeDocument.head.appendChild(script);
+				script.remove();
+			},
+			onError: (moduleName, error) => {
+				console.warn(`Ace 模块加载失败: ${moduleName}`, error);
+			},
+		});
 	}
 
 	private async readLocalModule(moduleName: string) {

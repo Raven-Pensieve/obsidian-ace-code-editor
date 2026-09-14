@@ -35,24 +35,69 @@ const aceModule = await import(
 );
 const ace = aceModule.default;
 globalThis.ace = ace;
-await import(
-	pathToFileURL(
-		path.join(
-			projectRoot,
-			"node_modules",
-			"ace-builds",
-			"src-noconflict",
-			"mode-c_cpp.js",
-		),
-	)
-);
 
 const modeSourcePath = path.join(projectRoot, "src", "ace", "mode-hlsl.js");
 const modeSource = await fs.promises.readFile(modeSourcePath, "utf8");
-vm.runInThisContext(modeSource, { filename: modeSourcePath });
+const cppModeSourcePath = path.join(
+	projectRoot,
+	"node_modules",
+	"ace-builds",
+	"src-noconflict",
+	"mode-c_cpp.js",
+);
+const cppModeSource = await fs.promises.readFile(cppModeSourcePath, "utf8");
+const { installAceModuleLoader } = await importTypeScriptModule(
+	"src/service/AceModuleLoader.ts",
+);
+assert.equal(ace.require("ace/mode/c_cpp"), undefined);
+const loadedSources = [];
+const loaderErrors = [];
+const originalLoadModule = ace.config.loadModule.bind(ace.config);
+installAceModuleLoader({
+	config: ace.config,
+	fallbackLoadModule: originalLoadModule,
+	requireModule: ace.require,
+	loadSource: async (moduleName) => {
+		loadedSources.push(moduleName);
+		if (moduleName === "ace/mode/c_cpp") {
+			return {
+				content: cppModeSource,
+				sourceUrl: cppModeSourcePath,
+			};
+		}
+		if (moduleName === "ace/mode/hlsl") {
+			return {
+				content: modeSource,
+				sourceUrl: modeSourcePath,
+			};
+		}
+		throw new Error(`Unexpected module request: ${moduleName}`);
+	},
+	evaluateSource: (content, sourceUrl) => {
+		vm.runInThisContext(content, { filename: sourceUrl });
+	},
+	onError: (moduleName, error) => {
+		loaderErrors.push({ moduleName, error });
+	},
+});
 
-const hlslModule = ace.require("ace/mode/hlsl");
+let hlslLoadCallbacks = 0;
+const hlslModule = await new Promise((resolve, reject) => {
+	ace.config.loadModule(["mode", "ace/mode/hlsl"], (loadedModule) => {
+		hlslLoadCallbacks++;
+		if (loadedModule) {
+			resolve(loadedModule);
+			return;
+		}
+		reject(new Error("HLSL mode loader returned no module"));
+	});
+});
+await new Promise((resolve) => setImmediate(resolve));
+
 assert.equal(typeof hlslModule.Mode, "function");
+assert.deepEqual(loadedSources, ["ace/mode/c_cpp", "ace/mode/hlsl"]);
+assert.deepEqual(loaderErrors, []);
+assert.equal(hlslLoadCallbacks, 1);
 const mode = new hlslModule.Mode();
 const cppMode = new (ace.require("ace/mode/c_cpp").Mode)();
 assert.equal(mode.$id, "ace/mode/hlsl");
