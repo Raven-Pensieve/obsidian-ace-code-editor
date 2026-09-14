@@ -28,6 +28,7 @@ export class AceService {
 
 	createEditor(element: HTMLElement): Ace.Editor {
 		this.editor = ace.edit(element);
+		this.editor.renderer.setPadding(8);
 		return this.editor;
 	}
 

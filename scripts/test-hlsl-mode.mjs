@@ -322,6 +322,7 @@ const aceServiceSource = await fs.promises.readFile(
 	"utf8",
 );
 assert.match(aceServiceSource, /const aliasStart = "run-"/);
+assert.match(aceServiceSource, /renderer\.setPadding\(8\)/);
 
 const runtimeManagerSource = await fs.promises.readFile(
 	path.join(projectRoot, "src", "service", "AceRuntimeManager.ts"),
