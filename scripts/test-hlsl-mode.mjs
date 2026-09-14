@@ -354,7 +354,7 @@ assert.match(
 	hlslHighlightCss,
 	/\.ace_variable\.ace_other\.ace_property\.ace_assignment/,
 );
-assert.match(hlslHighlightCss, /#4ec9b0\s*!important/);
+assert.match(hlslHighlightCss, /#e5c07b\s*!important/);
 assert.doesNotMatch(hlslHighlightCss, /\.ace_storage\.ace_type/);
 
 console.log("HLSL mode validation passed");
