@@ -133,8 +133,24 @@ function tokenizeLines(lines) {
 }
 
 assert.match(tokenType("if (enabled) return;", "if"), /^keyword\.control/);
-assert.match(tokenType("float4 color;", "float4"), /^storage\.type/);
-assert.match(tokenType("Texture2D tex;", "Texture2D"), /^storage\.type/);
+assert.equal(tokenType("float color;", "float"), "storage.type.hlsl.float");
+assert.equal(tokenType("float2 uv;", "float2"), "storage.type.hlsl.float");
+assert.equal(tokenType("float4x4 transform;", "float4x4"), "storage.type.hlsl.float");
+assert.equal(tokenType("int index;", "int"), "storage.type.hlsl.signed");
+assert.equal(tokenType("int3 cell;", "int3"), "storage.type.hlsl.signed");
+assert.equal(tokenType("uint count;", "uint"), "storage.type.hlsl.unsigned");
+assert.equal(tokenType("uint2 size;", "uint2"), "storage.type.hlsl.unsigned");
+assert.equal(tokenType("bool enabled;", "bool"), "storage.type.hlsl.bool");
+assert.equal(tokenType("bool4 mask;", "bool4"), "storage.type.hlsl.bool");
+assert.equal(
+	tokenType("Texture2D tex;", "Texture2D"),
+	"storage.type.hlsl.resource",
+);
+assert.equal(
+	tokenType("SamplerState samplerState;", "SamplerState"),
+	"storage.type.hlsl.resource",
+);
+assert.equal(tokenType("void Reset()", "void"), "storage.type.hlsl.void");
 assert.match(tokenType("float3 n = normalize(v);", "normalize"), /^support\.function/);
 assert.match(
 	tokenType("float4 Shade(float2 uv : TEXCOORD0)", "Shade"),
@@ -196,11 +212,11 @@ assert.match(
 );
 assert.match(
 	tokenType("Texture2D<float4> sceneTextures[4];", "Texture2D"),
-	/^storage\.type/,
+	/^storage\.type\.hlsl\.resource/,
 );
 assert.match(
 	tokenType("Texture2D<float4> sceneTextures[4];", "float4"),
-	/^storage\.type/,
+	/^storage\.type\.hlsl\.float/,
 );
 assert.match(
 	tokenType("Texture2D<float4> sceneTextures[4];", "sceneTextures"),
@@ -264,7 +280,7 @@ const blockCommentTokens = tokenizeLines(["/* block", "comment */ float value;"]
 assert.ok(blockCommentTokens[0].every((token) => token.type === "comment"));
 assert.equal(
 	blockCommentTokens[1].find((token) => token.value === "float")?.type,
-	"storage.type",
+	"storage.type.hlsl.float",
 );
 const directiveTokens = tokenizeLines(["#define SCALE(x) \\", "((x) * 2)"]);
 assert.equal(directiveTokens[1][0].type, "meta.preprocessor");
@@ -328,13 +344,17 @@ const hlslHighlightCss = await fs.promises.readFile(
 );
 assert.match(
 	hlslHighlightCss,
-	/\.ace_editor\s+\.ace_variable\.ace_other\.ace_assignment/,
+	/\.ace_storage\.ace_type\.ace_hlsl\.ace_float/,
 );
 assert.match(
 	hlslHighlightCss,
-	/\.ace_variable\.ace_other\.ace_property\.ace_assignment/,
+	/\.ace_storage\.ace_type\.ace_hlsl\.ace_signed/,
 );
-assert.match(hlslHighlightCss, /#4fc1ff\s*!important/);
+assert.match(hlslHighlightCss, /#4ec9b0\s*!important/);
+assert.match(hlslHighlightCss, /#569cd6\s*!important/);
 assert.match(hlslHighlightCss, /#9cdcfe\s*!important/);
+assert.match(hlslHighlightCss, /#c586c0\s*!important/);
+assert.match(hlslHighlightCss, /#dcdcaa\s*!important/);
+assert.doesNotMatch(hlslHighlightCss, /ace_variable/);
 
 console.log("HLSL mode validation passed");

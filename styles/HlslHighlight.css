@@ -1,8 +1,23 @@
-.ace_editor .ace_variable.ace_other.ace_assignment {
-	color: #4fc1ff !important;
+.ace_editor .ace_storage.ace_type.ace_hlsl.ace_float {
+	color: #4ec9b0 !important;
 }
 
-.ace_editor
-	.ace_variable.ace_other.ace_property.ace_assignment {
+.ace_editor .ace_storage.ace_type.ace_hlsl.ace_signed {
+	color: #569cd6 !important;
+}
+
+.ace_editor .ace_storage.ace_type.ace_hlsl.ace_unsigned {
 	color: #9cdcfe !important;
+}
+
+.ace_editor .ace_storage.ace_type.ace_hlsl.ace_bool {
+	color: #c586c0 !important;
+}
+
+.ace_editor .ace_storage.ace_type.ace_hlsl.ace_resource {
+	color: #dcdcaa !important;
+}
+
+.ace_editor .ace_storage.ace_type.ace_hlsl.ace_void {
+	color: #c8c8c8 !important;
 }

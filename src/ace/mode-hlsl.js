@@ -23,30 +23,51 @@ ace.define(
 				"asm|cbuffer|centroid|class|column_major|compile|compile_fragment|const|export|extern|globallycoherent|groupshared|in|inline|inout|interface|linear|namespace|nointerpolation|noperspective|out|packoffset|pass|precise|register|row_major|sample|shared|snorm|stateblock|static|struct|tbuffer|technique|technique10|technique11|typedef|uniform|unorm|volatile";
 			var objectTypes =
 				"AppendStructuredBuffer|Buffer|ByteAddressBuffer|ConstantBuffer|ConsumeStructuredBuffer|FeedbackTexture2D|FeedbackTexture2DArray|InputPatch|LineStream|OutputPatch|PointStream|RaytracingAccelerationStructure|RasterizerOrderedBuffer|RasterizerOrderedByteAddressBuffer|RasterizerOrderedStructuredBuffer|RasterizerOrderedTexture1D|RasterizerOrderedTexture1DArray|RasterizerOrderedTexture2D|RasterizerOrderedTexture2DArray|RasterizerOrderedTexture3D|RWBuffer|RWByteAddressBuffer|RWStructuredBuffer|RWTexture1D|RWTexture1DArray|RWTexture2D|RWTexture2DArray|RWTexture3D|SamplerComparisonState|SamplerState|StructuredBuffer|Texture1D|Texture1DArray|Texture2D|Texture2DArray|Texture2DMS|Texture2DMSArray|Texture3D|TextureBuffer|TextureCube|TextureCubeArray|TriangleStream|matrix|sampler|sampler1D|sampler2D|sampler3D|samplerCUBE|sampler_state|vector";
-			var scalarTypes =
-				"bool|double|dword|float|float16_t|float32_t|float64_t|half|int|int16_t|int32_t|int64_t|min10float|min12int|min16float|min16int|min16uint|uint|uint16_t|uint32_t|uint64_t|void";
-			var numericBases = [
-				"bool",
+			var floatBases = [
 				"double",
 				"float",
+				"float16_t",
+				"float32_t",
+				"float64_t",
 				"half",
-				"int",
 				"min10float",
-				"min12int",
 				"min16float",
+			];
+			var signedIntegerBases = [
+				"dword",
+				"int",
+				"int16_t",
+				"int32_t",
+				"int64_t",
+				"min12int",
 				"min16int",
+			];
+			var unsignedIntegerBases = [
 				"min16uint",
 				"uint",
+				"uint16_t",
+				"uint32_t",
+				"uint64_t",
 			];
-			var numericTypes = [];
-			numericBases.forEach(function (base) {
-				for (var columns = 1; columns <= 4; columns++) {
-					numericTypes.push(base + columns);
-					for (var rows = 1; rows <= 4; rows++) {
-						numericTypes.push(base + columns + "x" + rows);
+			var expandNumericTypes = function (bases) {
+				var types = bases.slice();
+				bases.forEach(function (base) {
+					for (var columns = 1; columns <= 4; columns++) {
+						types.push(base + columns);
+						for (var rows = 1; rows <= 4; rows++) {
+							types.push(base + columns + "x" + rows);
+						}
 					}
+				});
+				return types.join("|");
+			};
+			var boolTypes = ["bool"];
+			for (var boolColumns = 1; boolColumns <= 4; boolColumns++) {
+				boolTypes.push("bool" + boolColumns);
+				for (var boolRows = 1; boolRows <= 4; boolRows++) {
+					boolTypes.push("bool" + boolColumns + "x" + boolRows);
 				}
-			});
+			}
 			var intrinsics =
 				"abort|abs|acos|all|AllMemoryBarrier|AllMemoryBarrierWithGroupSync|any|asdouble|asfloat|asin|asint|asuint|atan|atan2|CalculateLevelOfDetail|CalculateLevelOfDetailUnclamped|ceil|CheckAccessFullyMapped|clamp|clip|cos|cosh|countbits|cross|D3DCOLORtoUBYTE4|ddx|ddx_coarse|ddx_fine|ddy|ddy_coarse|ddy_fine|degrees|determinant|DeviceMemoryBarrier|DeviceMemoryBarrierWithGroupSync|distance|dot|dst|errorf|EvaluateAttributeAtCentroid|EvaluateAttributeAtSample|EvaluateAttributeSnapped|exp|exp2|f16tof32|f32tof16|faceforward|firstbithigh|firstbitlow|floor|fma|fmod|frac|frexp|fwidth|Gather|GatherAlpha|GatherBlue|GatherCmp|GatherGreen|GatherRed|GetDimensions|GetRenderTargetSampleCount|GetRenderTargetSamplePosition|GroupMemoryBarrier|GroupMemoryBarrierWithGroupSync|InterlockedAdd|InterlockedAnd|InterlockedCompareExchange|InterlockedCompareStore|InterlockedExchange|InterlockedMax|InterlockedMin|InterlockedOr|InterlockedXor|isfinite|isinf|isnan|ldexp|length|lerp|lit|Load|log|log10|log2|max|min|modf|msad4|mul|noise|normalize|pow|printf|Process2DQuadTessFactorsAvg|Process2DQuadTessFactorsMax|Process2DQuadTessFactorsMin|ProcessIsolineTessFactors|ProcessQuadTessFactorsAvg|ProcessQuadTessFactorsMax|ProcessQuadTessFactorsMin|ProcessTriTessFactorsAvg|ProcessTriTessFactorsMax|ProcessTriTessFactorsMin|radians|rcp|reflect|refract|reversebits|round|rsqrt|Sample|SampleBias|SampleCmp|SampleCmpLevelZero|SampleGrad|SampleLevel|saturate|sign|sin|sincos|sinh|smoothstep|sqrt|step|Store|tan|tanh|tex1D|tex1Dbias|tex1Dgrad|tex1Dlod|tex1Dproj|tex2D|tex2Dbias|tex2Dgrad|tex2Dlod|tex2Dproj|tex3D|tex3Dbias|tex3Dgrad|tex3Dlod|tex3Dproj|texCUBE|texCUBEbias|texCUBEgrad|texCUBElod|texCUBEproj|transpose|trunc";
 			var constants =
@@ -55,12 +76,15 @@ ace.define(
 				{
 					"keyword.control": keywordControls,
 					"keyword.declaration": declarationKeywords,
-					"storage.type":
-						scalarTypes +
-						"|" +
-						numericTypes.join("|") +
-						"|" +
-						objectTypes,
+					"storage.type.hlsl.float":
+						expandNumericTypes(floatBases),
+					"storage.type.hlsl.signed":
+						expandNumericTypes(signedIntegerBases),
+					"storage.type.hlsl.unsigned":
+						expandNumericTypes(unsignedIntegerBases),
+					"storage.type.hlsl.bool": boolTypes.join("|"),
+					"storage.type.hlsl.resource": objectTypes,
+					"storage.type.hlsl.void": "void",
 					"support.function": intrinsics,
 					"constant.language": constants,
 				},
