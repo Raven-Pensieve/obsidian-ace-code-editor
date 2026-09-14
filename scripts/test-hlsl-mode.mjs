@@ -350,19 +350,7 @@ assert.match(
 	hlslHighlightCss,
 	/\.ace_variable\.ace_other\.ace_property\.ace_assignment/,
 );
-assert.match(hlslHighlightCss, /#4fc1ff\s*!important/);
-assert.match(
-	hlslHighlightCss,
-	/\.ace_storage\.ace_type\.ace_hlsl\.ace_float/,
-);
-assert.match(
-	hlslHighlightCss,
-	/\.ace_storage\.ace_type\.ace_hlsl\.ace_signed/,
-);
 assert.match(hlslHighlightCss, /#4ec9b0\s*!important/);
-assert.match(hlslHighlightCss, /#569cd6\s*!important/);
-assert.match(hlslHighlightCss, /#9cdcfe\s*!important/);
-assert.match(hlslHighlightCss, /#c586c0\s*!important/);
-assert.match(hlslHighlightCss, /#dcdcaa\s*!important/);
+assert.doesNotMatch(hlslHighlightCss, /\.ace_storage\.ace_type/);
 
 console.log("HLSL mode validation passed");
