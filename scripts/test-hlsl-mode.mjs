@@ -114,6 +114,15 @@ function tokenType(source, value) {
 	return token.type;
 }
 
+function containingTokenType(source, value) {
+	const tokenized = mode.getTokenizer().getLineTokens(source, "start");
+	const token = tokenized.tokens.find((candidate) =>
+		candidate.value.includes(value),
+	);
+	assert.ok(token, `Expected token containing ${JSON.stringify(value)} in ${source}`);
+	return token.type;
+}
+
 function tokenizeLines(lines) {
 	let state = "start";
 	return lines.map((line) => {
@@ -127,6 +136,14 @@ assert.match(tokenType("if (enabled) return;", "if"), /^keyword\.control/);
 assert.match(tokenType("float4 color;", "float4"), /^storage\.type/);
 assert.match(tokenType("Texture2D tex;", "Texture2D"), /^storage\.type/);
 assert.match(tokenType("float3 n = normalize(v);", "normalize"), /^support\.function/);
+assert.match(
+	tokenType("float4 Shade(float2 uv : TEXCOORD0)", "Shade"),
+	/^entity\.name\.function/,
+);
+assert.match(
+	tokenType("float4 color = Shade(uv);", "Shade"),
+	/^entity\.name\.function/,
+);
 assert.match(tokenType("bool enabled = true;", "true"), /^constant\.language/);
 assert.match(tokenType("uint mask = 0xFFu;", "0xFFu"), /^constant\.numeric/);
 assert.match(tokenType("uint count = 42u;", "42u"), /^constant\.numeric/);
@@ -141,9 +158,71 @@ assert.match(
 	tokenType("float4 main(float2 uv : TEXCOORD0) : SV_Target0", "SV_Target0"),
 	/^support\.type\.semantic/,
 );
-assert.equal(
+assert.match(
 	tokenType("float ordinaryIdentifier;", "ordinaryIdentifier"),
-	"identifier",
+	/^variable\.other/,
+);
+assert.match(
+	tokenType("float4 Shade(float2 screen_pos_view_uv : TEXCOORD0)", "screen_pos_view_uv"),
+	/^variable\.other/,
+);
+assert.match(
+	tokenType("current_pixel = float2(screen_pos_view_uv.r, screen_pos_view_uv.g);", "current_pixel"),
+	/^variable\.other/,
+);
+assert.match(
+	tokenType("current_pixel = float2(screen_pos_view_uv.r, screen_pos_view_uv.g);", "r"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType("current_pixel = float2(screen_pos_view_uv.r, screen_pos_view_uv.g);", "g"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType("float3 color = texture.Sample(samplerState, uv).rgb;", "Sample"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType("float3 color = texture.Sample(samplerState, uv).rgb;", "rgb"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType("float2 offset = scene_tex_NN_invSize.xy;", "xy"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType("Texture2D<float4> sceneTextures[4];", "Texture2D"),
+	/^storage\.type/,
+);
+assert.match(
+	tokenType("Texture2D<float4> sceneTextures[4];", "float4"),
+	/^storage\.type/,
+);
+assert.match(
+	tokenType("Texture2D<float4> sceneTextures[4];", "sceneTextures"),
+	/^variable\.other/,
+);
+assert.match(
+	tokenType("return material.surface.albedo;", "surface"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType("return material.surface.albedo;", "albedo"),
+	/^variable\.other\.property/,
+);
+assert.match(
+	tokenType(
+		"top_pixel = current_pixel + scene_tex_NN_invSize * float2(0, -0.0001);",
+		"top_pixel",
+	),
+	/^variable\.other/,
+);
+assert.match(
+	containingTokenType(
+		"#define SAMPLE_TEXTURE(tex, uv) tex.Sample(s, uv)",
+		"SAMPLE_TEXTURE",
+	),
+	/^meta\.preprocessor/,
 );
 assert.match(tokenType('// "comment"', '// "comment"'), /^comment/);
 assert.match(tokenType('#include "common.hlsli"', "#include"), /^keyword/);

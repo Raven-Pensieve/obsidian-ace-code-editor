@@ -64,10 +64,16 @@ ace.define(
 					"support.function": intrinsics,
 					"constant.language": constants,
 				},
-				"identifier",
+				"variable.other",
 			);
 			var identifier = "[A-Za-z_$][A-Za-z0-9_$]*";
 			var escape = "\\\\(?:[\\\\\"'0abfnrtv]|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|.)";
+			var functionMapper = function (value) {
+				var token = keywordMapper(value);
+				return token === "variable.other"
+					? "entity.name.function"
+					: token;
+			};
 
 			this.$rules = {
 				start: [
@@ -113,6 +119,17 @@ ace.define(
 						token: "support.type.semantic",
 						regex: "\\b(?:SV_[A-Za-z][A-Za-z0-9_]*|BINORMAL\\d*|BLENDINDICES\\d*|BLENDWEIGHT\\d*|COLOR\\d*|DEPTH\\d*|FOG\\d*|NORMAL\\d*|POSITION\\d*|PSIZE\\d*|SAMPLE\\d*|TANGENT\\d*|TARGET\\d*|TEXCOORD\\d*)\\b",
 						caseInsensitive: true,
+					},
+					{
+						token: [
+							"punctuation.operator",
+							"variable.other.property",
+						],
+						regex: "(\\.)(" + identifier + ")",
+					},
+					{
+						token: functionMapper,
+						regex: identifier + "(?=\\s*\\()",
 					},
 					{
 						token: keywordMapper,
