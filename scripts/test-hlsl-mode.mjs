@@ -292,6 +292,10 @@ assert.equal(await getLanguageMode("hlsl"), "hlsl");
 assert.equal(await getLanguageMode("hlsli"), "hlsl");
 assert.equal(await getLanguageMode("run-hlsl"), "hlsl");
 assert.equal(await getLanguageMode("run-hlsli"), "hlsl");
+assert.equal(await getLanguageMode("gim"), "xml");
+assert.equal(await getLanguageMode("mtg"), "xml");
+assert.equal(await getLanguageMode("mtl"), "xml");
+assert.equal(await getLanguageMode("run-gim"), "xml");
 
 const {
 	CUSTOM_ACE_MODE_FILES,
