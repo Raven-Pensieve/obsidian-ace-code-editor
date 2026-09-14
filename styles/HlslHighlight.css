@@ -1,0 +1,8 @@
+.ace_editor .ace_variable.ace_other.ace_assignment {
+	color: #4fc1ff !important;
+}
+
+.ace_editor
+	.ace_variable.ace_other.ace_property.ace_assignment {
+	color: #9cdcfe !important;
+}

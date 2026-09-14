@@ -322,4 +322,19 @@ const buildSource = await fs.promises.readFile(
 assert.match(buildSource, /copyCustomAceModesPlugin/);
 assert.match(buildSource, /path\.join\("src", "ace", fileName\)/);
 
+const hlslHighlightCss = await fs.promises.readFile(
+	path.join(projectRoot, "styles", "HlslHighlight.css"),
+	"utf8",
+);
+assert.match(
+	hlslHighlightCss,
+	/\.ace_editor\s+\.ace_variable\.ace_other\.ace_assignment/,
+);
+assert.match(
+	hlslHighlightCss,
+	/\.ace_variable\.ace_other\.ace_property\.ace_assignment/,
+);
+assert.match(hlslHighlightCss, /#4fc1ff\s*!important/);
+assert.match(hlslHighlightCss, /#9cdcfe\s*!important/);
+
 console.log("HLSL mode validation passed");
