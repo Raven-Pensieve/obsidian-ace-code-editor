@@ -168,7 +168,11 @@ assert.match(
 );
 assert.match(
 	tokenType("current_pixel = float2(screen_pos_view_uv.r, screen_pos_view_uv.g);", "current_pixel"),
-	/^variable\.other/,
+	/^variable\.other\.assignment/,
+);
+assert.equal(
+	tokenType("current_pixel = float2(screen_pos_view_uv.r, screen_pos_view_uv.g);", "screen_pos_view_uv"),
+	"variable.other",
 );
 assert.match(
 	tokenType("current_pixel = float2(screen_pos_view_uv.r, screen_pos_view_uv.g);", "r"),
@@ -215,7 +219,37 @@ assert.match(
 		"top_pixel = current_pixel + scene_tex_NN_invSize * float2(0, -0.0001);",
 		"top_pixel",
 	),
-	/^variable\.other/,
+	/^variable\.other\.assignment/,
+);
+assert.equal(
+	tokenType(
+		"top_pixel = current_pixel + scene_tex_NN_invSize * float2(0, -0.0001);",
+		"current_pixel",
+	),
+	"variable.other",
+);
+assert.match(
+	containingTokenType(
+		"material.surface.albedo = current_pixel.rgb;",
+		"albedo",
+	),
+	/^variable\.other\.property\.assignment/,
+);
+assert.equal(
+	tokenType("material.surface.albedo = current_pixel.rgb;", "surface"),
+	"variable.other.property",
+);
+assert.match(
+	tokenType("accumulatedColor += sampleColor;", "accumulatedColor"),
+	/^variable\.other\.assignment/,
+);
+assert.equal(
+	tokenType("accumulatedColor += sampleColor;", "sampleColor"),
+	"variable.other",
+);
+assert.equal(
+	tokenType("bool same = current_pixel == top_pixel;", "current_pixel"),
+	"variable.other",
 );
 assert.match(
 	containingTokenType(

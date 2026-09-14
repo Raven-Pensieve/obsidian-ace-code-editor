@@ -68,10 +68,17 @@ ace.define(
 			);
 			var identifier = "[A-Za-z_$][A-Za-z0-9_$]*";
 			var escape = "\\\\(?:[\\\\\"'0abfnrtv]|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|.)";
+			var assignmentOperator = "(?:<<|>>|[+\\-*/%&|^])?=(?!=)";
 			var functionMapper = function (value) {
 				var token = keywordMapper(value);
 				return token === "variable.other"
 					? "entity.name.function"
+					: token;
+			};
+			var assignmentMapper = function (value) {
+				var token = keywordMapper(value);
+				return token === "variable.other"
+					? "variable.other.assignment"
 					: token;
 			};
 
@@ -121,11 +128,28 @@ ace.define(
 						caseInsensitive: true,
 					},
 					{
+						token: "variable.other.property.assignment",
+						regex:
+							"\\." +
+							identifier +
+							"(?=\\s*" +
+							assignmentOperator +
+							")",
+					},
+					{
 						token: [
 							"punctuation.operator",
 							"variable.other.property",
 						],
 						regex: "(\\.)(" + identifier + ")",
+					},
+					{
+						token: assignmentMapper,
+						regex:
+							identifier +
+							"(?=\\s*" +
+							assignmentOperator +
+							")",
 					},
 					{
 						token: functionMapper,
