@@ -7,6 +7,7 @@ import { SettingsBus } from "./hooks/useSettings";
 import { LL } from "./i18n/i18n";
 import { AceRuntimeManager } from "./service/AceRuntimeManager";
 import { MarkdownEmbedProcessor } from "./service/MarkdownEmbedProcessor";
+import { mergeSupportedExtensions } from "./service/SupportedExtensions";
 import SettingsStore from "./settings/SettingsStore";
 import AceCodeEditorSettingTab from "./settings/SettingsTab";
 import { EmbedCreator } from "./type/obsidian-extend";
@@ -83,6 +84,11 @@ export default class AceCodeEditorPlugin extends Plugin {
 					...savedData,
 				};
 			}
+			validatedSettings.supportExtensions = mergeSupportedExtensions(
+				Array.isArray(validatedSettings.supportExtensions)
+					? validatedSettings.supportExtensions
+					: [],
+			);
 		} catch (error) {
 			throw new Error("Failed to validate and merge settings" + error);
 		}

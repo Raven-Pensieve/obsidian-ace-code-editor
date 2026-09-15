@@ -3,6 +3,7 @@ import {
 	AceKeyboard,
 	AceLightThemes,
 } from "@src/service/AceThemes";
+import { mergeSupportedExtensions } from "@src/service/SupportedExtensions";
 import { DEFAULT_REMOTE_SETTINGS, RemoteEmbedSettings } from "@src/type/remote";
 
 export const CODE_EDITOR_VIEW_TYPE = "ace-code-editor";
@@ -38,7 +39,7 @@ export interface ICodeEditorConfig {
 }
 
 export const DEFAULT_CONFIG: ICodeEditorConfig = {
-	supportExtensions: ["js"],
+	supportExtensions: mergeSupportedExtensions([]),
 	lightTheme: "chrome",
 	darkTheme: "monokai",
 	keyboard: "default",

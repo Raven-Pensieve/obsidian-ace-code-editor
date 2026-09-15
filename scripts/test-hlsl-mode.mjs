@@ -319,6 +319,27 @@ assert.deepEqual(
 	["mode-c_cpp.js"],
 );
 
+const { BUILT_IN_CODE_EXTENSIONS, mergeSupportedExtensions } =
+	await importTypeScriptModule("src/service/SupportedExtensions.ts");
+assert.deepEqual([...BUILT_IN_CODE_EXTENSIONS], [
+	"hlsl",
+	"hlsli",
+	"nfx",
+	"gim",
+	"mtg",
+	"mtl",
+]);
+assert.deepEqual(mergeSupportedExtensions(["py", "nfx"]), [
+	"js",
+	"hlsl",
+	"hlsli",
+	"nfx",
+	"gim",
+	"mtg",
+	"mtl",
+	"py",
+]);
+
 const aceServiceSource = await fs.promises.readFile(
 	path.join(projectRoot, "src", "service", "AceService.ts"),
 	"utf8",
