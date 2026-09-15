@@ -278,7 +278,7 @@ export const languageModeMap = {
 	html: ["html", "htm", "shtml", "xhtml", "mdoc", "asp", "aspx", "jshtm"],
 	html_elixir: ["html_elixir"],
 	html_ruby: ["html_ruby"],
-	hlsl: ["hlsl", "hlsli"],
+	hlsl: ["hlsl", "hlsli", "nfx"],
 	ini: ["ini", "gitconfig"],
 	io: ["io"],
 	ion: ["ion"],
