@@ -3,6 +3,7 @@ import {
 	AceKeyboard,
 	AceLightThemes,
 } from "@src/service/AceThemes";
+import { mergeSupportedExtensions } from "@src/service/SupportedExtensions";
 import { DEFAULT_REMOTE_SETTINGS, RemoteEmbedSettings } from "@src/type/remote";
 
 export const CODE_EDITOR_VIEW_TYPE = "ace-code-editor";
@@ -33,12 +34,12 @@ export interface ICodeEditorConfig {
 		mode: "always" | "hover";
 	};
 	remoteEmbed: RemoteEmbedSettings;
-	/** 兼容旧配置保留字段；运行时始终使用本地加载 */
+	/** Ace 运行时加载模式：true=本地, false=CDN */
 	useLocalAce: boolean;
 }
 
 export const DEFAULT_CONFIG: ICodeEditorConfig = {
-	supportExtensions: ["js"],
+	supportExtensions: mergeSupportedExtensions([]),
 	lightTheme: "chrome",
 	darkTheme: "monokai",
 	keyboard: "default",

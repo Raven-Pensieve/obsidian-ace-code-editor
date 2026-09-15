@@ -18,6 +18,7 @@ const args = process.argv.slice(2);
 const mode = args[0] || "dev";
 const prod = mode === "production" || mode === "prod";
 const outDir = "dist";
+const customAceModes = ["mode-hlsl.js"];
 
 /**
  * CSS 文件重命名插件
@@ -65,6 +66,28 @@ const sanitizeScriptCreationPlugin = () => ({
 			} catch (error) {
 				console.error("Failed to sanitize script creation patterns:", error);
 			}
+		});
+	},
+});
+
+const copyCustomAceModesPlugin = () => ({
+	name: "copy-custom-ace-modes-plugin",
+	setup(build) {
+		build.onEnd(async (result) => {
+			if (result.errors.length > 0) {
+				return;
+			}
+
+			const targetDir = path.join(outDir, "ace-modes");
+			await fs.promises.mkdir(targetDir, { recursive: true });
+			await Promise.all(
+				customAceModes.map((fileName) =>
+					fs.promises.copyFile(
+						path.join("src", "ace", fileName),
+						path.join(targetDir, fileName),
+					),
+				),
+			);
 		});
 	},
 });
@@ -174,7 +197,12 @@ const context = await esbuild.context({
 	},
 	entryPoints: ["src/main.ts"],
 	bundle: true,
-	plugins: [renamePlugin(), sanitizeScriptCreationPlugin(), cssReBuild()],
+	plugins: [
+		renamePlugin(),
+		sanitizeScriptCreationPlugin(),
+		copyCustomAceModesPlugin(),
+		cssReBuild(),
+	],
 	external: [
 		"obsidian",
 		"electron",

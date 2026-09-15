@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "node --env-file-if-exists=.env scripts/deploy.mjs link && node scripts/esbuild.config.mjs dev",
 		"build": "tsc -noEmit -skipLibCheck && node scripts/esbuild.config.mjs prod && node --env-file-if-exists=.env scripts/deploy.mjs copy",
+		"test:hlsl": "node scripts/test-hlsl-mode.mjs",
 		"release": "pnpm run build && node scripts/version-bump.mjs && pnpm run changelog:u && pnpm i",
 		"tmTheme": "node scripts/convert-themes.mjs",
 		"changelog:u": "conventional-changelog -p angular -i CHANGELOG.md -s -u -n ./scripts/changelog-option.js",

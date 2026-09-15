@@ -1,6 +1,13 @@
 import { LL } from "@src/i18n/i18n";
 import * as ace from "ace-builds";
 import { App, Modal, Notice, PluginManifest, requestUrl } from "obsidian";
+import {
+	CUSTOM_ACE_MODE_FILES,
+	excludeCustomAceModes,
+	getCustomAceModeFile,
+	isCustomAceModeModule,
+} from "./AceRuntimeAssets";
+import { installAceModuleLoader } from "./AceModuleLoader";
 
 /** jsDelivr API 返回的文件树节点 */
 interface JsDelivrFileNode {
@@ -16,11 +23,6 @@ export class AceRuntimeManager {
 	/** Ace 版本号（用于 CDN URL） */
 	static readonly ACE_VERSION = "1.44.0";
 	static readonly ACE_CDN = `https://cdn.jsdelivr.net/npm/ace-builds@${AceRuntimeManager.ACE_VERSION}/src-noconflict`;
-	private static readonly pendingModuleLoads = new Map<
-		string,
-		Promise<unknown>
-	>();
-
 	private readonly app: App;
 	private readonly pluginId: string;
 	private onSaveUseLocalAce?: (value: boolean) => Promise<void>;
@@ -66,7 +68,7 @@ export class AceRuntimeManager {
 
 	/**
 	 * 检查本地运行时文件是否完整
-	 * 检测标记: mode-javascript.js + worker-javascript.js + snippets/javascript.js + keybinding-vim.js
+	 * 检测标记: 标准运行时文件 + 仓库维护的自定义 mode
 	 */
 	async checkAceModesExist(): Promise<boolean> {
 		try {
@@ -82,6 +84,9 @@ export class AceRuntimeManager {
 				)) &&
 				(await this.app.vault.adapter.exists(
 					`${this.aceModesDir}/keybinding-vscode.js`,
+				)) &&
+				(await this.app.vault.adapter.exists(
+					`${this.aceModesDir}/${CUSTOM_ACE_MODE_FILES[0]}`,
 				))
 			);
 		} catch {
@@ -90,24 +95,35 @@ export class AceRuntimeManager {
 	}
 
 	/**
-	 * 初始化 Ace 运行时加载器。
-	 * 仅支持本地运行时；若本地包缺失则进入受限模式并提示用户下载。
+	 * 初始化 Ace 运行时加载器。自定义 mode 始终从插件目录加载，
+	 * 其余模块根据配置使用本地运行时或 CDN。
 	 */
-	async initAceModeBasePath() {
-		this.setupLocalLoader();
-		this.runtimeInstalled = await this.checkAceModesExist();
-		await this.onSaveUseLocalAce?.(true);
-		if (this.runtimeInstalled) {
+	async initAceModeBasePath(useLocalAce = true) {
+		if (useLocalAce) {
+			this.runtimeInstalled = await this.checkAceModesExist();
+		}
+
+		if (useLocalAce && this.runtimeInstalled) {
+			this.setupLocalLoader();
+			await this.onSaveUseLocalAce?.(true);
 			console.log("Ace 运行时: 使用本地包");
 			return;
 		}
-		console.warn("Ace 运行时: 本地包缺失，进入受限模式");
-		void this.promptInstallRuntime();
+
+		this.setupCdnLoader();
+		await this.onSaveUseLocalAce?.(false);
+		console.log("Ace 运行时: 使用 CDN");
+		if (useLocalAce) {
+			console.warn("Ace 运行时: 本地包缺失，已回退 CDN");
+			void this.promptInstallRuntime();
+		}
 	}
 
 	private setupLocalLoader() {
 		this.setupLocalPaths();
-		this.installCustomModuleLoader();
+		this.installCustomModuleLoader(async (moduleName) => {
+			return this.readLocalModule(moduleName);
+		});
 	}
 
 	private setupLocalPaths() {
@@ -116,65 +132,69 @@ export class AceRuntimeManager {
 		ace.config.set("basePath", this.aceModesUrl);
 	}
 
-	private installCustomModuleLoader() {
+	private setupCdnLoader() {
+		ace.config.set("modePath", AceRuntimeManager.ACE_CDN);
+		ace.config.set("workerPath", AceRuntimeManager.ACE_CDN);
+		ace.config.set("basePath", AceRuntimeManager.ACE_CDN);
+		this.installCustomModuleLoader(async (moduleName, moduleType) => {
+			if (isCustomAceModeModule(moduleName)) {
+				return this.readLocalModule(moduleName);
+			}
+
+			const sourceUrl = (
+				ace.config as unknown as AceConfigInternal
+			).moduleUrl?.(moduleName, moduleType);
+			if (!sourceUrl) {
+				throw new Error(`无法解析 Ace CDN 模块地址: ${moduleName}`);
+			}
+			const response = await requestUrl({ url: sourceUrl });
+			return { content: response.text, sourceUrl };
+		});
+	}
+
+	private installCustomModuleLoader(
+		loadSource: (
+			moduleName: string,
+			moduleType?: string,
+		) => Promise<{ content: string; sourceUrl: string }>,
+	) {
 		const aceConfig = ace.config as unknown as AceConfigInternal;
 		const fallbackLoadModule = this.originalLoadModule;
-		aceConfig.loadModule = (moduleId, onLoad) => {
-			const moduleName =
-				typeof moduleId === "string" ? moduleId : moduleId[1];
-			const moduleType =
-				typeof moduleId === "string" ? undefined : moduleId[0];
+		const aceRequire = (
+			ace as unknown as { require: (name: string) => unknown }
+		).require;
+		installAceModuleLoader({
+			config: aceConfig,
+			fallbackLoadModule,
+			requireModule: aceRequire,
+			loadSource,
+			evaluateSource: (content, sourceUrl) => {
+				const script = activeDocument.createElement("script");
+				script.textContent = `${content}\n//# sourceURL=${sourceUrl}`;
+				activeDocument.head.appendChild(script);
+				script.remove();
+			},
+			onError: (moduleName, error) => {
+				console.warn(`Ace 模块加载失败: ${moduleName}`, error);
+			},
+		});
+	}
 
-			if (!this.runtimeInstalled && moduleType !== "theme") {
-				void this.promptInstallRuntime();
-				onLoad?.(undefined);
-				return;
-			}
-
-			if (!moduleName.startsWith("ace/") || moduleType === "worker") {
-				fallbackLoadModule?.(moduleId, onLoad);
-				return;
-			}
-
-			const aceRequire = (
-				ace as unknown as { require?: (name: string) => unknown }
-			).require;
-			try {
-				const loaded = aceRequire?.(moduleName);
-				if (loaded) {
-					onLoad?.(loaded);
-					return;
-				}
-			} catch {
-				// ignore and continue loading
-			}
-
-			const cacheKey = `${moduleType ?? "module"}:${moduleName}`;
-			const pending =
-				AceRuntimeManager.pendingModuleLoads.get(cacheKey) ??
-				(async () => {
-					const filePath = this.getLocalModuleFilePath(moduleName);
-					const content = await this.app.vault.adapter.read(filePath);
-					const script = activeDocument.createElement("script");
-					script.textContent = `${content}\n//# sourceURL=${filePath.replace(/\\/g, "/")}`;
-					activeDocument.head.appendChild(script);
-					script.remove();
-					return aceRequire?.(moduleName);
-				})().finally(() => {
-					AceRuntimeManager.pendingModuleLoads.delete(cacheKey);
-				});
-
-			AceRuntimeManager.pendingModuleLoads.set(cacheKey, pending);
-			pending
-				.then((module) => onLoad?.(module))
-				.catch((error) => {
-					console.warn(`Ace 模块加载失败: ${moduleName}`, error);
-					fallbackLoadModule?.(moduleId, onLoad);
-				});
+	private async readLocalModule(moduleName: string) {
+		const filePath = this.getLocalModuleFilePath(moduleName);
+		const content = await this.app.vault.adapter.read(filePath);
+		return {
+			content,
+			sourceUrl: filePath.replace(/\\/g, "/"),
 		};
 	}
 
 	private getLocalModuleFilePath(moduleName: string) {
+		const customModeFile = getCustomAceModeFile(moduleName);
+		if (customModeFile) {
+			return `${this.aceModesDir}/${customModeFile}`;
+		}
+
 		const parts = moduleName.split("/");
 		const type = parts[1];
 		const name = parts.slice(2).join("-");
@@ -234,7 +254,12 @@ export class AceRuntimeManager {
 			}
 		}
 
-		return { modes, workers, keybindings, snippetFiles };
+		return {
+			modes: excludeCustomAceModes(modes),
+			workers,
+			keybindings,
+			snippetFiles,
+		};
 	}
 
 	/**
@@ -301,8 +326,15 @@ export class AceRuntimeManager {
 			onProgress?.(i + 1, total);
 		}
 
+		const customModeExists = await this.app.vault.adapter.exists(
+			`${this.aceModesDir}/${CUSTOM_ACE_MODE_FILES[0]}`,
+		);
+		if (!customModeExists) {
+			throw new Error("插件缺少自定义 Ace HLSL mode 文件");
+		}
+
 		this.runtimeInstalled = true;
-		this.setupLocalPaths();
+		this.setupLocalLoader();
 		await this.onSaveUseLocalAce?.(true);
 		new Notice(LL.setting.about.download_done());
 		console.log("Ace 运行时: 本地包下载完成");
@@ -311,6 +343,11 @@ export class AceRuntimeManager {
 	async isRuntimeInstalled() {
 		this.runtimeInstalled = await this.checkAceModesExist();
 		return this.runtimeInstalled;
+	}
+
+	async switchToCdn() {
+		this.setupCdnLoader();
+		await this.onSaveUseLocalAce?.(false);
 	}
 
 	private async promptInstallRuntime() {
